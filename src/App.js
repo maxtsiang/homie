@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import Home from "./pages/Home";
+import Nav from "./components/Nav";
+import { BrowserRouter, Route } from "react-router-dom";
+import "fontsource-roboto";
+
+import {
+  makeStyles,
+  ThemeProvider,
+  createMuiTheme,
+} from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: '"Roboto"',
+    h3: {
+      fontWeight: 700,
+    },
+    h6: {
+      fontSize: "2.5em",
+      fontWeight: 600,
+    },
+    subtitle1: {
+      fontWeight: 500,
+    },
+    subtitle2: {
+      color: "grey",
+    },
+  },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Nav />
+        <Route exact path="/" component={() => <Home />} />
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
