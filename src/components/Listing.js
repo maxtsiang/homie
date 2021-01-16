@@ -8,6 +8,7 @@ import {
   CardContent,
   CardActions,
   Grid,
+  IconButton,
   Box,
 } from "@material-ui/core";
 
@@ -16,6 +17,9 @@ import profile from "../dev-imgs/profile.jpg";
 
 import Profile from "./Profile";
 import Interested from "./Interested";
+
+import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
+import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
 
 function Listing() {
   return (
@@ -58,8 +62,13 @@ function Listing() {
 
             <Box>
               <Interested names="Max Tsiang" imgs={profile} />
-              <Button>Interested</Button>
-              <Button>Share</Button>
+              <Button style={{ width: "20em" }}>
+                <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />{" "}
+                Interested
+              </Button>
+              <IconButton>
+                <ShareRoundedIcon />
+              </IconButton>
             </Box>
           </CardContent>
         </CardActionArea>
