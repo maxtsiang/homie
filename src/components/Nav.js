@@ -33,6 +33,11 @@ function Nav() {
                 Homie
               </Button>
             </Typography>
+            <Typography variant="title">
+              <Button component={Link} to="/new">
+                New Listing
+              </Button>
+            </Typography>
           </Grid>
           <Grid item>
             <div>
