@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import New from "./pages/New";
 import Nav from "./components/Nav";
+import Chat from "./pages/Chat";
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
 
@@ -45,6 +46,7 @@ function App() {
           <Nav />
           <Route exact path="/" component={() => <Home />} />
           <Route exact path="/new" component={() => <New />} />
+          <Route exact path="/chats" component={()=> <Chat />} />
         </BrowserRouter>
       </MuiPickersUtilsProvider>
     </ThemeProvider>
