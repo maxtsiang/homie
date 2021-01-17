@@ -30,8 +30,6 @@ const useStyles = makeStyles({
   right: {},
 });
 
-const msgs = [];
-
 const sentMessage = (msgContent, avatar) => {
   return (
     <ListItem>
@@ -52,6 +50,18 @@ const receivedMessage = (msgContent, avatar) => {
 
 const ChatWindow = () => {
   const [textContent, setTextContent] = useState("");
+  const [msgs, setMsgs] = useState([
+    {
+      msg: "your next line is jojo references are dumb",
+      sentMessage: false,
+      avatar: null,
+    },
+    {
+      msg: "jojo references are dumb",
+      sentMessage: true,
+      avatar: null,
+    },
+  ]);
   const classes = useStyles();
 
   const handleChange = (event) => {
@@ -61,8 +71,11 @@ const ChatWindow = () => {
   return (
     <Box>
       <List className={classes.container}>
-        {receivedMessage("your next line is 'jojo references are dumb'", null)}
-        {sentMessage("jojo references are dumb", null)}
+        {msgs.map((message) => {
+          return message.sentMessage
+            ? sentMessage(message.msg, message.avatar)
+            : receivedMessage(message.msg, message.avatar);
+        })}
       </List>
       {/* need to prevent form from submitting */}
       <form className={classes.msgBar} noValidate autoComplete="off">
@@ -77,7 +90,14 @@ const ChatWindow = () => {
           //className={classes.button}
           endIcon={<Icon>send</Icon>}
           onClick={() => {
-            msgs.push({ msg: textContent, sentMessage: true });
+            setMsgs((oldMsgs) => [
+              ...oldMsgs,
+              {
+                msg: textContent,
+                sentMessage: true,
+                avatar: null,
+              },
+            ]);
             setTextContent("");
           }}
         >
