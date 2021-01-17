@@ -10,7 +10,7 @@ function Map(props) {
       style={{
         borderRadius: "1em",
         height: props.height,
-        width: props.width,
+        width: "100%",
         overflow: "hidden",
         position: props.position,
       }}
