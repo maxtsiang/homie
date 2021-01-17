@@ -23,6 +23,8 @@ function Amenity(props) {
           <Typography variant="subtitle1">Wifi</Typography>
         </Box>
       );
+    default:
+      return <div>Amenity nothing</div>;
   }
 }
 

@@ -1,4 +1,5 @@
 import Home from "./pages/Home";
+import New from "./pages/New";
 import Nav from "./components/Nav";
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
@@ -43,6 +44,7 @@ function App() {
         <BrowserRouter>
           <Nav />
           <Route exact path="/" component={() => <Home />} />
+          <Route exact path="/new" component={() => <New />} />
         </BrowserRouter>
       </MuiPickersUtilsProvider>
     </ThemeProvider>

@@ -18,6 +18,7 @@ import { KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Counter from "../components/Counter";
+import Amenity from "../components/Amenity";
 
 const useStyles = makeStyles({
   container: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles({
     marginTop: "1em",
     padding: "0.7em",
     borderRadius: "1em",
+    boxShadow: "none",
   },
   group: {
     marginBottom: "1em",
@@ -61,26 +63,24 @@ function Filter(props) {
         </Typography>
         <Box display="flex" alignItems="center">
           <FormControl fullWidth className={classes.input} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-amount">Minimum</InputLabel>
+            <InputLabel>Min</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-amount"
               startAdornment={
                 <InputAdornment position="start">$</InputAdornment>
               }
-              labelWidth={60}
+              label="Min"
             />
           </FormControl>
           <Typography variant="h6" className={classes.separator}>
             -
           </Typography>
           <FormControl fullWidth className={classes.input} variant="outlined">
-            <InputLabel htmlFor="outlined-adornment-amount">Maximum</InputLabel>
+            <InputLabel>Max</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-amount"
               startAdornment={
                 <InputAdornment position="start">$</InputAdornment>
               }
-              labelWidth={60}
+              label="Max"
             />
           </FormControl>
         </Box>
@@ -109,7 +109,7 @@ function Filter(props) {
             autoOk
             variant="inline"
             inputVariant="outlined"
-            label="Start"
+            label="End"
             format="MM/dd/yyyy"
             InputAdornmentProps={{ position: "start" }}
             onChange={() => console.log("HI")}
@@ -134,36 +134,42 @@ function Filter(props) {
 
         <FormControl component="fieldset">
           <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={false}
-                  onChange={() => console.log("checked!")}
-                  name="wifi"
-                />
-              }
-              label="Wifi"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={false}
-                  onChange={() => console.log("checked!")}
-                  name="wifi"
-                />
-              }
-              label="Wifi"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={false}
-                  onChange={() => console.log("checked!")}
-                  name="wifi"
-                />
-              }
-              label="Wifi"
-            />
+            <Box display="flex" alignItems="center">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={false}
+                    onChange={() => console.log("checked!")}
+                    name="wifi"
+                  />
+                }
+              />
+              <Amenity id="wifi" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={false}
+                    onChange={() => console.log("checked!")}
+                    name="wifi"
+                  />
+                }
+              />
+              <Amenity id="wifi" />
+            </Box>
+            <Box display="flex" alignItems="center">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={false}
+                    onChange={() => console.log("checked!")}
+                    name="wifi"
+                  />
+                }
+              />
+              <Amenity id="wifi" />
+            </Box>
           </FormGroup>
         </FormControl>
       </Box>
