@@ -2,14 +2,15 @@ import { Grid } from "@material-ui/core";
 import React from "react";
 import Nav from "../components/Nav";
 import ChatWindow from "../components/ChatWindow";
+import ChatContacts from "../components/ChatContacts";
 
 const Chat = () => {
   return (
     <div>
       <Nav></Nav>
-      <Grid container>
+      <Grid container style={{ marginTop: "5em" }}>
         <Grid item xs={3}>
-          <p> contacts area</p>
+          <ChatContacts></ChatContacts>
         </Grid>
         <Grid item xs={9}>
           <ChatWindow></ChatWindow>
