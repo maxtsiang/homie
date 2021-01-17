@@ -107,7 +107,8 @@ function Home() {
           setHovered={setHovered}
           setDetailed={setDetailed}
           height="88vh"
-          width="50%"
+          width="45%"
+          position="fixed"
         />
       </Grid>
     </Grid>
