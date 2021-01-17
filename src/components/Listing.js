@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Typography,
   Divider,
@@ -21,10 +22,13 @@ import Interested from "./Interested";
 import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
 import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
 
-function Listing() {
+function Listing(props) {
   return (
-    <div style={{ padding: "0.3em" }}>
-      <Card>
+    <div
+      onMouseEnter={() => props.setHovered(props.id)}
+      onMouseLeave={() => props.setHovered(-1)}
+    >
+      <Card style={{ marginBottom: "1em" }} raised={props.id === props.hovered}>
         <CardActionArea
           style={{
             display: "flex",
@@ -34,7 +38,7 @@ function Listing() {
             image={bedroom}
             title="bedroom-pic"
             component="img"
-            style={{ width: "35em", padding: "2em", borderRadius: "3em" }}
+            style={{ width: "35em", padding: "2em", borderRadius: "2.5em" }}
           />
           <CardContent
             style={{

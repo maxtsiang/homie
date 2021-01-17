@@ -19,8 +19,13 @@ import profile from "../dev-imgs/profile.jpg";
 
 function Nav() {
   return (
-    <div>
-      <AppBar position="static" style={{ background: "#FFFFFF" }}>
+    <div style={{ marginBottom: "3em" }}>
+      <AppBar
+        style={{
+          background: "#FFFFFF",
+          overflow: "hidden",
+        }}
+      >
         <Grid
           container
           display="flex"

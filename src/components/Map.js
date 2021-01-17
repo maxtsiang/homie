@@ -1,23 +1,38 @@
 import GoogleMapReact from "google-map-react";
-
-function Map() {
+import MapMarker from "../components/MapMarker";
+// key = AIzaSyDbGKLgDehhTw5e74VYe3jvACTBS9GdrVI
+function Map(props) {
   return (
     <div
       style={{
-        margin: "3em",
-        borderRadius: "3em",
-        height: "100vh",
+        borderRadius: "1em",
+        height: "88vh",
         width: "45em",
+        overflow: "hidden",
+        position: "fixed",
       }}
     >
       <GoogleMapReact
-        bootstrapURLKeys={{ key: "AIzaSyDbGKLgDehhTw5e74VYe3jvACTBS9GdrVI" }}
+        bootstrapURLKeys={{ key: "" }}
         defaultCenter={{
-          lat: 59.95,
-          lng: 30.33,
+          lat: 39.9539,
+          lng: -75.193,
         }}
-        defaultZoom={11}
-      ></GoogleMapReact>
+        defaultZoom={15}
+        hoverDistance={25}
+      >
+        {props.markers.map((loc) => {
+          return (
+            <MapMarker
+              hovered={loc.id === props.hovered}
+              setHovered={props.setHovered}
+              id={loc.id}
+              lat={loc.lat}
+              lng={loc.lng}
+            />
+          );
+        })}
+      </GoogleMapReact>
     </div>
   );
 }
