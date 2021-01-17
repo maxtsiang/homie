@@ -1,15 +1,18 @@
+import { Box } from "@material-ui/core";
+
 import GoogleMapReact from "google-map-react";
 import MapMarker from "../components/MapMarker";
 // key = AIzaSyDbGKLgDehhTw5e74VYe3jvACTBS9GdrVI
 function Map(props) {
   return (
-    <div
+    <Box
+      display={props.hidden ? "none" : "block"}
       style={{
         borderRadius: "1em",
-        height: "88vh",
-        width: "45em",
+        height: props.height,
+        width: props.width,
         overflow: "hidden",
-        position: "fixed",
+        position: props.position,
       }}
     >
       <GoogleMapReact
@@ -26,6 +29,7 @@ function Map(props) {
             <MapMarker
               hovered={loc.id === props.hovered}
               setHovered={props.setHovered}
+              setDetailed={props.setDetailed}
               id={loc.id}
               lat={loc.lat}
               lng={loc.lng}
@@ -33,7 +37,7 @@ function Map(props) {
           );
         })}
       </GoogleMapReact>
-    </div>
+    </Box>
   );
 }
 

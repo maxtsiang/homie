@@ -7,8 +7,6 @@ import {
   CardActionArea,
   CardMedia,
   CardContent,
-  CardActions,
-  Grid,
   IconButton,
   Box,
 } from "@material-ui/core";
@@ -27,8 +25,12 @@ function Listing(props) {
     <div
       onMouseEnter={() => props.setHovered(props.id)}
       onMouseLeave={() => props.setHovered(-1)}
+      onClick={() => props.setDetailed(props.id)}
     >
-      <Card style={{ marginBottom: "1em" }} raised={props.id === props.hovered}>
+      <Card
+        style={{ marginBottom: "1em", boxShadow: "none" }}
+        raised={props.id === props.hovered || props.id === props.detailed}
+      >
         <CardActionArea
           style={{
             display: "flex",
@@ -76,6 +78,7 @@ function Listing(props) {
             </Box>
           </CardContent>
         </CardActionArea>
+        <Divider />
       </Card>
     </div>
   );

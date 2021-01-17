@@ -1,5 +1,7 @@
 import Listing from "../components/Listing";
 import Map from "../components/Map";
+import Detail from "../components/Detail";
+
 import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
 
 import React, { useState } from "react";
@@ -8,6 +10,7 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 
 function Home() {
   const [hovered, setHovered] = useState(-1);
+  const [detailed, setDetailed] = useState(-1);
 
   return (
     <div>
@@ -15,7 +18,7 @@ function Home() {
         <Grid item style={{ margin: "3em" }}>
           <Box display="flex">
             <Typography variant="h3">Find a place</Typography>
-            <IconButton color="primary" aria-label="filter">
+            <IconButton aria-label="filter">
               <FilterListIcon />
             </IconButton>
           </Box>
@@ -30,15 +33,31 @@ function Home() {
             </Typography>
             <Button>Sort By</Button>
           </Box>
-          {[0, 1, 2, 3, 4].map((n) => {
-            return <Listing id={n} hovered={hovered} setHovered={setHovered} />;
-          })}
+          <Box>
+            {[0, 1, 2, 3, 4].map((n) => {
+              return (
+                <Listing
+                  id={n}
+                  detailed={detailed}
+                  hovered={hovered}
+                  setHovered={setHovered}
+                  setDetailed={setDetailed}
+                />
+              );
+            })}
+          </Box>
         </Grid>
         <Grid item style={{ margin: "3em" }}>
+          {detailed >= 0 && <Detail close={() => setDetailed(-1)} />}
           <Map
+            hidden={detailed >= 0}
             hovered={hovered}
             markers={[{ id: 0, lat: 39.9539, lng: -75.193 }]}
             setHovered={setHovered}
+            setDetailed={setDetailed}
+            height="88vh"
+            width="48em"
+            position="fixed"
           />
         </Grid>
       </Grid>

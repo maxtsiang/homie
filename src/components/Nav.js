@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import {
   AppBar,
-  Toolbar,
+  Divider,
   Typography,
   Grid,
   Button,
@@ -24,6 +24,9 @@ function Nav() {
         style={{
           background: "#FFFFFF",
           overflow: "hidden",
+          paddingLeft: "3em",
+          paddingRight: "3em",
+          boxShadow: "none",
         }}
       >
         <Grid
@@ -73,6 +76,7 @@ function Nav() {
             </div>
           </Grid>
         </Grid>
+        <Divider />
       </AppBar>
     </div>
   );
