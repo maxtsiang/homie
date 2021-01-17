@@ -3,6 +3,9 @@ import Nav from "./components/Nav";
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
 
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+
 import {
   makeStyles,
   ThemeProvider,
@@ -36,10 +39,12 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Nav />
-        <Route exact path="/" component={() => <Home />} />
-      </BrowserRouter>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <BrowserRouter>
+          <Nav />
+          <Route exact path="/" component={() => <Home />} />
+        </BrowserRouter>
+      </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
 }
