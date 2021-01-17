@@ -15,9 +15,7 @@ const useStyles = makeStyles({
     marginTop: "1em",
     marginBottom: "1em",
   },
-  container: {
-    margin: "3em",
-  },
+
   item: {
     width: "50%",
     padding: "3em",
@@ -49,7 +47,6 @@ function Home() {
       direction="row"
       justify="space-between"
       alignItems="flex-start"
-      className={classes.container}
     >
       <Grid item className={classes.item}>
         {filterMode ? (

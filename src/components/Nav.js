@@ -60,11 +60,7 @@ function Nav() {
                 </IconButton>
               </Typography>
               <Typography variant="title">
-                <IconButton
-                  component={Link}
-                  to="/notifications"
-                  aria-label="notifications"
-                >
+                <IconButton aria-label="notifications">
                   <NotificationsNoneRoundedIcon />
                 </IconButton>
               </Typography>
