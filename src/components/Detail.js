@@ -20,6 +20,10 @@ const useStyles = makeStyles({
   header: {
     fontSize: "2.5em",
   },
+  img: {
+    borderRadius: "0.7em",
+    width: "100%",
+  },
   subheader: {
     fontSize: "1.2em",
     fontWeight: 500,
@@ -34,7 +38,7 @@ const useStyles = makeStyles({
   text: {
     fontSize: "1em",
     fontWeight: 400,
-    maxWidth: "47em",
+    maxWidth: "100%",
   },
 });
 
@@ -49,11 +53,7 @@ function Detail(props) {
       <Box m={1}>
         <Carousel navButtonsAlwaysVisible autoPlay={false}>
           {[1, 2, 3].map((n) => (
-            <img
-              style={{ borderRadius: "0.7em", width: "47em" }}
-              key={n}
-              src={bedroom}
-            />
+            <img className={classes.img} key={n} src={bedroom} />
           ))}
         </Carousel>
       </Box>
@@ -103,7 +103,7 @@ function Detail(props) {
           hovered={0}
           markers={[{ id: 0, lat: 39.9539, lng: -75.193 }]}
           height="30vh"
-          width="46em"
+          width="100%"
         />
       </Box>
     </Box>

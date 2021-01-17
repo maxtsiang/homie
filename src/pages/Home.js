@@ -12,7 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   header: {
-    marginTop: "1em",
     marginBottom: "1em",
   },
 
@@ -49,22 +48,31 @@ function Home() {
       alignItems="flex-start"
     >
       <Grid item className={classes.item}>
-        {filterMode ? (
-          <Typography variant="h3">Filter</Typography>
-        ) : (
-          <Box display="flex">
-            <Typography variant="h3">Find a place</Typography>
-            <IconButton aria-label="filter" onClick={() => setFilterMode(true)}>
-              <FilterListIcon />
-            </IconButton>
-          </Box>
-        )}
+        <Box className={classes.header}>
+          {filterMode ? (
+            <Typography variant="h3">Filter</Typography>
+          ) : (
+            <Box display="flex">
+              <Typography variant="h3">Find a place</Typography>
+              <IconButton
+                aria-label="filter"
+                onClick={() => setFilterMode(true)}
+              >
+                <FilterListIcon />
+              </IconButton>
+            </Box>
+          )}
 
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography variant="h4">
-            23 places found near University of Pennsylvania
-          </Typography>
-          {!filterMode && <Button>Sort By</Button>}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h4">
+              23 places found near University of Pennsylvania
+            </Typography>
+            {!filterMode && <Button>Sort By</Button>}
+          </Box>
         </Box>
 
         {filterMode ? (
