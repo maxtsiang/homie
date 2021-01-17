@@ -30,7 +30,7 @@ function Home() {
   return (
     <div>
       <Grid container display="flex">
-        <Grid item style={{ margin: "3em" }}>
+        <Grid item style={{ margin: "3em", width: "43vw" }}>
           {filterMode ? (
             <Box display="flex">
               <Typography variant="h3">Filter</Typography>
@@ -81,7 +81,7 @@ function Home() {
             </Box>
           )}
         </Grid>
-        <Grid item style={{ margin: "3em" }}>
+        <Grid item style={{ margin: "3em", width: "42vw" }}>
           {detailed >= 0 && <Detail close={() => setDetailed(-1)} />}
           <Map
             hidden={detailed >= 0}
@@ -90,8 +90,8 @@ function Home() {
             setHovered={setHovered}
             setDetailed={setDetailed}
             height="88vh"
-            width="48em"
-            position="fixed"
+            width="50%"
+            // position="fixed"
           />
         </Grid>
       </Grid>

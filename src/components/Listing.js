@@ -40,14 +40,14 @@ function Listing(props) {
             image={bedroom}
             title="bedroom-pic"
             component="img"
-            style={{ width: "35em", padding: "2em", borderRadius: "2.5em" }}
+            style={{ width: "35%", padding: "2em", borderRadius: "2.5em" }}
           />
           <CardContent
             style={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              height: "24em",
+              height: "30vh",
             }}
           >
             <Box
