@@ -8,12 +8,12 @@ import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 import {
-  makeStyles,
+  responsiveFontSizes,
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
+let theme = createMuiTheme({
   typography: {
     fontFamily: '"Roboto"',
     h3: {
@@ -21,11 +21,12 @@ const theme = createMuiTheme({
     },
     h4: {
       fontWeight: 600,
-      fontSize: "1.5em",
       color: "grey",
     },
+    h5: {
+      fontWeight: 700,
+    },
     h6: {
-      fontSize: "2.5em",
       fontWeight: 600,
     },
     subtitle1: {
@@ -36,6 +37,7 @@ const theme = createMuiTheme({
     },
   },
 });
+theme = responsiveFontSizes(theme);
 
 function App() {
   return (
