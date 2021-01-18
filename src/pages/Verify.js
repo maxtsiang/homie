@@ -62,10 +62,6 @@ function Verify(props) {
 
   const { currentUser } = useAuth();
 
-  useEffect(() => {
-    verifyEmail();
-  }, []);
-
   async function verifyEmail() {
     try {
       setMessage("");

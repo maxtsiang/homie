@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { makeStyles } from "@material-ui/core/styles";
 
+import { useAuth } from "../contexts/AuthContext";
+
 const useStyles = makeStyles({
   header: {
     marginBottom: "1em",
@@ -23,6 +25,7 @@ const useStyles = makeStyles({
 
 function Home() {
   const classes = useStyles();
+  const { currentUser } = useAuth();
   const [filterMode, setFilterMode] = useState(false);
   const [hovered, setHovered] = useState(-1);
   const [detailed, setDetailed] = useState(-1);
@@ -38,6 +41,7 @@ function Home() {
   function cancel() {
     console.log("FILTERS CANCELLED");
     setFilterMode(false);
+    console.log(currentUser);
   }
 
   return (

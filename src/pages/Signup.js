@@ -14,6 +14,9 @@ import { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
+import firebase from "../firebase";
+import "firebase/firestore";
+
 const useStyles = makeStyles({
   container: {
     width: "400px",
@@ -64,7 +67,7 @@ function Signup(props) {
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
 
-  const { signup, currentUser } = useAuth();
+  const { signup } = useAuth();
 
   const history = useHistory();
 
@@ -87,7 +90,14 @@ function Signup(props) {
     try {
       setError("");
       setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
+      const res = await signup(
+        emailRef.current.value,
+        passwordRef.current.value
+      );
+      await res.user.sendEmailVerification();
+      firebase.firestore().collection("users").doc(res.user.uid).set({
+        email: res.user.email,
+      });
       history.push("/");
     } catch {
       setError("Failed to create an account");
