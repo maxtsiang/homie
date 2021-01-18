@@ -61,7 +61,7 @@ const ChatWindow = () => {
       sentMessage: true,
       avatar: null,
     },
-  ]);
+  ]); // pulled from db in future
   const classes = useStyles();
 
   const handleChange = (event) => {
@@ -99,6 +99,7 @@ const ChatWindow = () => {
               },
             ]);
             setTextContent("");
+            // this stuff will be replaced by saving to db
           }}
         >
           Send

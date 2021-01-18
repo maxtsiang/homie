@@ -19,46 +19,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const ChatPreview = (userName, avatar, lastmsg) => {
+  return (
+    <ListItem alignItems="flex-start">
+      <ListItemAvatar>
+        <Avatar alt="Max Tsiang" src={avatar} />
+      </ListItemAvatar>
+      <ListItemText
+        primary={userName}
+        secondary={<React.Fragment>{lastmsg}</React.Fragment>}
+      />
+    </ListItem>
+  );
+};
+
 const ChatContacts = () => {
   const classes = useStyles();
   return (
     // obviously this will have to be a template that pulls data from the database
     <List>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Max Tsiang" src="" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Max Tsiang"
-          secondary={
-            <React.Fragment>{"text text text preview"}</React.Fragment>
-          }
-        />
-      </ListItem>
+      {ChatPreview("Max Tsiang", null, "hello this is a preview")}
       <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Max Tsiang" src="" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Max Tsiang"
-          secondary={
-            <React.Fragment>{"text text text preview"}</React.Fragment>
-          }
-        />
-      </ListItem>
+      {ChatPreview("Max Tsiang", null, "hello this is another preview")}
       <Divider variant="inset" component="li" />
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Max Tsiang" src="" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Max Tsiang"
-          secondary={
-            <React.Fragment>{"text text text preview"}</React.Fragment>
-          }
-        />
-      </ListItem>
+      {ChatPreview("Max Tsiang", null, "wfjbfjewhflef")}
     </List>
   );
 };
