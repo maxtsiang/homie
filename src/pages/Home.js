@@ -7,7 +7,7 @@ import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
 
 import React, { useState } from "react";
 
-import FilterListIcon from "@material-ui/icons/FilterList";
+import TuneRoundedIcon from "@material-ui/icons/TuneRounded";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -62,7 +62,7 @@ function Home() {
                 aria-label="filter"
                 onClick={() => setFilterMode(true)}
               >
-                <FilterListIcon />
+                <TuneRoundedIcon />
               </IconButton>
             </Box>
           )}

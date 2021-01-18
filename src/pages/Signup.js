@@ -15,7 +15,6 @@ import { useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 import firebase from "../firebase";
-import "firebase/firestore";
 
 const useStyles = makeStyles({
   container: {

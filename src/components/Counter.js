@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box, Typography, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -19,15 +20,27 @@ const useStyles = makeStyles({
 function Counter(props) {
   const classes = useStyles();
 
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+    props.setCountHandler(count);
+  };
+
+  const decrement = () => {
+    setCount(count - 1);
+    props.setCountHandler(count);
+  };
+
   return (
     <Box className={classes.counterBox}>
       <Typography variant="subtitle1">{props.label}</Typography>
       <Box className={classes.counter}>
-        <IconButton>
+        <IconButton onClick={decrement} disabled={count === 0}>
           <RemoveIcon />
         </IconButton>
-        <Typography variant="subtitle1">1</Typography>
-        <IconButton>
+        <Typography variant="subtitle1">{count}</Typography>
+        <IconButton onClick={increment}>
           <AddIcon />
         </IconButton>
       </Box>

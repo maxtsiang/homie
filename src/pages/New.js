@@ -19,7 +19,7 @@ import { KeyboardDatePicker } from "@material-ui/pickers";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 import Counter from "../components/Counter";
-import Amenity from "../components/Amenity";
+import Amenity, { amenitiesList } from "../components/Amenity";
 
 import React, { useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,18 +28,28 @@ import RemoveIcon from "@material-ui/icons/Remove";
 
 import PlacesSearch from "../components/PlacesSearch";
 
+import { storage } from "../firebase";
+
 const useStyles = makeStyles({
   container: {
     margin: "3em",
     marginTop: "6em",
-    width: "50%",
+    width: "80vw",
     height: "80vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
   },
   checkbox: {
-    margin: 0,
+    marginRight: 0,
+  },
+  checkboxGroup: {
+    display: "flex",
+    flexDirection: "column",
+    flexWrap: "wrap",
+  },
+  checkboxWrapper: {
+    flex: "1 0 34%",
   },
   label: {
     fontSize: "1.3em",
@@ -78,22 +88,70 @@ const useStyles = makeStyles({
     marginRight: "1em",
     width: "100%",
   },
+  fieldGroup: {
+    marginTop: "1em",
+    marginRight: "1em",
+    width: "100%",
+  },
+  groupWrapper: {
+    display: "flex",
+  },
 });
 
 function New() {
   const classes = useStyles();
+
+  const [address, setAddress] = useState("");
+  const [latLng, setLatLng] = useState("");
+  const [type, setType] = useState("");
+  const [price, setPrice] = useState(0);
+  const [start, setStart] = useState(new Date());
+  const [end, setEnd] = useState(new Date());
+  const [persons, setPersons] = useState(0);
+  const [bedrooms, setBedrooms] = useState(0);
+  const [bathrooms, setBathrooms] = useState(0);
+  const [amenities, setAmenities] = useState();
+  const [description, setDescription] = useState("");
+  const [photos, setPhotos] = useState([]);
+
+  const handleSetType = (e) => {
+    setType(e.target.value);
+  };
+
+  const handleSetPrice = (e) => {
+    setPrice(e.target.value);
+  };
+
+  const handleCheck = (e) => {
+    setAmenities({ ...amenities, [e.target.name]: e.target.checked });
+  };
+
+  const handleSetDescription = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleFileChange = (e) => {
+    const fileList = Array.from(e.target.files);
+    fileList.map((newPhoto) =>
+      setPhotos((prevPhotos) => [...prevPhotos, newPhoto])
+    );
+  };
 
   return (
     <div>
       <Box className={classes.container}>
         <Typography variant="h3">Create a new listing</Typography>
 
-        <Box display="flex">
+        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Property Address
             </Typography>
-            <PlacesSearch className={classes.input} />
+            <PlacesSearch
+              className={classes.input}
+              setAddressHandler={setAddress}
+              setLatLngHandler={setLatLng}
+            />
           </Box>
 
           <Box className={classes.group}>
@@ -101,25 +159,19 @@ function New() {
               Property Type
             </Typography>
             <FormControl fullWidth className={classes.input} variant="outlined">
-              <Select
-                value=""
-                onChange={() => {
-                  console.log("selected");
-                }}
-                displayEmpty
-              >
+              <Select value={type} onChange={handleSetType} displayEmpty>
                 <MenuItem value="">
                   <em>Select one</em>
                 </MenuItem>
-                <MenuItem value={10}>Apartment</MenuItem>
-                <MenuItem value={20}>Room</MenuItem>
-                <MenuItem value={30}>House</MenuItem>
+                <MenuItem value="Apartment">Apartment</MenuItem>
+                <MenuItem value="Room">Room</MenuItem>
+                <MenuItem value="House">House</MenuItem>
               </Select>
             </FormControl>
           </Box>
         </Box>
 
-        <Box display="flex">
+        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Price
@@ -132,6 +184,7 @@ function New() {
                   <InputAdornment position="start">$</InputAdornment>
                 }
                 label="Amount"
+                onChange={handleSetPrice}
               />
             </FormControl>
           </Box>
@@ -147,9 +200,11 @@ function New() {
                 variant="inline"
                 inputVariant="outlined"
                 label="Start"
-                format="MM/dd/yyyy"
+                format="MM/DD/YYYY"
                 InputAdornmentProps={{ position: "start" }}
-                onChange={() => console.log("HI")}
+                value={start}
+                minDate={new Date()}
+                onChange={(date) => setStart(date)}
                 className={classes.input}
                 fullWidth
               />
@@ -159,9 +214,11 @@ function New() {
                 variant="inline"
                 inputVariant="outlined"
                 label="End"
-                format="MM/dd/yyyy"
+                format="MM/DD/YYYY"
                 InputAdornmentProps={{ position: "start" }}
-                onChange={() => console.log("HI")}
+                value={end}
+                minDate={new Date()}
+                onChange={(date) => setEnd(date)}
                 className={classes.input}
                 fullWidth
               />
@@ -169,14 +226,14 @@ function New() {
           </Box>
         </Box>
 
-        <Box display="flex">
+        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Rooms and Beds
             </Typography>
-            <Counter label="Persons" />
-            <Counter label="Bedroom" />
-            <Counter label="Bathroom" />
+            <Counter label="Persons" setCountHandler={setPersons} />
+            <Counter label="Bedroom" setCountHandler={setBedrooms} />
+            <Counter label="Bathroom" setCountHandler={setBathrooms} />
           </Box>
 
           <Box className={classes.group}>
@@ -184,72 +241,68 @@ function New() {
               Amenities
             </Typography>
 
-            <FormControl component="fieldset">
-              <FormGroup>
-                <Box display="flex" alignItems="center">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={false}
-                        onChange={() => console.log("checked!")}
-                        name="wifi"
+            <FormControl>
+              <FormGroup className={classes.checkboxGroup}>
+                {amenitiesList.map((amenityName) => {
+                  return (
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      className={classes.checkboxWrapper}
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={amenities && amenities[amenityName]}
+                            onChange={handleCheck}
+                            name={amenityName}
+                          />
+                        }
+                        className={classes.checkbox}
                       />
-                    }
-                    className={classes.checkbox}
-                  />
-                  <Amenity id="wifi" />
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={false}
-                        onChange={() => console.log("checked!")}
-                        name="wifi"
-                      />
-                    }
-                    className={classes.checkbox}
-                  />
-                  <Amenity id="wifi" />
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={false}
-                        onChange={() => console.log("checked!")}
-                        name="wifi"
-                      />
-                    }
-                    className={classes.checkbox}
-                  />
-                  <Amenity id="wifi" />
-                </Box>
+                      <Amenity id={amenityName} />
+                    </Box>
+                  );
+                })}
               </FormGroup>
             </FormControl>
           </Box>
         </Box>
 
-        <Box className={classes.group}>
+        <Box className={classes.fieldGroup}>
           <Typography variant="h6" className={classes.label}>
-            Description
+            Description ({description.length}/300 characters)
           </Typography>
           <FormControl
             fullWidth
             className={classes.inputField}
             variant="outlined"
           >
-            <OutlinedInput multiline />
+            <OutlinedInput
+              multiline
+              style={{ paddingBottom: "5em" }}
+              onChange={handleSetDescription}
+            />
           </FormControl>
         </Box>
 
-        <Box className={classes.group} display="flex" alignItems="center">
-          <Typography variant="h6" className={classes.label}>
-            Photos
-          </Typography>
-          <IconButton color="primary">
-            <AddCircleOutlineIcon />
-          </IconButton>
+        <Box className={classes.groupWrapper}>
+          <Box className={classes.group} display="flex" alignItems="center">
+            <Typography variant="h6" className={classes.label}>
+              Photos
+            </Typography>
+            <IconButton color="primary" component="label">
+              <AddCircleOutlineIcon />
+              <input
+                type="file"
+                onChange={handleFileChange}
+                accept="image/png,image/jpeg"
+                multiple
+                hidden
+              />
+            </IconButton>
+          </Box>
+          {/* display images here */}
         </Box>
 
         <Button className={classes.button} variant="contained" color="primary">

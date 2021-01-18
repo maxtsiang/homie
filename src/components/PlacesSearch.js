@@ -1,33 +1,11 @@
 import React, { useState } from "react";
 
-import {
-  Typography,
-  Grid,
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  TextField,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormGroup,
-  FormControlLabel,
-  CircularProgress,
-  OutlinedInput,
-  Paper,
-  Menu,
-} from "@material-ui/core";
+import { Typography, TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-
-import SearchIcon from "@material-ui/icons/Search";
 
 import ReactDependentScript from "react-dependent-script";
 import PlacesAutocomplete, {
   geocodeByAddress,
-  geocodeByPlaceId,
   getLatLng,
 } from "react-places-autocomplete";
 
@@ -52,17 +30,20 @@ const useStyles = makeStyles({
 });
 
 function PlacesSearch(props) {
-  const classes = useStyles();
   const [address, setAddress] = useState("");
 
   const handleChange = (address) => {
     setAddress(address);
+    props.setAddressHandler(address);
   };
 
   const handleSelect = (address) => {
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
-      .then((latLng) => console.log("Success", latLng))
+      .then((latLng) => {
+        console.log("Success", latLng);
+        props.setLatLngHandler(latLng);
+      })
       .catch((error) => console.error("Error", error));
   };
 
