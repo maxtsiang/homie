@@ -50,6 +50,8 @@ const useStyles = makeStyles({
   interestedButton: {
     width: "100%",
     padding: "0.5em",
+    marginTop: "1em",
+    background: "#ffcccc",
   },
 });
 
@@ -96,6 +98,7 @@ function Listing(props) {
                 <Button
                   className={classes.interestedButton}
                   variant="contained"
+                  disableElevation
                 >
                   <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />{" "}
                   Interested
