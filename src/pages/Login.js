@@ -76,7 +76,6 @@ function Login(props) {
     } catch {
       setError("Failed to sign in");
     }
-
     setLoading(false);
   }
   return (
@@ -113,7 +112,7 @@ function Login(props) {
           className={classes.button}
           onClick={handleSubmit}
         >
-          Sign up
+          Login
         </Button>
         <Typography variant="subtitle2" className={classes.subtitle}>
           <Link component={RouterLink} to="/forgot">
