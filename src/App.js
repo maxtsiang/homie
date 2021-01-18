@@ -4,6 +4,7 @@ import New from "./pages/New";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Forgot from "./pages/Forgot";
+import Verify from "./pages/Verify";
 
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
