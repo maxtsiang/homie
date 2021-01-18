@@ -21,11 +21,12 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Counter from "../components/Counter";
 import Amenity from "../components/Amenity";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
 
 import RemoveIcon from "@material-ui/icons/Remove";
+
+import PlacesSearch from "../components/PlacesSearch";
 
 const useStyles = makeStyles({
   container: {
@@ -48,6 +49,7 @@ const useStyles = makeStyles({
     marginRight: "1em",
     marginTop: "1em",
     width: "100%",
+    overflow: "visible",
   },
   inputField: {
     marginBottom: "1em",
@@ -80,6 +82,7 @@ const useStyles = makeStyles({
 
 function New() {
   const classes = useStyles();
+
   return (
     <div>
       <Box className={classes.container}>
@@ -90,15 +93,7 @@ function New() {
             <Typography variant="h6" className={classes.label}>
               Property Address
             </Typography>
-            <FormControl fullWidth className={classes.input} variant="outlined">
-              <OutlinedInput
-                startAdornment={
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+            <PlacesSearch className={classes.input} />
           </Box>
 
           <Box className={classes.group}>

@@ -2,7 +2,7 @@ import { Box } from "@material-ui/core";
 
 import GoogleMapReact from "google-map-react";
 import MapMarker from "../components/MapMarker";
-// key = AIzaSyDbGKLgDehhTw5e74VYe3jvACTBS9GdrVI
+
 function Map(props) {
   return (
     <Box
@@ -16,7 +16,7 @@ function Map(props) {
       }}
     >
       <GoogleMapReact
-        bootstrapURLKeys={{ key: "" }}
+        // bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
         defaultCenter={{
           lat: 39.9539,
           lng: -75.193,
