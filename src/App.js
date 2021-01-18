@@ -1,8 +1,13 @@
 import Home from "./pages/Home";
 import New from "./pages/New";
-import Nav from "./components/Nav";
+
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Forgot from "./pages/Forgot";
+
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
+import PrivateRoute from "./components/PrivateRoute";
 
 import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -12,6 +17,7 @@ import {
   ThemeProvider,
   createMuiTheme,
 } from "@material-ui/core/styles";
+import { AuthProvider } from "./contexts/AuthContext";
 
 let theme = createMuiTheme({
   typography: {
@@ -41,15 +47,19 @@ theme = responsiveFontSizes(theme);
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <BrowserRouter>
-          <Nav />
-          <Route exact path="/" component={() => <Home />} />
-          <Route exact path="/new" component={() => <New />} />
-        </BrowserRouter>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <BrowserRouter>
+            <PrivateRoute exact path="/" component={() => <Home />} />
+            <PrivateRoute exact path="/new" component={() => <New />} />
+            <Route exact path="/signup" component={() => <Signup />} />
+            <Route exact path="/login" component={() => <Login />} />
+            <Route exact path="/forgot" component={() => <Forgot />} />
+          </BrowserRouter>
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

@@ -1,14 +1,17 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 import {
   AppBar,
   Divider,
   Typography,
   Grid,
-  Button,
+  Popover,
   IconButton,
   Avatar,
+  Button,
+  Link,
 } from "@material-ui/core";
 
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
@@ -18,6 +21,31 @@ import NotificationsNoneRoundedIcon from "@material-ui/icons/NotificationsNoneRo
 import profile from "../dev-imgs/profile.jpg";
 
 function Nav() {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [error, setError] = useState("");
+  const { logout } = useAuth();
+  const history = useHistory();
+
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
+  async function handleLogout() {
+    setError("");
+    try {
+      await logout();
+      history.push("/login");
+    } catch {
+      setError("Failed to log out");
+    }
+  }
+
   return (
     <div style={{ marginBottom: "3em" }}>
       <AppBar
@@ -37,25 +65,28 @@ function Nav() {
         >
           <Grid item>
             <Typography variant="title">
-              <Button component={Link} to="/">
+              <Link component={RouterLink} to="/">
                 Homie
-              </Button>
+              </Link>
             </Typography>
             <Typography variant="title">
-              <Button component={Link} to="/new">
+              <Link component={RouterLink} to="/new">
                 New Listing
-              </Button>
+              </Link>
             </Typography>
           </Grid>
           <Grid item>
             <div>
+              <IconButton component={RouterLink} to="/chats" aria-label="chats">
+                <ChatBubbleOutlineRoundedIcon />
+              </IconButton>
+
               <Typography variant="title">
-                <IconButton component={Link} to="/chats" aria-label="chats">
-                  <ChatBubbleOutlineRoundedIcon />
-                </IconButton>
-              </Typography>
-              <Typography variant="title">
-                <IconButton component={Link} to="/saved" aria-label="saved">
+                <IconButton
+                  component={RouterLink}
+                  to="/saved"
+                  aria-label="saved"
+                >
                   <FavoriteBorderRoundedIcon />
                 </IconButton>
               </Typography>
@@ -65,9 +96,24 @@ function Nav() {
                 </IconButton>
               </Typography>
               <Typography variant="title">
-                <IconButton component={Link} to="/profile" aria-label="profile">
+                <IconButton aria-label="profile" onClick={handleClick}>
                   <Avatar alt="Max Tsiang" src={profile} />
                 </IconButton>
+                <Popover
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <Button onClick={handleLogout}>Logout</Button>
+                </Popover>
               </Typography>
             </div>
           </Grid>
