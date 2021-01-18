@@ -20,9 +20,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import Counter from "../components/Counter";
 import Amenity from "../components/Amenity";
 
+import RemoveIcon from "@material-ui/icons/Remove";
+
 const useStyles = makeStyles({
   container: {
-    width: "49.3em",
+    width: "100%",
+  },
+  checkbox: {
+    margin: 0,
   },
   label: {
     fontSize: "1.3em",
@@ -34,8 +39,7 @@ const useStyles = makeStyles({
   },
   separator: {
     fontSize: "1.3em",
-    margin: "1em",
-    marginRight: "2em",
+    marginRight: "1em",
   },
   subtitle: {
     fontSize: "1em",
@@ -71,9 +75,9 @@ function Filter(props) {
               label="Min"
             />
           </FormControl>
-          <Typography variant="h6" className={classes.separator}>
-            -
-          </Typography>
+
+          <RemoveIcon className={classes.separator} />
+
           <FormControl fullWidth className={classes.input} variant="outlined">
             <InputLabel>Max</InputLabel>
             <OutlinedInput
@@ -99,12 +103,13 @@ function Filter(props) {
             label="Start"
             format="MM/dd/yyyy"
             InputAdornmentProps={{ position: "start" }}
+            fullWidth
             onChange={() => console.log("HI")}
             className={classes.input}
           />
-          <Typography variant="h6" className={classes.separator}>
-            -
-          </Typography>
+
+          <RemoveIcon className={classes.separator} />
+
           <KeyboardDatePicker
             autoOk
             variant="inline"
@@ -112,6 +117,7 @@ function Filter(props) {
             label="End"
             format="MM/dd/yyyy"
             InputAdornmentProps={{ position: "start" }}
+            fullWidth
             onChange={() => console.log("HI")}
             className={classes.input}
           />
@@ -143,6 +149,7 @@ function Filter(props) {
                     name="wifi"
                   />
                 }
+                className={classes.checkbox}
               />
               <Amenity id="wifi" />
             </Box>
@@ -155,6 +162,7 @@ function Filter(props) {
                     name="wifi"
                   />
                 }
+                className={classes.checkbox}
               />
               <Amenity id="wifi" />
             </Box>
@@ -167,6 +175,7 @@ function Filter(props) {
                     name="wifi"
                   />
                 }
+                className={classes.checkbox}
               />
               <Amenity id="wifi" />
             </Box>

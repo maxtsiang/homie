@@ -9,6 +9,7 @@ import {
   CardContent,
   IconButton,
   Box,
+  Grid,
 } from "@material-ui/core";
 
 import bedroom from "../dev-imgs/bedroom.jpg";
@@ -18,69 +19,97 @@ import Profile from "./Profile";
 import Interested from "./Interested";
 
 import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
-import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
+
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  card: {
+    marginBottom: "1em",
+    boxShadow: "none",
+  },
+  cardimg: {
+    height: "100%",
+    borderRadius: "1em",
+  },
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: 0,
+
+    height: "100%",
+  },
+  header: {
+    marginTop: "1em",
+    marginBottom: "1em",
+  },
+  item: {
+    width: "50%",
+    padding: "1em",
+  },
+  interestedButton: {
+    width: "100%",
+    padding: "0.5em",
+    marginTop: "1em",
+    background: "#ffcccc",
+  },
+});
 
 function Listing(props) {
+  const classes = useStyles();
   return (
-    <div
+    <Card
       onMouseEnter={() => props.setHovered(props.id)}
       onMouseLeave={() => props.setHovered(-1)}
       onClick={() => props.setDetailed(props.id)}
+      className={classes.card}
+      raised={props.id === props.hovered || props.id === props.detailed}
     >
-      <Card
-        style={{ marginBottom: "1em", boxShadow: "none" }}
-        raised={props.id === props.hovered || props.id === props.detailed}
-      >
-        <CardActionArea
-          style={{
-            display: "flex",
-          }}
-        >
-          <CardMedia
-            image={bedroom}
-            title="bedroom-pic"
-            component="img"
-            style={{ width: "35%", padding: "2em", borderRadius: "2.5em" }}
-          />
-          <CardContent
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              height: "30vh",
-            }}
-          >
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Profile name="Max Tsiang" img={profile} />
-              <Typography variant="subtitle2">5 DAYS AGO</Typography>
-            </Box>
+      <CardActionArea>
+        <Grid container display="flex">
+          <Grid item className={classes.item}>
+            <CardMedia
+              image={bedroom}
+              title="bedroom-pic"
+              component="img"
+              className={classes.cardimg}
+            />
+          </Grid>
+          <Grid item className={classes.item}>
+            <CardContent className={classes.content}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Profile name="Max Tsiang" img={profile} />
+                <Typography variant="subtitle2">5 DAYS AGO</Typography>
+              </Box>
 
-            <Box>
-              <Typography variant="h6">$1000/month</Typography>
-              <Typography variant="subtitle2">
-                1 PERSON • 2 BR, 5, BA • JAN 3 - FEB 7
-              </Typography>
-            </Box>
+              <Box>
+                <Typography variant="h5">$1000/month</Typography>
+                <Typography variant="subtitle2">
+                  1 PERSON • 2 BR, 5, BA • JAN 3 - FEB 7
+                </Typography>
+              </Box>
 
-            <Box>
-              <Interested names="Max Tsiang" imgs={profile} />
-              <Button style={{ width: "20em" }}>
-                <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />{" "}
-                Interested
-              </Button>
-              <IconButton>
-                <ShareRoundedIcon />
-              </IconButton>
-            </Box>
-          </CardContent>
-        </CardActionArea>
-        <Divider />
-      </Card>
-    </div>
+              <Box>
+                <Interested names="Max Tsiang" imgs={profile} />
+                <Button
+                  className={classes.interestedButton}
+                  variant="contained"
+                  disableElevation
+                >
+                  <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />{" "}
+                  Interested
+                </Button>
+              </Box>
+            </CardContent>
+          </Grid>
+        </Grid>
+      </CardActionArea>
+      <Divider />
+    </Card>
   );
 }
 

@@ -8,8 +8,21 @@ import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
 import React, { useState } from "react";
 
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  header: {
+    marginBottom: "1em",
+  },
+
+  item: {
+    width: "50%",
+    padding: "3em",
+  },
+});
 
 function Home() {
+  const classes = useStyles();
   const [filterMode, setFilterMode] = useState(false);
   const [hovered, setHovered] = useState(-1);
   const [detailed, setDetailed] = useState(-1);
@@ -28,13 +41,16 @@ function Home() {
   }
 
   return (
-    <div>
-      <Grid container display="flex">
-        <Grid item style={{ margin: "3em", width: "43vw" }}>
+    <Grid
+      container
+      direction="row"
+      justify="space-between"
+      alignItems="flex-start"
+    >
+      <Grid item className={classes.item}>
+        <Box className={classes.header}>
           {filterMode ? (
-            <Box display="flex">
-              <Typography variant="h3">Filter</Typography>
-            </Box>
+            <Typography variant="h3">Filter</Typography>
           ) : (
             <Box display="flex">
               <Typography variant="h3">Find a place</Typography>
@@ -51,51 +67,51 @@ function Home() {
             display="flex"
             alignItems="center"
             justifyContent="space-between"
-            style={{ marginBottom: "1em" }}
           >
             <Typography variant="h4">
               23 places found near University of Pennsylvania
             </Typography>
             {!filterMode && <Button>Sort By</Button>}
           </Box>
+        </Box>
 
-          {filterMode ? (
-            <Filter
-              setFilters={setFilters}
-              clearFilters={clearFilters}
-              cancel={cancel}
-            />
-          ) : (
-            <Box>
-              {[0, 1, 2, 3, 4].map((n) => {
-                return (
-                  <Listing
-                    id={n}
-                    detailed={detailed}
-                    hovered={hovered}
-                    setHovered={setHovered}
-                    setDetailed={setDetailed}
-                  />
-                );
-              })}
-            </Box>
-          )}
-        </Grid>
-        <Grid item style={{ margin: "3em", width: "42vw" }}>
-          {detailed >= 0 && <Detail close={() => setDetailed(-1)} />}
-          <Map
-            hidden={detailed >= 0}
-            hovered={hovered}
-            markers={[{ id: 0, lat: 39.9539, lng: -75.193 }]}
-            setHovered={setHovered}
-            setDetailed={setDetailed}
-            height="88vh"
-            width="50%"
-            // position="fixed"
+        {filterMode ? (
+          <Filter
+            setFilters={setFilters}
+            clearFilters={clearFilters}
+            cancel={cancel}
           />
-        </Grid>
+        ) : (
+          <Box>
+            {[0, 1, 2, 3, 4].map((n) => {
+              return (
+                <Listing
+                  id={n}
+                  detailed={detailed}
+                  hovered={hovered}
+                  setHovered={setHovered}
+                  setDetailed={setDetailed}
+                />
+              );
+            })}
+          </Box>
+        )}
       </Grid>
-    </div>
+
+      <Grid item className={classes.item}>
+        {detailed >= 0 && <Detail close={() => setDetailed(-1)} />}
+        <Map
+          hidden={detailed >= 0}
+          hovered={hovered}
+          markers={[{ id: 0, lat: 39.9539, lng: -75.193 }]}
+          setHovered={setHovered}
+          setDetailed={setDetailed}
+          height="88vh"
+          width="45%"
+          position="fixed"
+        />
+      </Grid>
+    </Grid>
   );
 }
 

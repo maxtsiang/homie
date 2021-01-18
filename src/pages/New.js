@@ -16,7 +16,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import DoneIcon from "@material-ui/icons/Done";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 import Counter from "../components/Counter";
 import Amenity from "../components/Amenity";
@@ -25,10 +25,20 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 
+import RemoveIcon from "@material-ui/icons/Remove";
+
 const useStyles = makeStyles({
   container: {
     margin: "3em",
     marginTop: "6em",
+    width: "50%",
+    height: "80vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  checkbox: {
+    margin: 0,
   },
   label: {
     fontSize: "1.3em",
@@ -37,34 +47,34 @@ const useStyles = makeStyles({
     marginBottom: "1em",
     marginRight: "1em",
     marginTop: "1em",
-    width: "30em",
+    width: "100%",
   },
   inputField: {
     marginBottom: "1em",
     marginRight: "1em",
     marginTop: "1em",
-    width: "60em",
+    width: "100%",
   },
   separator: {
     fontSize: "1.3em",
-    margin: "1em",
-    marginRight: "2em",
+    marginRight: "1em",
   },
   subtitle: {
     fontSize: "1em",
     fontWeight: 400,
   },
   button: {
-    width: "30%",
-    margin: "1em",
+    width: "20%",
+    marginTop: "1em",
     padding: "0.7em",
     borderRadius: "1em",
     boxShadow: "none",
+    alignSelf: "center",
   },
   group: {
     marginTop: "1em",
     marginRight: "1em",
-    width: "30em",
+    width: "100%",
   },
 });
 
@@ -73,12 +83,7 @@ function New() {
   return (
     <div>
       <Box className={classes.container}>
-        <Box display="flex" alignItems="center">
-          <Typography variant="h3">Create a new listing</Typography>
-          <IconButton color="primary">
-            <DoneIcon />
-          </IconButton>
-        </Box>
+        <Typography variant="h3">Create a new listing</Typography>
 
         <Box display="flex">
           <Box className={classes.group}>
@@ -151,10 +156,9 @@ function New() {
                 InputAdornmentProps={{ position: "start" }}
                 onChange={() => console.log("HI")}
                 className={classes.input}
+                fullWidth
               />
-              <Typography variant="h6" className={classes.separator}>
-                -
-              </Typography>
+              <RemoveIcon className={classes.separator} />
               <KeyboardDatePicker
                 autoOk
                 variant="inline"
@@ -164,6 +168,7 @@ function New() {
                 InputAdornmentProps={{ position: "start" }}
                 onChange={() => console.log("HI")}
                 className={classes.input}
+                fullWidth
               />
             </Box>
           </Box>
@@ -195,6 +200,7 @@ function New() {
                         name="wifi"
                       />
                     }
+                    className={classes.checkbox}
                   />
                   <Amenity id="wifi" />
                 </Box>
@@ -207,6 +213,7 @@ function New() {
                         name="wifi"
                       />
                     }
+                    className={classes.checkbox}
                   />
                   <Amenity id="wifi" />
                 </Box>
@@ -219,6 +226,7 @@ function New() {
                         name="wifi"
                       />
                     }
+                    className={classes.checkbox}
                   />
                   <Amenity id="wifi" />
                 </Box>
@@ -244,14 +252,14 @@ function New() {
           <Typography variant="h6" className={classes.label}>
             Photos
           </Typography>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
-          >
-            Add Photos
-          </Button>
+          <IconButton color="primary">
+            <AddCircleOutlineIcon />
+          </IconButton>
         </Box>
+
+        <Button className={classes.button} variant="contained" color="primary">
+          Done
+        </Button>
       </Box>
     </div>
   );
