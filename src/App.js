@@ -1,5 +1,7 @@
 import Home from "./pages/Home";
 import New from "./pages/New";
+import Nav from "./components/Nav";
+import Chat from "./pages/Chat";
 
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -54,6 +56,7 @@ function App() {
           <BrowserRouter>
             <PrivateRoute exact path="/" component={() => <Home />} />
             <PrivateRoute exact path="/new" component={() => <New />} />
+            <PrivateRoute exact path="/chats" component={() => <Chat />} />
             <Route exact path="/signup" component={() => <Signup />} />
             <Route exact path="/login" component={() => <Login />} />
             <Route exact path="/forgot" component={() => <Forgot />} />
