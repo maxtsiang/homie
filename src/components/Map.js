@@ -24,18 +24,19 @@ function Map(props) {
         defaultZoom={15}
         hoverDistance={25}
       >
-        {props.listings.map((listing, index) => {
-          return (
-            <MapMarker
-              hovered={index === props.hovered}
-              setHovered={props.setHovered}
-              setDetailed={props.setDetailed}
-              id={index}
-              lat={listing.location.latitude}
-              lng={listing.location.longitude}
-            />
-          );
-        })}
+        {props.listings &&
+          props.listings.map((listing, index) => {
+            return (
+              <MapMarker
+                hovered={index === props.hovered}
+                setHovered={props.setHovered}
+                setDetailed={props.setDetailed}
+                id={index}
+                lat={listing.location.latitude}
+                lng={listing.location.longitude}
+              />
+            );
+          })}
       </GoogleMapReact>
     </Box>
   );

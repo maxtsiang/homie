@@ -3,7 +3,14 @@ import Map from "../components/Map";
 import Filter from "../components/Filter";
 import Detail from "../components/Detail";
 
-import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  Box,
+  Button,
+  IconButton,
+  Badge,
+} from "@material-ui/core";
 
 import React, { useEffect, useState } from "react";
 
@@ -21,6 +28,9 @@ const useStyles = makeStyles({
   item: {
     width: "50%",
     padding: "3em",
+  },
+  subheader: {
+    color: "lightgrey",
   },
 });
 
@@ -47,26 +57,60 @@ function useListings() {
 
 function Home() {
   const classes = useStyles();
-  const { currentUser } = useAuth();
+
   const [filterMode, setFilterMode] = useState(false);
   const [hovered, setHovered] = useState(-1);
   const [detailed, setDetailed] = useState(-1);
 
-  function setFilters() {
-    console.log("FILTERS SET");
+  const [filters, setFilters] = useState({});
+
+  const listings = useListings();
+  let filteredListings = listings;
+
+  function filter(list) {
+    // console.log(Object.keys(filters).length);
+
+    for (let name in filters) {
+      switch (name) {
+        case "min":
+          list = list.filter((i) => i.price >= filters[name]);
+          continue;
+        case "max":
+          list = list.filter((i) => i.price <= filters[name]);
+          continue;
+        case "start":
+          list = list.filter((i) => i.start >= filters[name]);
+          continue;
+        case "end":
+          list = list.filter((i) => i.end <= filters[name]);
+          continue;
+        case "persons":
+          list = list.filter((i) => i.persons === filters[name]);
+          continue;
+        case "bedrooms":
+          list = list.filter((i) => i.bedrooms === filters[name]);
+          continue;
+        case "bathrooms":
+          list = list.filter((i) => i.bathrooms === filters[name]);
+          continue;
+        default:
+          continue;
+      }
+    }
+    return list;
+  }
+
+  function addFilter(name, val) {
+    setFilters((prevFilters) => {
+      return { ...prevFilters, [name]: val };
+    });
   }
 
   function clearFilters() {
-    console.log("FILTERS CLEARED");
+    setFilters({});
   }
 
-  function cancel() {
-    console.log("FILTERS CANCELLED");
-    setFilterMode(false);
-    console.log(currentUser);
-  }
-
-  const listings = useListings();
+  filteredListings = filter(filteredListings);
 
   return (
     <Grid
@@ -86,7 +130,12 @@ function Home() {
                 aria-label="filter"
                 onClick={() => setFilterMode(true)}
               >
-                <TuneRoundedIcon />
+                <Badge
+                  badgeContent={Object.keys(filters).length}
+                  color="primary"
+                >
+                  <TuneRoundedIcon />
+                </Badge>
               </IconButton>
             </Box>
           )}
@@ -96,8 +145,9 @@ function Home() {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h4">
-              23 places found near University of Pennsylvania
+            <Typography variant="h4" className={classes.subheader}>
+              {filteredListings.length} places found near University of
+              Pennsylvania
             </Typography>
             {!filterMode && <Button>Sort By</Button>}
           </Box>
@@ -105,14 +155,15 @@ function Home() {
 
         {filterMode ? (
           <Filter
-            setFilters={setFilters}
+            filters={filters}
+            addFilter={addFilter}
+            close={() => setFilterMode(false)}
             clearFilters={clearFilters}
-            cancel={cancel}
           />
         ) : (
           <Box>
-            {listings &&
-              listings.map((listing, index) => {
+            {filteredListings &&
+              filteredListings.map((listing, index) => {
                 return (
                   <Listing
                     index={index}
@@ -131,12 +182,15 @@ function Home() {
 
       <Grid item className={classes.item}>
         {detailed >= 0 && (
-          <Detail close={() => setDetailed(-1)} info={listings[detailed]} />
+          <Detail
+            close={() => setDetailed(-1)}
+            info={filteredListings[detailed]}
+          />
         )}
         <Map
           hidden={detailed >= 0}
           hovered={hovered}
-          listings={listings}
+          filteredListings={filteredListings}
           setHovered={setHovered}
           setDetailed={setDetailed}
           height="88vh"

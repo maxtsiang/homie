@@ -18,9 +18,12 @@ import { KeyboardDatePicker } from "@material-ui/pickers";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Counter from "../components/Counter";
-import Amenity from "../components/Amenity";
+import Amenity, { amenitiesList } from "../components/Amenity";
 
 import RemoveIcon from "@material-ui/icons/Remove";
+import { useState } from "react";
+
+import moment from "moment";
 
 const useStyles = makeStyles({
   container: {
@@ -59,6 +62,92 @@ const useStyles = makeStyles({
 
 function Filter(props) {
   const classes = useStyles();
+
+  const [min, setMin] = useState(props.filters.min);
+  const [max, setMax] = useState(props.filters.max);
+  const [start, setStart] = useState(
+    props.filters.start ? moment(props.filters.start) : null
+  );
+  const [end, setEnd] = useState(
+    props.filters.end ? moment(props.filters.end) : null
+  );
+  const [persons, setPersons] = useState(props.filters.persons);
+  const [bedrooms, setBedrooms] = useState(props.filters.bedrooms);
+  const [bathrooms, setBathrooms] = useState(props.filters.bathrooms);
+  // const [amenities, setAmenities] = useState(props.filters.amenities);
+
+  const [error, setError] = useState("");
+
+  const handleSetMin = (e) => {
+    setMin(e.target.value);
+  };
+
+  const handleSetMax = (e) => {
+    setMax(e.target.value);
+  };
+
+  // const handleCheck = (e) => {
+  //   setAmenities({ ...amenities, [e.target.name]: e.target.checked });
+  // };
+
+  const handleSetFilters = (e) => {
+    if (min) {
+      if (min < 0) {
+        setError("Minimum amount must be at least 0");
+        return;
+      } else if (max && min > max) {
+        setError("Minimum amount cannot be greater than maximum amount");
+        return;
+      }
+      props.addFilter("min", Number(min));
+    }
+
+    if (max) {
+      if (max < 0) {
+        setError("Maximum amount must be at least 0");
+        return;
+      }
+      props.addFilter("max", max);
+    }
+
+    if (start) {
+      props.addFilter("start", start.unix().valueOf() * 1000);
+    }
+
+    if (end) {
+      props.addFilter("end", end.unix().valueOf() * 1000);
+    }
+
+    if (persons) {
+      props.addFilter("persons", persons);
+    }
+
+    if (bedrooms) {
+      props.addFilter("bedrooms", bedrooms);
+    }
+
+    if (bathrooms) {
+      props.addFilter("bathrooms", bathrooms);
+    }
+
+    // if (amenities) {
+    //   let selectedAmenities = [];
+    //   for (let amenity in amenities) {
+    //     if (amenities[amenity]) {
+    //       selectedAmenities.push(amenity);
+    //     }
+    //   }
+    //   props.addFilter("amenities", amenities)
+    // }
+
+    props.close();
+  };
+
+  const handleClearFilters = (e) => {
+    props.clearFilters();
+    props.close();
+  };
+
   return (
     <Box className={classes.container}>
       <Box className={classes.group}>
@@ -73,6 +162,8 @@ function Filter(props) {
                 <InputAdornment position="start">$</InputAdornment>
               }
               label="Min"
+              value={min}
+              onChange={handleSetMin}
             />
           </FormControl>
 
@@ -84,7 +175,9 @@ function Filter(props) {
               startAdornment={
                 <InputAdornment position="start">$</InputAdornment>
               }
+              value={max}
               label="Max"
+              onChange={handleSetMax}
             />
           </FormControl>
         </Box>
@@ -101,10 +194,12 @@ function Filter(props) {
             variant="inline"
             inputVariant="outlined"
             label="Start"
-            format="MM/dd/yyyy"
+            format="MM/DD/YYYY"
             InputAdornmentProps={{ position: "start" }}
             fullWidth
-            onChange={() => console.log("HI")}
+            value={start}
+            minDate={new Date()}
+            onChange={(date) => setStart(date)}
             className={classes.input}
           />
 
@@ -115,10 +210,12 @@ function Filter(props) {
             variant="inline"
             inputVariant="outlined"
             label="End"
-            format="MM/dd/yyyy"
+            format="MM/DD/YYYY"
             InputAdornmentProps={{ position: "start" }}
             fullWidth
-            onChange={() => console.log("HI")}
+            value={end}
+            minDate={new Date()}
+            onChange={(date) => setEnd(date)}
             className={classes.input}
           />
         </Box>
@@ -128,71 +225,63 @@ function Filter(props) {
         <Typography variant="h6" className={classes.label}>
           Rooms and Beds
         </Typography>
-        <Counter label="Persons" />
-        <Counter label="Bedroom" />
-        <Counter label="Bathroom" />
+        <Counter label="Persons" setCountHandler={setPersons} count={persons} />
+        <Counter
+          label="Bedroom"
+          setCountHandler={setBedrooms}
+          count={bedrooms}
+        />
+        <Counter
+          label="Bathroom"
+          setCountHandler={setBathrooms}
+          count={bathrooms}
+        />
       </Box>
 
-      <Box className={classes.group}>
+      {/* <Box className={classes.group}>
         <Typography variant="h6" className={classes.label}>
           Amenities
         </Typography>
 
         <FormControl component="fieldset">
-          <FormGroup>
-            <Box display="flex" alignItems="center">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={false}
-                    onChange={() => console.log("checked!")}
-                    name="wifi"
+          <FormGroup className={classes.checkboxGroup}>
+            {amenitiesList.map((amenityName) => {
+              return (
+                <Box display="flex" alignItems="center">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={amenities ? amenities[amenityName] : false}
+                        onChange={handleCheck}
+                        name={amenityName}
+                      />
+                    }
+                    className={classes.checkbox}
                   />
-                }
-                className={classes.checkbox}
-              />
-              <Amenity id="wifi" />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={false}
-                    onChange={() => console.log("checked!")}
-                    name="wifi"
-                  />
-                }
-                className={classes.checkbox}
-              />
-              <Amenity id="wifi" />
-            </Box>
-            <Box display="flex" alignItems="center">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={false}
-                    onChange={() => console.log("checked!")}
-                    name="wifi"
-                  />
-                }
-                className={classes.checkbox}
-              />
-              <Amenity id="wifi" />
-            </Box>
+                  <Amenity id={amenityName} />
+                </Box>
+              );
+            })}
           </FormGroup>
         </FormControl>
-      </Box>
+      </Box> */}
 
       <Box>
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleSetFilters}
+        >
           Done
         </Button>
         <Button
           variant="contained"
           className={classes.button}
-          onClick={() => props.cancel()}
+          disabled={Object.keys(props.filters).length === 0}
+          onClick={handleClearFilters}
         >
-          Cancel
+          Clear Filters
         </Button>
       </Box>
     </Box>

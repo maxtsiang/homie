@@ -140,7 +140,7 @@ function New() {
   const [persons, setPersons] = useState(0);
   const [bedrooms, setBedrooms] = useState(0);
   const [bathrooms, setBathrooms] = useState(0);
-  const [amenities, setAmenities] = useState();
+  const [amenities, setAmenities] = useState({});
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState([]);
 
@@ -234,16 +234,16 @@ function New() {
           location: new firebase.firestore.GeoPoint(latLng.lat, latLng.lng),
           address: address,
           type: type,
-          price: price,
-          start: start.unix().valueOf() * 1000,
-          end: end.unix().valueOf() * 1000,
-          persons: persons,
-          bedrooms: bedrooms,
-          bathrooms: bathrooms,
+          price: Number(price),
+          start: Number(start.unix().valueOf() * 1000),
+          end: Number(end.unix().valueOf() * 1000),
+          persons: Number(persons),
+          bedrooms: Number(bedrooms),
+          bathrooms: Number(bathrooms),
           amenities: selectedAmenities,
           description: description,
           creator: currentUser.uid,
-          createdAt: moment().unix().valueOf() * 1000,
+          createdAt: Number(moment().unix().valueOf() * 1000),
         });
 
       uploadImgs(photos, ref.id);
@@ -378,7 +378,7 @@ function New() {
               Amenities
             </Typography>
 
-            <FormControl>
+            <FormControl component="fieldset">
               <FormGroup className={classes.checkboxGroup}>
                 {amenitiesList.map((amenityName) => {
                   return (
@@ -386,7 +386,7 @@ function New() {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={amenities && amenities[amenityName]}
+                            checked={amenities ? amenities[amenityName] : false}
                             onChange={handleCheck}
                             name={amenityName}
                           />

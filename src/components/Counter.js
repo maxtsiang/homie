@@ -20,23 +20,25 @@ const useStyles = makeStyles({
 function Counter(props) {
   const classes = useStyles();
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(props.count ? props.count : 1);
 
   const increment = () => {
-    setCount(count + 1);
-    props.setCountHandler(count);
+    const newCount = count + 1;
+    setCount(newCount);
+    props.setCountHandler(newCount);
   };
 
   const decrement = () => {
-    setCount(count - 1);
-    props.setCountHandler(count);
+    const newCount = count - 1;
+    setCount(newCount);
+    props.setCountHandler(newCount);
   };
 
   return (
     <Box className={classes.counterBox}>
       <Typography variant="subtitle1">{props.label}</Typography>
       <Box className={classes.counter}>
-        <IconButton onClick={decrement} disabled={count === 0}>
+        <IconButton onClick={decrement} disabled={count === 1}>
           <RemoveIcon />
         </IconButton>
         <Typography variant="subtitle1">{count}</Typography>

@@ -87,11 +87,6 @@ function Listing(props) {
   const selected =
     props.index === props.hovered || props.index === props.detailed;
 
-  const imageLoaded = () => {
-    setLoading(false);
-    console.log("LOADED");
-  };
-
   return (
     <Card
       onMouseEnter={() => props.setHovered(props.index)}
@@ -110,11 +105,7 @@ function Listing(props) {
               }}
             >
               {loading && <CircularProgress />}
-              <img
-                src={images[0]}
-                className={classes.cardimg}
-                onLoad={() => imageLoaded()}
-              />
+              <img src={images[0]} className={classes.cardimg} />
             </Box>
           </Grid>
           <Grid item className={classes.item}>
