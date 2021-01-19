@@ -24,15 +24,15 @@ function Map(props) {
         defaultZoom={15}
         hoverDistance={25}
       >
-        {props.markers.map((loc) => {
+        {props.listings.map((listing, index) => {
           return (
             <MapMarker
-              hovered={loc.id === props.hovered}
+              hovered={index === props.hovered}
               setHovered={props.setHovered}
               setDetailed={props.setDetailed}
-              id={loc.id}
-              lat={loc.lat}
-              lng={loc.lng}
+              id={index}
+              lat={listing.location.latitude}
+              lng={listing.location.longitude}
             />
           );
         })}

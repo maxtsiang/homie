@@ -30,6 +30,10 @@ const useStyles = makeStyles({
     boxShadow: "none",
     height: "20%",
   },
+  cardSelected: {
+    marginBottom: "1em",
+    height: "20%",
+  },
   cardimg: {
     height: "100%",
     borderRadius: "1em",
@@ -75,13 +79,16 @@ function Listing(props) {
       });
   }, []);
 
+  const selected =
+    props.index === props.hovered || props.index === props.detailed;
+
   return (
     <Card
-      onMouseEnter={() => props.setHovered(props.id)}
+      onMouseEnter={() => props.setHovered(props.index)}
       onMouseLeave={() => props.setHovered(-1)}
-      onClick={() => props.setDetailed(props.id)}
-      className={classes.card}
-      raised={props.id === props.hovered || props.id === props.detailed}
+      onClick={() => props.setDetailed(props.index)}
+      className={selected ? classes.selected : classes.card}
+      raised={selected}
     >
       <CardActionArea>
         <Grid container display="flex">
@@ -132,7 +139,7 @@ function Listing(props) {
           </Grid>
         </Grid>
       </CardActionArea>
-      <Divider />
+      {!selected && <Divider />}
     </Card>
   );
 }

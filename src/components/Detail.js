@@ -10,6 +10,9 @@ import profile from "../dev-imgs/profile.jpg";
 import Map from "../components/Map";
 import Profile from "../components/Profile";
 import Amenity from "../components/Amenity";
+import moment from "moment";
+import { storage } from "../firebase";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
   headerBox: {
@@ -44,6 +47,21 @@ const useStyles = makeStyles({
 
 function Detail(props) {
   const classes = useStyles();
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    storage
+      .ref(`listing_images/${props.info.id}`)
+      .listAll()
+      .then((res) => {
+        res.items.forEach((img) => {
+          img.getDownloadURL().then((url) => {
+            setImages((prevImages) => [...prevImages, url]);
+          });
+        });
+      });
+  }, []);
+
   return (
     <Box>
       <IconButton onClick={() => props.close()}>
@@ -52,19 +70,23 @@ function Detail(props) {
 
       <Box m={1}>
         <Carousel navButtonsAlwaysVisible autoPlay={false}>
-          {[1, 2, 3].map((n) => (
-            <img className={classes.img} key={n} src={bedroom} />
-          ))}
+          {images &&
+            images.map((image, index) => (
+              <img className={classes.img} key={index} src={image} />
+            ))}
         </Carousel>
       </Box>
 
       <Box m={1} className={classes.headerBox}>
         <Box>
           <Typography variant="h3" className={classes.header}>
-            $1000/month
+            ${props.info.price}/month
           </Typography>
           <Typography variant="h4" className={classes.subheader}>
-            1 PERSON • 2 BR, 5 BA • JAN 3 - FEB 7
+            {props.info.persons} PERSON • {props.info.bedrooms} BR,{" "}
+            {props.info.bathrooms} BA •{" "}
+            {moment(props.info.start).format("MMM DD").toUpperCase()} -{" "}
+            {moment(props.info.end).format("MMM DD").toUpperCase()}
           </Typography>
         </Box>
         <Profile name="Max Tsiang" img={profile} />
@@ -75,12 +97,7 @@ function Detail(props) {
           Details
         </Typography>
         <Typography variant="subtitle1" className={classes.text}>
-          This unit was JUST finished with a full renovation of the kitchen and
-          bath with all new fixtures, appliances, tile, stackable laundry
-          center, and updated paint. It is a light-filled, spacious 2 bedroom
-          apartment on the garden side of the building. It has two large
-          bedrooms each containing a spacious closet, high ceilings, and
-          year-round light.
+          {props.info.description}
         </Typography>
       </Box>
 
@@ -89,8 +106,8 @@ function Detail(props) {
           Amenities
         </Typography>
         <Box display="flex">
-          {[1, 2, 3].map((n) => {
-            return <Amenity id="wifi" />;
+          {props.info.amenities.map((amenity) => {
+            return <Amenity id={amenity} />;
           })}
         </Box>
       </Box>
@@ -99,12 +116,7 @@ function Detail(props) {
         <Typography variant="h6" className={classes.label}>
           Location
         </Typography>
-        <Map
-          hovered={0}
-          markers={[{ id: 0, lat: 39.9539, lng: -75.193 }]}
-          height="30vh"
-          width="100%"
-        />
+        <Map hovered={0} listings={[props.info]} height="30vh" width="100%" />
       </Box>
     </Box>
   );

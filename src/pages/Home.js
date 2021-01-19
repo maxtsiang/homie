@@ -112,9 +112,10 @@ function Home() {
         ) : (
           <Box>
             {listings &&
-              listings.map((listing) => {
+              listings.map((listing, index) => {
                 return (
                   <Listing
+                    index={index}
                     id={listing.id}
                     detailed={detailed}
                     hovered={hovered}
@@ -129,11 +130,13 @@ function Home() {
       </Grid>
 
       <Grid item className={classes.item}>
-        {detailed >= 0 && <Detail close={() => setDetailed(-1)} />}
+        {detailed >= 0 && (
+          <Detail close={() => setDetailed(-1)} info={listings[detailed]} />
+        )}
         <Map
           hidden={detailed >= 0}
           hovered={hovered}
-          markers={[{ id: 0, lat: 39.9539, lng: -75.193 }]}
+          listings={listings}
           setHovered={setHovered}
           setDetailed={setDetailed}
           height="88vh"
