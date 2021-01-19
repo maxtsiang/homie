@@ -178,15 +178,13 @@ function New() {
     setPhotos(photos.filter((_, photoIndex) => photoIndex !== index));
   };
 
-  async function uploadImg(img) {
+  function uploadImgs(imgs, id) {
     setError("");
-    try {
-      const uploadTask = await storage
-        .ref(`listing_images/${currentUser.uid}/${img.name}`)
-        .put(img);
-      const url = await uploadTask.ref.getDownloadURL();
 
-      return url;
+    try {
+      for (let i = 0; i < imgs.length; i++) {
+        storage.ref(`listing_images/${id}/${imgs[i].name}`).put(imgs[i]);
+      }
     } catch (err) {
       setError("Something went wrong uploading the images...");
     }
@@ -228,30 +226,25 @@ function New() {
         }
       }
 
-      let urls = [];
-      for (let photo in photos) {
-        const url = await uploadImg(photo);
-        urls.push(url);
-      }
-
-      await firebase
+      const ref = await firebase
         .firestore()
         .collection("listings")
         .add({
           location: new firebase.firestore.GeoPoint(latLng.lat, latLng.lng),
           type: type,
           price: price,
-          start: start.unix().valueOf(),
-          end: end.unix().valueOf(),
+          start: start.unix().valueOf() * 1000,
+          end: end.unix().valueOf() * 1000,
           persons: persons,
           bedrooms: bedrooms,
           bathrooms: bathrooms,
           amenities: selectedAmenities,
           description: description,
           creator: currentUser.uid,
-          images: urls,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: moment().unix().valueOf() * 1000,
         });
+
+      uploadImgs(photos, ref.id);
 
       history.push("/");
     } catch (err) {

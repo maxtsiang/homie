@@ -5,12 +5,13 @@ import Detail from "../components/Detail";
 
 import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TuneRoundedIcon from "@material-ui/icons/TuneRounded";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useAuth } from "../contexts/AuthContext";
+import firebase from "../firebase";
 
 const useStyles = makeStyles({
   header: {
@@ -22,6 +23,27 @@ const useStyles = makeStyles({
     padding: "3em",
   },
 });
+
+function useListings() {
+  const [listings, setListings] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = firebase
+      .firestore()
+      .collection("listings")
+      .onSnapshot((snapshot) => {
+        const newListings = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setListings(newListings);
+      });
+
+    return () => unsubscribe();
+  }, []);
+
+  return listings;
+}
 
 function Home() {
   const classes = useStyles();
@@ -43,6 +65,8 @@ function Home() {
     setFilterMode(false);
     console.log(currentUser);
   }
+
+  const listings = useListings();
 
   return (
     <Grid
@@ -87,17 +111,19 @@ function Home() {
           />
         ) : (
           <Box>
-            {[0, 1, 2, 3, 4].map((n) => {
-              return (
-                <Listing
-                  id={n}
-                  detailed={detailed}
-                  hovered={hovered}
-                  setHovered={setHovered}
-                  setDetailed={setDetailed}
-                />
-              );
-            })}
+            {listings &&
+              listings.map((listing) => {
+                return (
+                  <Listing
+                    id={listing.id}
+                    detailed={detailed}
+                    hovered={hovered}
+                    setHovered={setHovered}
+                    setDetailed={setDetailed}
+                    info={listing}
+                  />
+                );
+              })}
           </Box>
         )}
       </Grid>

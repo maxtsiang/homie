@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Divider,
@@ -21,11 +21,14 @@ import Interested from "./Interested";
 import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
 
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
+import { storage } from "../firebase";
 
 const useStyles = makeStyles({
   card: {
     marginBottom: "1em",
     boxShadow: "none",
+    height: "20%",
   },
   cardimg: {
     height: "100%",
@@ -57,6 +60,21 @@ const useStyles = makeStyles({
 
 function Listing(props) {
   const classes = useStyles();
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    storage
+      .ref(`listing_images/${props.info.id}`)
+      .listAll()
+      .then((res) => {
+        res.items.forEach((img) => {
+          img.getDownloadURL().then((url) => {
+            setImages((prevImages) => [...prevImages, url]);
+          });
+        });
+      });
+  }, []);
+
   return (
     <Card
       onMouseEnter={() => props.setHovered(props.id)}
@@ -69,7 +87,8 @@ function Listing(props) {
         <Grid container display="flex">
           <Grid item className={classes.item}>
             <CardMedia
-              image={bedroom}
+              square
+              src={images && images[0]}
               title="bedroom-pic"
               component="img"
               className={classes.cardimg}
@@ -83,13 +102,18 @@ function Listing(props) {
                 justifyContent="space-between"
               >
                 <Profile name="Max Tsiang" img={profile} />
-                <Typography variant="subtitle2">5 DAYS AGO</Typography>
+                <Typography variant="subtitle2">
+                  {moment(props.info.createdAt).fromNow().toUpperCase()}
+                </Typography>
               </Box>
 
               <Box>
-                <Typography variant="h5">$1000/month</Typography>
+                <Typography variant="h5">${props.info.price}/month</Typography>
                 <Typography variant="subtitle2">
-                  1 PERSON • 2 BR, 5, BA • JAN 3 - FEB 7
+                  {props.info.persons} PERSON • {props.info.bedrooms} BR,{" "}
+                  {props.info.bathrooms} BA •{" "}
+                  {moment(props.info.start).format("MMM DD").toUpperCase()} -{" "}
+                  {moment(props.info.end).format("MMM DD").toUpperCase()}
                 </Typography>
               </Box>
 
