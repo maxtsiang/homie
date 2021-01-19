@@ -17,9 +17,12 @@ import {
   GridList,
   GridListTile,
   GridListTileBar,
+  CircularProgress,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+
+import { useHistory } from "react-router-dom";
 
 import Counter from "../components/Counter";
 import Amenity, { amenitiesList } from "../components/Amenity";
@@ -33,6 +36,10 @@ import PlacesSearch from "../components/PlacesSearch";
 
 import { storage } from "../firebase";
 import { Remove } from "@material-ui/icons";
+
+import { useAuth } from "../contexts/AuthContext";
+import firebase from "../firebase";
+import moment from "moment";
 
 const useStyles = makeStyles({
   container: {
@@ -121,19 +128,23 @@ const useStyles = makeStyles({
 
 function New() {
   const classes = useStyles();
+  const { currentUser } = useAuth();
+  const history = useHistory();
 
-  const [address, setAddress] = useState("");
-  const [latLng, setLatLng] = useState("");
+  const [latLng, setLatLng] = useState();
   const [type, setType] = useState("");
   const [price, setPrice] = useState(0);
-  const [start, setStart] = useState(new Date());
-  const [end, setEnd] = useState(new Date());
+  const [start, setStart] = useState(moment());
+  const [end, setEnd] = useState(moment());
   const [persons, setPersons] = useState(0);
   const [bedrooms, setBedrooms] = useState(0);
   const [bathrooms, setBathrooms] = useState(0);
   const [amenities, setAmenities] = useState();
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleSetType = (e) => {
     setType(e.target.value);
@@ -152,10 +163,11 @@ function New() {
   };
 
   const handleFileChange = (e) => {
+    setError("");
     const fileList = Array.from(e.target.files);
     fileList.map((newPhoto) => {
       if (newPhoto.size > 1000000) {
-        console.log("error");
+        setError("Image must be less than 1mb");
         return;
       }
       setPhotos((prevPhotos) => [...prevPhotos, newPhoto]);
@@ -166,44 +178,113 @@ function New() {
     setPhotos(photos.filter((_, photoIndex) => photoIndex !== index));
   };
 
-  const uploadImg = (img) => {
-    const uploadTask = storage.ref(`listing_images/${img.name}`).put(img);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("listing_images")
-          .child(img.name)
-          .getDownloadURL()
-          .then((url) => {
-            console.log(url);
-          });
-      }
-    );
-  };
+  async function uploadImg(img) {
+    setError("");
+    try {
+      const uploadTask = await storage
+        .ref(`listing_images/${currentUser.uid}/${img.name}`)
+        .put(img);
+      const url = await uploadTask.ref.getDownloadURL();
 
-  const handleSubmit = (e) => {
+      return url;
+    } catch (err) {
+      setError("Something went wrong uploading the images...");
+    }
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
-  };
+
+    setError("");
+    setLoading(true);
+
+    if (!latLng) {
+      setError("Please enter a property address");
+      setLoading(false);
+      return;
+    } else if (type === "") {
+      setError("Please select a property type");
+      setLoading(false);
+      return;
+    } else if (price <= 0) {
+      setError("Please enter a valid price");
+      setLoading(false);
+      return;
+    } else if (description.length == 0) {
+      setError("Please enter a description");
+      setLoading(false);
+      return;
+    } else if (photos.length < 3) {
+      setError("Please add at least 3 photos");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      let selectedAmenities = [];
+      for (let amenity in amenities) {
+        if (amenities[amenity]) {
+          selectedAmenities.push(amenity);
+        }
+      }
+
+      let urls = [];
+      for (let photo in photos) {
+        const url = await uploadImg(photo);
+        urls.push(url);
+      }
+
+      await firebase
+        .firestore()
+        .collection("listings")
+        .add({
+          location: new firebase.firestore.GeoPoint(latLng.lat, latLng.lng),
+          type: type,
+          price: price,
+          start: start.unix().valueOf(),
+          end: end.unix().valueOf(),
+          persons: persons,
+          bedrooms: bedrooms,
+          bathrooms: bathrooms,
+          amenities: selectedAmenities,
+          description: description,
+          creator: currentUser.uid,
+          images: urls,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+      history.push("/");
+    } catch (err) {
+      setError("Something went wrong!");
+      console.log(err);
+    }
+    setLoading(false);
+  }
 
   return (
     <div>
       <Box className={classes.container}>
         <Box display="flex" justifyContent="space-between">
           <Typography variant="h3">Create a new listing</Typography>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-          >
-            Done
-          </Button>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Done
+            </Button>
+          )}
         </Box>
+
+        {error && (
+          <Alert className={classes.error} severity="error">
+            {error}
+          </Alert>
+        )}
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
@@ -212,7 +293,6 @@ function New() {
             </Typography>
             <PlacesSearch
               className={classes.input}
-              setAddressHandler={setAddress}
               setLatLngHandler={setLatLng}
             />
           </Box>

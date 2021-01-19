@@ -34,7 +34,6 @@ function PlacesSearch(props) {
 
   const handleChange = (address) => {
     setAddress(address);
-    props.setAddressHandler(address);
   };
 
   const handleSelect = (address) => {
