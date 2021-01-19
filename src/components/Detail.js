@@ -1,4 +1,11 @@
-import { IconButton, Box, Grid, Divider, Typography } from "@material-ui/core";
+import {
+  IconButton,
+  Box,
+  Grid,
+  Divider,
+  Typography,
+  CircularProgress,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Carousel from "react-material-ui-carousel";
 
@@ -15,6 +22,11 @@ import { storage } from "../firebase";
 import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
+  imgWrapper: {
+    height: "45vh",
+    display: "flex",
+    alignItems: "center",
+  },
   headerBox: {
     marginBottom: "3em",
     display: "flex",
@@ -25,7 +37,11 @@ const useStyles = makeStyles({
   },
   img: {
     borderRadius: "0.7em",
-    width: "100%",
+    width: "auto",
+    maxHeight: "100%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    display: "block",
   },
   subheader: {
     fontSize: "1.2em",
@@ -70,10 +86,17 @@ function Detail(props) {
 
       <Box m={1}>
         <Carousel navButtonsAlwaysVisible autoPlay={false}>
-          {images &&
+          {images.length > 0 ? (
             images.map((image, index) => (
-              <img className={classes.img} key={index} src={image} />
-            ))}
+              <div className={classes.imgWrapper}>
+                <img className={classes.img} key={index} src={image} />
+              </div>
+            ))
+          ) : (
+            <div className={classes.imgWrapper}>
+              <CircularProgress className={classes.img} />
+            </div>
+          )}
         </Carousel>
       </Box>
 

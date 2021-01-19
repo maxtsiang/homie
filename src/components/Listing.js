@@ -10,6 +10,7 @@ import {
   IconButton,
   Box,
   Grid,
+  CircularProgress,
 } from "@material-ui/core";
 
 import bedroom from "../dev-imgs/bedroom.jpg";
@@ -28,7 +29,7 @@ const useStyles = makeStyles({
   card: {
     marginBottom: "1em",
     boxShadow: "none",
-    height: "20%",
+    height: "100%",
   },
   cardSelected: {
     marginBottom: "1em",
@@ -36,7 +37,8 @@ const useStyles = makeStyles({
     height: "20%",
   },
   cardimg: {
-    height: "100%",
+    height: "auto",
+    width: "100%",
     borderRadius: "1em",
   },
   content: {
@@ -52,6 +54,7 @@ const useStyles = makeStyles({
     marginBottom: "1em",
   },
   item: {
+    height: "30vh",
     width: "50%",
     padding: "1em",
   },
@@ -66,6 +69,7 @@ const useStyles = makeStyles({
 function Listing(props) {
   const classes = useStyles();
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     storage
@@ -83,6 +87,11 @@ function Listing(props) {
   const selected =
     props.index === props.hovered || props.index === props.detailed;
 
+  const imageLoaded = () => {
+    setLoading(false);
+    console.log("LOADED");
+  };
+
   return (
     <Card
       onMouseEnter={() => props.setHovered(props.index)}
@@ -93,13 +102,20 @@ function Listing(props) {
       <CardActionArea>
         <Grid container display="flex">
           <Grid item className={classes.item}>
-            <CardMedia
-              square
-              src={images && images[0]}
-              title="bedroom-pic"
-              component="img"
-              className={classes.cardimg}
-            />
+            <Box
+              display="flex"
+              alignItems="center"
+              style={{
+                height: "100%",
+              }}
+            >
+              {loading && <CircularProgress />}
+              <img
+                src={images[0]}
+                className={classes.cardimg}
+                onLoad={() => imageLoaded()}
+              />
+            </Box>
           </Grid>
           <Grid item className={classes.item}>
             <CardContent className={classes.content}>
