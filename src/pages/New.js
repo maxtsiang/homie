@@ -131,6 +131,7 @@ function New() {
   const { currentUser } = useAuth();
   const history = useHistory();
 
+  const [address, setAddress] = useState("");
   const [latLng, setLatLng] = useState();
   const [type, setType] = useState("");
   const [price, setPrice] = useState(0);
@@ -231,6 +232,7 @@ function New() {
         .collection("listings")
         .add({
           location: new firebase.firestore.GeoPoint(latLng.lat, latLng.lng),
+          address: address,
           type: type,
           price: price,
           start: start.unix().valueOf() * 1000,
@@ -286,6 +288,7 @@ function New() {
             </Typography>
             <PlacesSearch
               className={classes.input}
+              setAddressHandler={setAddress}
               setLatLngHandler={setLatLng}
             />
           </Box>

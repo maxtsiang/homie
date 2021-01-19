@@ -116,6 +116,9 @@ function Detail(props) {
         <Typography variant="h6" className={classes.label}>
           Location
         </Typography>
+        <Typography variant="subtitle1" className={classes.text}>
+          {props.info.address}
+        </Typography>
         <Map hovered={0} listings={[props.info]} height="30vh" width="100%" />
       </Box>
     </Box>

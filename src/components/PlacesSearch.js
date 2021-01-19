@@ -44,6 +44,7 @@ function PlacesSearch(props) {
         props.setLatLngHandler(latLng);
       })
       .catch((error) => console.error("Error", error));
+    props.setAddressHandler(address);
   };
 
   return (

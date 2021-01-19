@@ -32,6 +32,7 @@ const useStyles = makeStyles({
   },
   cardSelected: {
     marginBottom: "1em",
+    boxShadow: "1em",
     height: "20%",
   },
   cardimg: {
@@ -87,8 +88,7 @@ function Listing(props) {
       onMouseEnter={() => props.setHovered(props.index)}
       onMouseLeave={() => props.setHovered(-1)}
       onClick={() => props.setDetailed(props.index)}
-      className={selected ? classes.selected : classes.card}
-      raised={selected}
+      className={selected ? classes.cardSelected : classes.card}
     >
       <CardActionArea>
         <Grid container display="flex">
@@ -139,7 +139,7 @@ function Listing(props) {
           </Grid>
         </Grid>
       </CardActionArea>
-      {!selected && <Divider />}
+      <Divider />
     </Card>
   );
 }

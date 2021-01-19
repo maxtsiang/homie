@@ -1,6 +1,7 @@
 import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
 
 import RoomRoundedIcon from "@material-ui/icons/RoomRounded";
+import ApartmentRoundedIcon from "@material-ui/icons/ApartmentRounded";
 
 function MapMarker(props) {
   return (
@@ -10,9 +11,9 @@ function MapMarker(props) {
       onClick={() => props.setDetailed && props.setDetailed(props.id)}
     >
       {props.$hover || props.hovered ? (
-        <RoomRoundedIcon color="secondary" fontSize="large" />
+        <ApartmentRoundedIcon color="secondary" fontSize="large" />
       ) : (
-        <RoomRoundedIcon fontSize="large" />
+        <ApartmentRoundedIcon fontSize="large" />
       )}
     </div>
   );
