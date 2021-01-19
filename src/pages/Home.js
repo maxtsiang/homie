@@ -10,6 +10,11 @@ import {
   Button,
   IconButton,
   Badge,
+  Menu,
+  MenuItem,
+  List,
+  ListItem,
+  ListItemText,
 } from "@material-ui/core";
 
 import React, { useEffect, useState } from "react";
@@ -34,13 +39,20 @@ const useStyles = makeStyles({
   },
 });
 
-function useListings() {
+const SORT_OPTIONS = {
+  PRICE_ASC: { column: "price", direction: "asc" },
+  AVAILABILITY_ASC: { column: "start", direction: "asc" },
+  CREATEDAT_DESC: { column: "createdAt", direction: "desc" },
+};
+
+function useListings(sortBy = "CREATEDAT_DESC") {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
     const unsubscribe = firebase
       .firestore()
       .collection("listings")
+      .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
       .onSnapshot((snapshot) => {
         const newListings = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -50,7 +62,7 @@ function useListings() {
       });
 
     return () => unsubscribe();
-  }, []);
+  }, [sortBy]);
 
   return listings;
 }
@@ -64,7 +76,23 @@ function Home() {
 
   const [filters, setFilters] = useState({});
 
-  const listings = useListings();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [sortBy, setSortBy] = useState("CREATEDAT_DESC");
+
+  const handleClickListItem = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event, option) => {
+    setSortBy(option);
+    setAnchorEl(null);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const listings = useListings(sortBy);
   let filteredListings = listings;
 
   function filter(list) {
@@ -149,7 +177,42 @@ function Home() {
               {filteredListings.length} places found near University of
               Pennsylvania
             </Typography>
-            {!filterMode && <Button>Sort By</Button>}
+            {!filterMode && (
+              <>
+                <List aria-label="Sort by">
+                  <ListItem
+                    button
+                    aria-haspopup="true"
+                    aria-controls="lock-menu"
+                    onClick={handleClickListItem}
+                  >
+                    <ListItemText primary="SORT BY" />
+                  </ListItem>
+                </List>
+                <Menu
+                  id="lock-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    selected={sortBy === "PRICE_ASC"}
+                    onClick={(event) => handleMenuItemClick(event, "PRICE_ASC")}
+                  >
+                    Price (cheapest first)
+                  </MenuItem>
+                  <MenuItem
+                    selected={sortBy === "AVAILABILITY_ASC"}
+                    onClick={(event) =>
+                      handleMenuItemClick(event, "AVAILABILITY_ASC")
+                    }
+                  >
+                    Availability (earliest first)
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
           </Box>
         </Box>
 
@@ -190,7 +253,7 @@ function Home() {
         <Map
           hidden={detailed >= 0}
           hovered={hovered}
-          filteredListings={filteredListings}
+          listings={filteredListings}
           setHovered={setHovered}
           setDetailed={setDetailed}
           height="88vh"
