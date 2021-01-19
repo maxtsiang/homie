@@ -14,6 +14,9 @@ import {
   FormControlLabel,
   OutlinedInput,
   Checkbox,
+  GridList,
+  GridListTile,
+  GridListTileBar,
 } from "@material-ui/core";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
@@ -21,7 +24,7 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Counter from "../components/Counter";
 import Amenity, { amenitiesList } from "../components/Amenity";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Image } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -29,13 +32,14 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import PlacesSearch from "../components/PlacesSearch";
 
 import { storage } from "../firebase";
+import { Remove } from "@material-ui/icons";
 
 const useStyles = makeStyles({
   container: {
     margin: "3em",
     marginTop: "6em",
     width: "80vw",
-    height: "80vh",
+    height: "85vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -48,9 +52,7 @@ const useStyles = makeStyles({
     flexDirection: "column",
     flexWrap: "wrap",
   },
-  checkboxWrapper: {
-    flex: "1 0 34%",
-  },
+
   label: {
     fontSize: "1.3em",
   },
@@ -76,12 +78,12 @@ const useStyles = makeStyles({
     fontWeight: 400,
   },
   button: {
-    width: "20%",
+    width: "10%",
     marginTop: "1em",
     padding: "0.7em",
     borderRadius: "1em",
     boxShadow: "none",
-    alignSelf: "center",
+    alignSelf: "flex-end",
   },
   group: {
     marginTop: "1em",
@@ -95,6 +97,25 @@ const useStyles = makeStyles({
   },
   groupWrapper: {
     display: "flex",
+  },
+  gridListWrapper: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "hidden",
+    backgroundColor: "white",
+    height: "100%",
+
+    width: "100%",
+  },
+  gridList: {
+    flexWrap: "nowrap",
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: "translateZ(0)",
+    width: "100%",
+  },
+  titleBar: {
+    background: "transparent",
   },
 });
 
@@ -132,15 +153,57 @@ function New() {
 
   const handleFileChange = (e) => {
     const fileList = Array.from(e.target.files);
-    fileList.map((newPhoto) =>
-      setPhotos((prevPhotos) => [...prevPhotos, newPhoto])
+    fileList.map((newPhoto) => {
+      if (newPhoto.size > 1000000) {
+        console.log("error");
+        return;
+      }
+      setPhotos((prevPhotos) => [...prevPhotos, newPhoto]);
+    });
+  };
+
+  const removePhoto = (index) => {
+    setPhotos(photos.filter((_, photoIndex) => photoIndex !== index));
+  };
+
+  const uploadImg = (img) => {
+    const uploadTask = storage.ref(`listing_images/${img.name}`).put(img);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("listing_images")
+          .child(img.name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+          });
+      }
     );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
     <div>
       <Box className={classes.container}>
-        <Typography variant="h3">Create a new listing</Typography>
+        <Box display="flex" justifyContent="space-between">
+          <Typography variant="h3">Create a new listing</Typography>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Done
+          </Button>
+        </Box>
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
@@ -178,12 +241,10 @@ function New() {
             </Typography>
 
             <FormControl fullWidth className={classes.input} variant="outlined">
-              <InputLabel>Amount</InputLabel>
               <OutlinedInput
                 startAdornment={
                   <InputAdornment position="start">$</InputAdornment>
                 }
-                label="Amount"
                 onChange={handleSetPrice}
               />
             </FormControl>
@@ -245,11 +306,7 @@ function New() {
               <FormGroup className={classes.checkboxGroup}>
                 {amenitiesList.map((amenityName) => {
                   return (
-                    <Box
-                      display="flex"
-                      alignItems="center"
-                      className={classes.checkboxWrapper}
-                    >
+                    <Box display="flex" alignItems="center">
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -271,28 +328,25 @@ function New() {
 
         <Box className={classes.fieldGroup}>
           <Typography variant="h6" className={classes.label}>
-            Description ({description.length}/300 characters)
+            Description
           </Typography>
           <FormControl
             fullWidth
             className={classes.inputField}
             variant="outlined"
           >
-            <OutlinedInput
-              multiline
-              style={{ paddingBottom: "5em" }}
-              onChange={handleSetDescription}
-            />
+            <OutlinedInput multiline onChange={handleSetDescription} />
           </FormControl>
         </Box>
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group} display="flex" alignItems="center">
-            <Typography variant="h6" className={classes.label}>
-              Photos
-            </Typography>
-            <IconButton color="primary" component="label">
-              <AddCircleOutlineIcon />
+            <Button
+              className={classes.button}
+              variant="contained"
+              component="label"
+            >
+              Add Photos
               <input
                 type="file"
                 onChange={handleFileChange}
@@ -300,14 +354,36 @@ function New() {
                 multiple
                 hidden
               />
-            </IconButton>
-          </Box>
-          {/* display images here */}
-        </Box>
+            </Button>
 
-        <Button className={classes.button} variant="contained" color="primary">
-          Done
-        </Button>
+            <Box className={classes.gridListWrapper}>
+              <GridList cols={3.5} className={classes.gridList}>
+                {photos.map((photo, index) => (
+                  <GridListTile key={index}>
+                    <div>
+                      <img
+                        src={URL.createObjectURL(photo)}
+                        alt={photo.name}
+                        style={{
+                          maxHeight: "100%",
+                          maxWidth: "100%",
+                        }}
+                      />
+                    </div>
+                    <GridListTileBar
+                      className={classes.titleBar}
+                      actionIcon={
+                        <IconButton onClick={() => removePhoto(index)}>
+                          <RemoveIcon />
+                        </IconButton>
+                      }
+                    />
+                  </GridListTile>
+                ))}
+              </GridList>
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </div>
   );
