@@ -1,56 +1,36 @@
 import {
   Typography,
-  Grid,
   Box,
   Button,
   IconButton,
-  TextField,
-  InputAdornment,
-  FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  FormGroup,
-  FormControlLabel,
   OutlinedInput,
-  Checkbox,
-  GridList,
-  GridListTile,
-  GridListTileBar,
   CircularProgress,
   Avatar,
   Badge,
+  FormControl,
+  Chip,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { KeyboardDatePicker } from "@material-ui/pickers";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
 import { useHistory } from "react-router-dom";
 
-import Counter from "../components/Counter";
-import Amenity, { amenitiesList } from "../components/Amenity";
-
 import React, { useState, useRef, Image, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import RemoveIcon from "@material-ui/icons/Remove";
-
-import PlacesSearch from "../components/PlacesSearch";
-
 import { storage } from "../firebase";
-import { Remove } from "@material-ui/icons";
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
-import moment from "moment";
 
 const useStyles = makeStyles({
   container: {
     margin: "3em",
     marginTop: "6em",
-    width: "80vw",
-    height: "85vh",
+    width: "70vw",
+    height: "70vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -58,8 +38,8 @@ const useStyles = makeStyles({
   avatar: {
     height: "15vh",
     width: "15vh",
+    border: "1px solid lightgrey",
   },
-
   label: {
     fontSize: "1.3em",
   },
@@ -76,14 +56,7 @@ const useStyles = makeStyles({
     marginTop: "1em",
     width: "100%",
   },
-  separator: {
-    fontSize: "1.3em",
-    marginRight: "1em",
-  },
-  subtitle: {
-    fontSize: "1em",
-    fontWeight: 400,
-  },
+
   button: {
     width: "10%",
     marginTop: "1em",
@@ -97,41 +70,31 @@ const useStyles = makeStyles({
     marginRight: "1em",
     width: "100%",
   },
-  fieldGroup: {
+  avatarWrapper: {
     marginTop: "1em",
     marginRight: "1em",
     width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   groupWrapper: {
     display: "flex",
   },
-  gridListWrapper: {
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    overflow: "hidden",
-    backgroundColor: "white",
-    height: "100%",
-
-    width: "100%",
-  },
-  gridList: {
-    flexWrap: "nowrap",
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: "translateZ(0)",
-    width: "100%",
-  },
-  titleBar: {
-    background: "transparent",
+  habit: {
+    color: "white",
+    padding: "0.5em",
+    borderRadius: "0.5em",
+    margin: "0.5em",
   },
 });
 
 function EditProfile() {
   const classes = useStyles();
   const { currentUser } = useAuth();
-  const history = useHistory();
 
   const userRef = firebase.firestore().collection("users").doc(currentUser.uid);
+  const habitsRef = firebase.firestore().collection("habits");
 
   const [name, setName] = useState(currentUser.displayName);
   const [pronouns, setPronouns] = useState("");
@@ -139,10 +102,12 @@ function EditProfile() {
   const [grad, setGrad] = useState(0);
   const [greek, setGreek] = useState("");
   const [habits, setHabits] = useState([]);
+  const [myHabits, setMyHabits] = useState([]);
   const [photo, setPhoto] = useState();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSetName = (e) => {
     setName(e.target.value);
@@ -164,6 +129,18 @@ function EditProfile() {
     setGreek(e.target.value);
   };
 
+  const handleSelectHabit = (id) => {
+    const newHabit = habits.find((habit) => {
+      return habit.id === id;
+    });
+
+    setMyHabits((oldHabits) => [...oldHabits, newHabit]);
+  };
+
+  const handleDeleteHabit = (id) => {
+    setMyHabits(myHabits.filter((habit) => habit.id !== id));
+  };
+
   useEffect(() => {
     userRef.get().then((snapshot) => {
       const doc = snapshot.data();
@@ -171,8 +148,21 @@ function EditProfile() {
       setMajor(doc.major);
       setGrad(doc.grad);
       setGreek(doc.greek);
+      setMyHabits(doc.habits);
+    });
+    habitsRef.get().then((snapshot) => {
+      snapshot.docs.map((doc) => {
+        const habit = {
+          id: doc.id,
+          ...doc.data(),
+        };
+
+        setHabits((oldHabits) => [...oldHabits, habit]);
+      });
     });
   }, []);
+
+  console.log("MYHABITS", myHabits);
 
   const handleFileChange = (e) => {
     setError("");
@@ -184,10 +174,6 @@ function EditProfile() {
       }
       setPhoto(newPhoto);
     });
-  };
-
-  const removePhoto = () => {
-    setPhoto();
   };
 
   function uploadImg(img) {
@@ -235,73 +221,9 @@ function EditProfile() {
     }
   }
 
-  //   async function handleSubmit(e) {
-  //     e.preventDefault();
-
-  //     setError("");
-  //     setLoading(true);
-
-  //     if (!latLng) {
-  //       setError("Please enter a property address");
-  //       setLoading(false);
-  //       return;
-  //     } else if (type === "") {
-  //       setError("Please select a property type");
-  //       setLoading(false);
-  //       return;
-  //     } else if (price <= 0) {
-  //       setError("Please enter a valid price");
-  //       setLoading(false);
-  //       return;
-  //     } else if (description.length == 0) {
-  //       setError("Please enter a description");
-  //       setLoading(false);
-  //       return;
-  //     } else if (photos.length < 3) {
-  //       setError("Please add at least 3 photos");
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     try {
-  //       let selectedAmenities = [];
-  //       for (let amenity in amenities) {
-  //         if (amenities[amenity]) {
-  //           selectedAmenities.push(amenity);
-  //         }
-  //       }
-
-  //       const ref = await firebase
-  //         .firestore()
-  //         .collection("listings")
-  //         .add({
-  //           location: new firebase.firestore.GeoPoint(latLng.lat, latLng.lng),
-  //           address: address,
-  //           type: type,
-  //           price: Number(price),
-  //           start: Number(start.unix().valueOf() * 1000),
-  //           end: Number(end.unix().valueOf() * 1000),
-  //           persons: Number(persons),
-  //           bedrooms: Number(bedrooms),
-  //           bathrooms: Number(bathrooms),
-  //           amenities: selectedAmenities,
-  //           description: description,
-  //           creator: currentUser.uid,
-  //           createdAt: Number(moment().unix().valueOf() * 1000),
-  //         });
-
-  //       uploadImgs(photos, ref.id);
-
-  //       history.push("/");
-  //     } catch (err) {
-  //       setError("Something went wrong!");
-  //       console.log(err);
-  //     }
-  //     setLoading(false);
-  //   }
-
   async function handleSubmit() {
     setError("");
+    setMessage("");
     setLoading(true);
     await currentUser.updateProfile({
       displayName: name,
@@ -312,12 +234,14 @@ function EditProfile() {
       major,
       grad,
       greek,
+      habits: myHabits,
     });
     if (photo) {
       uploadImg(photo);
     }
 
     setLoading(false);
+    setMessage("Success!");
   }
 
   return (
@@ -340,13 +264,19 @@ function EditProfile() {
         </Box>
 
         {error && (
-          <Alert className={classes.error} severity="error">
+          <Alert className={classes.alert} severity="error">
             {error}
           </Alert>
         )}
 
+        {message && (
+          <Alert className={classes.alert} severity="success">
+            {message}
+          </Alert>
+        )}
+
         <Box className={classes.groupWrapper}>
-          <Box className={classes.group}>
+          <Box className={classes.avatarWrapper}>
             <Badge
               overlap="circle"
               anchorOrigin={{
@@ -374,9 +304,6 @@ function EditProfile() {
               />
             </Badge>
           </Box>
-        </Box>
-
-        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Name
@@ -388,7 +315,9 @@ function EditProfile() {
               className={classes.input}
             />
           </Box>
+        </Box>
 
+        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Pronouns
@@ -400,9 +329,7 @@ function EditProfile() {
               className={classes.input}
             />
           </Box>
-        </Box>
 
-        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Major
@@ -414,7 +341,9 @@ function EditProfile() {
               className={classes.input}
             />
           </Box>
+        </Box>
 
+        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Graduation Year
@@ -430,9 +359,6 @@ function EditProfile() {
               </Select>
             </FormControl>
           </Box>
-        </Box>
-
-        <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
               Greek Life
@@ -444,63 +370,48 @@ function EditProfile() {
               value={greek}
             />
           </Box>
-
-          {/* <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Habits
-            </Typography>
-
-            <FormControl fullWidth className={classes.input} variant="outlined">
-              <OutlinedInput />
-            </FormControl>
-          </Box> */}
         </Box>
 
-        {/* <Box className={classes.groupWrapper}>
-          <Box className={classes.group} display="flex" alignItems="center">
-            <Button
-              className={classes.button}
-              variant="contained"
-              component="label"
-            >
-              Add Photos
-              <input
-                type="file"
-                onChange={handleFileChange}
-                accept="image/png,image/jpeg"
-                multiple
-                hidden
-              />
-            </Button>
+        <Box className={classes.groupWrapper}>
+          <Box className={classes.group}>
+            <Typography variant="h6" className={classes.label}>
+              My Habits
+            </Typography>
 
-            <Box className={classes.gridListWrapper}>
-              <GridList cols={3.5} className={classes.gridList}>
-                {photos.map((photo, index) => (
-                  <GridListTile key={index}>
-                    <div>
-                      <img
-                        src={URL.createObjectURL(photo)}
-                        alt={photo.name}
-                        style={{
-                          maxHeight: "100%",
-                          maxWidth: "100%",
-                        }}
-                      />
-                    </div>
-                    <GridListTileBar
-                      className={classes.titleBar}
-                      actionIcon={
-                        <IconButton onClick={() => removePhoto(index)}>
-                          <RemoveIcon />
-                        </IconButton>
-                      }
-                    />
-                  </GridListTile>
-                ))}
-              </GridList>
+            <Box>
+              {myHabits.map((habit) => (
+                <Chip
+                  key={habit.id}
+                  label={habit.name}
+                  className={classes.habit}
+                  style={{ background: habit.color }}
+                  onDelete={() => handleDeleteHabit(habit.id)}
+                />
+              ))}
             </Box>
           </Box>
-        </Box> */}
+          <Box className={classes.group}>
+            <Typography variant="h6" className={classes.label}>
+              All Habits
+            </Typography>
+
+            <Box>
+              {habits.map((habit) => (
+                <Chip
+                  key={habit.id}
+                  label={habit.name}
+                  className={classes.habit}
+                  style={{ background: habit.color }}
+                  onClick={() => handleSelectHabit(habit.id)}
+                  disabled={
+                    myHabits.filter((myHabit) => myHabit.id === habit.id)
+                      .length > 0
+                  }
+                />
+              ))}
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </div>
   );

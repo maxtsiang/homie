@@ -70,6 +70,7 @@ function Interested(props) {
           const user = {
             id: snapshot.id,
             name: snapshot.data().name,
+            profile: snapshot.data().profile,
           };
           setInterestedUsers((prevUsers) => [...prevUsers, user]);
         });
@@ -114,6 +115,7 @@ function Interested(props) {
       const currentUserObject = {
         id: currentUser.uid,
         name: currentUser.displayName,
+        profile: currentUser.photoURL,
       };
       setInterestedUsers((prevUsers) => [...prevUsers, currentUserObject]);
     }
@@ -133,7 +135,7 @@ function Interested(props) {
                 return (
                   <Avatar
                     alt={user.name}
-                    src={props.imgs}
+                    src={user.profile}
                     className={classes.avatar}
                   />
                 );
