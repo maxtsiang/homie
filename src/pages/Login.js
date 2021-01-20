@@ -14,6 +14,8 @@ import { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
+import firebase from "../firebase";
+
 const useStyles = makeStyles({
   container: {
     width: "400px",
@@ -63,7 +65,7 @@ function Login(props) {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
 
   const history = useHistory();
 

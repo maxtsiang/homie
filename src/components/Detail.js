@@ -21,6 +21,8 @@ import moment from "moment";
 import { storage } from "../firebase";
 import React, { useEffect, useState } from "react";
 
+import firebase from "../firebase";
+
 const useStyles = makeStyles({
   imgWrapper: {
     height: "45vh",
@@ -64,6 +66,7 @@ const useStyles = makeStyles({
 function Detail(props) {
   const classes = useStyles();
   const [images, setImages] = useState([]);
+  const [creator, setCreator] = useState();
 
   useEffect(() => {
     storage
@@ -75,6 +78,19 @@ function Detail(props) {
             setImages((prevImages) => [...prevImages, url]);
           });
         });
+      });
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(props.info.creator)
+      .get()
+      .then((snapshot) => {
+        const doc = snapshot.data();
+        const user = {
+          id: snapshot.id,
+          ...doc,
+        };
+        setCreator(user);
       });
   }, []);
 
@@ -112,7 +128,7 @@ function Detail(props) {
             {moment(props.info.end).format("MMM DD").toUpperCase()}
           </Typography>
         </Box>
-        <Profile name="Max Tsiang" img={profile} />
+        {creator && <Profile user={creator} popover />}
       </Box>
 
       <Box m={1} className={classes.labelBox}>

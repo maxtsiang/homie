@@ -25,7 +25,7 @@ import profile from "../dev-imgs/profile.jpg";
 function Nav() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [error, setError] = useState("");
-  const { logout } = useAuth();
+  const { logout, currentUser } = useAuth();
   const history = useHistory();
 
   const handleClick = (e) => {
@@ -99,7 +99,10 @@ function Nav() {
               </Typography>
               <Typography variant="title">
                 <IconButton aria-label="profile" onClick={handleClick}>
-                  <Avatar alt="Max Tsiang" src={profile} />
+                  <Avatar
+                    alt={currentUser.displayName}
+                    src={currentUser.photoURL}
+                  />
                 </IconButton>
                 <Popover
                   open={open}

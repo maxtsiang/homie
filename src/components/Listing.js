@@ -13,6 +13,8 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 
+import firebase from "../firebase";
+
 import bedroom from "../dev-imgs/bedroom.jpg";
 import profile from "../dev-imgs/profile.jpg";
 
@@ -63,6 +65,7 @@ const useStyles = makeStyles({
 function Listing(props) {
   const classes = useStyles();
   const [image, setImage] = useState();
+  const [creator, setCreator] = useState();
 
   useEffect(() => {
     storage
@@ -74,6 +77,20 @@ function Listing(props) {
             setImage(url);
           });
         }
+      });
+
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(props.info.creator)
+      .get()
+      .then((snapshot) => {
+        const doc = snapshot.data();
+        const user = {
+          name: doc.name,
+          profile: doc.profile,
+        };
+        setCreator(user);
       });
   }, []);
 
@@ -107,7 +124,7 @@ function Listing(props) {
                 alignItems="center"
                 justifyContent="space-between"
               >
-                <Profile name="Max Tsiang" img={profile} />
+                {creator && <Profile user={creator} />}
                 <Typography variant="subtitle2">
                   {moment(props.info.createdAt).fromNow().toUpperCase()}
                 </Typography>
@@ -124,15 +141,6 @@ function Listing(props) {
               </Box>
 
               <Box>
-                {/* <Interested names="Max Tsiang" imgs={profile} /> */}
-                {/* <Button
-                  className={classes.interestedButton}
-                  variant="contained"
-                  disableElevation
-                >
-                  <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />{" "}
-                  Interested
-                </Button> */}
                 <Interested
                   listingid={props.info.id}
                   interested={props.info.interested}
