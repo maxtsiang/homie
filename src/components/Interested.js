@@ -113,7 +113,7 @@ function Interested(props) {
 
       const currentUserObject = {
         id: currentUser.uid,
-        name: "Max Tsiang",
+        name: currentUser.displayName,
       };
       setInterestedUsers((prevUsers) => [...prevUsers, currentUserObject]);
     }

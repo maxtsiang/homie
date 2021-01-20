@@ -62,19 +62,18 @@ const useStyles = makeStyles({
 
 function Listing(props) {
   const classes = useStyles();
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [image, setImage] = useState();
 
   useEffect(() => {
     storage
       .ref(`listing_images/${props.info.id}`)
       .listAll()
       .then((res) => {
-        res.items.forEach((img) => {
-          img.getDownloadURL().then((url) => {
-            setImages((prevImages) => [...prevImages, url]);
+        if (res.items.length > 0) {
+          res.items[0].getDownloadURL().then((url) => {
+            setImage(url);
           });
-        });
+        }
       });
   }, []);
 
@@ -98,8 +97,7 @@ function Listing(props) {
                 height: "100%",
               }}
             >
-              {loading && <CircularProgress />}
-              <img src={images[0]} className={classes.cardimg} />
+              <img src={image} className={classes.cardimg} />
             </Box>
           </Grid>
           <Grid item className={classes.item}>

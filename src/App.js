@@ -6,7 +6,7 @@ import Chat from "./pages/Chat";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Forgot from "./pages/Forgot";
-import Verify from "./pages/Verify";
+import EditProfile from "./pages/EditProfile";
 
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
@@ -57,6 +57,11 @@ function App() {
             <PrivateRoute exact path="/" component={() => <Home />} />
             <PrivateRoute exact path="/new" component={() => <New />} />
             <PrivateRoute exact path="/chats" component={() => <Chat />} />
+            <PrivateRoute
+              exact
+              path="/editprofile"
+              component={() => <EditProfile />}
+            />
             <Route exact path="/signup" component={() => <Signup />} />
             <Route exact path="/login" component={() => <Login />} />
             <Route exact path="/forgot" component={() => <Forgot />} />

@@ -41,10 +41,10 @@ function PlacesSearch(props) {
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         console.log("Success", latLng);
-        props.setLatLngHandler(latLng);
+        props.setlatlnghandler(latLng);
       })
       .catch((error) => console.error("Error", error));
-    props.setAddressHandler(address);
+    props.setaddresshandler(address);
   };
 
   return (

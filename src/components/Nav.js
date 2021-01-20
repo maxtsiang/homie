@@ -12,6 +12,8 @@ import {
   Avatar,
   Button,
   Link,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
@@ -112,7 +114,10 @@ function Nav() {
                     horizontal: "center",
                   }}
                 >
-                  <Button onClick={handleLogout}>Logout</Button>
+                  <MenuItem component={RouterLink} to="/editprofile">
+                    Edit Profile
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Popover>
               </Typography>
             </div>

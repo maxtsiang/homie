@@ -244,6 +244,7 @@ function New() {
           description: description,
           creator: currentUser.uid,
           createdAt: Number(moment().unix().valueOf() * 1000),
+          interested: [],
         });
 
       uploadImgs(photos, ref.id);
@@ -288,8 +289,8 @@ function New() {
             </Typography>
             <PlacesSearch
               className={classes.input}
-              setAddressHandler={setAddress}
-              setLatLngHandler={setLatLng}
+              setaddresshandler={setAddress}
+              setlatlnghandler={setLatLng}
             />
           </Box>
 
