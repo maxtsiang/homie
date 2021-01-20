@@ -58,12 +58,6 @@ const useStyles = makeStyles({
     width: "50%",
     padding: "1em",
   },
-  interestedButton: {
-    width: "100%",
-    padding: "0.5em",
-    marginTop: "1em",
-    background: "#ffcccc",
-  },
 });
 
 function Listing(props) {
@@ -132,15 +126,19 @@ function Listing(props) {
               </Box>
 
               <Box>
-                <Interested names="Max Tsiang" imgs={profile} />
-                <Button
+                {/* <Interested names="Max Tsiang" imgs={profile} /> */}
+                {/* <Button
                   className={classes.interestedButton}
                   variant="contained"
                   disableElevation
                 >
                   <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />{" "}
                   Interested
-                </Button>
+                </Button> */}
+                <Interested
+                  listingid={props.info.id}
+                  interested={props.info.interested}
+                />
               </Box>
             </CardContent>
           </Grid>
