@@ -1,8 +1,6 @@
 import {
   IconButton,
   Box,
-  Grid,
-  Divider,
   Typography,
   CircularProgress,
 } from "@material-ui/core";
@@ -10,9 +8,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Carousel from "react-material-ui-carousel";
 
 import CloseIcon from "@material-ui/icons/Close";
-
-import bedroom from "../dev-imgs/bedroom.jpg";
-import profile from "../dev-imgs/profile.jpg";
 
 import Map from "../components/Map";
 import Profile from "../components/Profile";
@@ -24,6 +19,9 @@ import React, { useEffect, useState } from "react";
 import firebase from "../firebase";
 
 const useStyles = makeStyles({
+  container: {
+    overflow: "scroll",
+  },
   imgWrapper: {
     height: "45vh",
     display: "flex",
@@ -95,7 +93,14 @@ function Detail(props) {
   }, []);
 
   return (
-    <Box>
+    <Box
+      className={classes.container}
+      style={{
+        height: props.height,
+        width: props.width,
+        position: props.position,
+      }}
+    >
       <IconButton onClick={() => props.close()}>
         <CloseIcon />
       </IconButton>
@@ -105,7 +110,12 @@ function Detail(props) {
           {images.length > 0 ? (
             images.map((image, index) => (
               <div className={classes.imgWrapper}>
-                <img className={classes.img} key={index} src={image} />
+                <img
+                  className={classes.img}
+                  key={index}
+                  src={image}
+                  alt={image.name}
+                />
               </div>
             ))
           ) : (

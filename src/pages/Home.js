@@ -7,14 +7,11 @@ import {
   Typography,
   Grid,
   Box,
-  Button,
   IconButton,
   Badge,
   Menu,
   MenuItem,
-  List,
-  ListItem,
-  ListItemText,
+  Button,
 } from "@material-ui/core";
 
 import React, { useEffect, useState } from "react";
@@ -45,29 +42,45 @@ const SORT_OPTIONS = {
   CREATEDAT_DESC: { column: "createdAt", direction: "desc" },
 };
 
-function useListings(sortBy = "CREATEDAT_DESC") {
+function useListings(sortBy = "CREATEDAT_DESC", saved = false, creator) {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = firebase
-      .firestore()
-      .collection("listings")
-      .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
-      .onSnapshot((snapshot) => {
-        const newListings = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setListings(newListings);
-      });
+    let unsubscribe;
+    if (saved) {
+      unsubscribe = firebase
+        .firestore()
+        .collection("listings")
+        .where("creator", "==", creator)
+        .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
+        .onSnapshot((snapshot) => {
+          const newListings = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setListings(newListings);
+        });
+    } else {
+      unsubscribe = firebase
+        .firestore()
+        .collection("listings")
+        .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
+        .onSnapshot((snapshot) => {
+          const newListings = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setListings(newListings);
+        });
+    }
 
     return () => unsubscribe();
-  }, [sortBy]);
+  }, [sortBy, creator]);
 
   return listings;
 }
 
-function Home() {
+function Home(props) {
   const classes = useStyles();
 
   const [filterMode, setFilterMode] = useState(false);
@@ -79,11 +92,13 @@ function Home() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [sortBy, setSortBy] = useState("CREATEDAT_DESC");
 
-  const handleClickListItem = (event) => {
+  const { currentUser } = useAuth();
+
+  const handleOpenSortBy = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuItemClick = (event, option) => {
+  const handleSortBy = (option) => {
     setSortBy(option);
     setAnchorEl(null);
   };
@@ -92,12 +107,10 @@ function Home() {
     setAnchorEl(null);
   };
 
-  const listings = useListings(sortBy);
+  const listings = useListings(sortBy, props.saved, currentUser.uid);
   let filteredListings = listings;
 
   function filter(list) {
-    // console.log(Object.keys(filters).length);
-
     for (let name in filters) {
       switch (name) {
         case "min":
@@ -153,7 +166,9 @@ function Home() {
             <Typography variant="h3">Filter</Typography>
           ) : (
             <Box display="flex">
-              <Typography variant="h3">Find a place</Typography>
+              <Typography variant="h3">
+                {props.saved ? <>Saved places</> : <>Find a place</>}
+              </Typography>
               <IconButton
                 aria-label="filter"
                 onClick={() => setFilterMode(true)}
@@ -179,16 +194,7 @@ function Home() {
             </Typography>
             {!filterMode && (
               <>
-                <List aria-label="Sort by">
-                  <ListItem
-                    button
-                    aria-haspopup="true"
-                    aria-controls="lock-menu"
-                    onClick={handleClickListItem}
-                  >
-                    <ListItemText primary="SORT BY" />
-                  </ListItem>
-                </List>
+                <Button onClick={handleOpenSortBy}>Sort By</Button>
                 <Menu
                   id="lock-menu"
                   anchorEl={anchorEl}
@@ -198,15 +204,13 @@ function Home() {
                 >
                   <MenuItem
                     selected={sortBy === "PRICE_ASC"}
-                    onClick={(event) => handleMenuItemClick(event, "PRICE_ASC")}
+                    onClick={() => handleSortBy("PRICE_ASC")}
                   >
                     Price (cheapest first)
                   </MenuItem>
                   <MenuItem
                     selected={sortBy === "AVAILABILITY_ASC"}
-                    onClick={(event) =>
-                      handleMenuItemClick(event, "AVAILABILITY_ASC")
-                    }
+                    onClick={() => handleSortBy("AVAILABILITY_ASC")}
                   >
                     Availability (earliest first)
                   </MenuItem>
@@ -248,6 +252,9 @@ function Home() {
           <Detail
             close={() => setDetailed(-1)}
             info={filteredListings[detailed]}
+            height="88vh"
+            width="45%"
+            position="fixed"
           />
         )}
         <Map

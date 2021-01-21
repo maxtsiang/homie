@@ -59,6 +59,11 @@ function App() {
             <PrivateRoute exact path="/chats" component={() => <Chat />} />
             <PrivateRoute
               exact
+              path="/saved"
+              component={() => <Home saved />}
+            />
+            <PrivateRoute
+              exact
               path="/editprofile"
               component={() => <EditProfile />}
             />

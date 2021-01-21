@@ -38,7 +38,6 @@ const useStyles = makeStyles({
   avatar: {
     height: "15vh",
     width: "15vh",
-    border: "1px solid lightgrey",
   },
   label: {
     fontSize: "1.3em",

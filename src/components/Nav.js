@@ -14,15 +14,23 @@ import {
   Link,
   Menu,
   MenuItem,
+  makeStyles,
 } from "@material-ui/core";
 
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
 import NotificationsNoneRoundedIcon from "@material-ui/icons/NotificationsNoneRounded";
 
-import profile from "../dev-imgs/profile.jpg";
+const useStyles = makeStyles({
+  navText: {
+    color: "black",
+    textDecoration: "none",
+    marginRight: "1em",
+  },
+});
 
 function Nav() {
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [error, setError] = useState("");
   const { logout, currentUser } = useAuth();
@@ -66,15 +74,21 @@ function Nav() {
           justify="space-between"
         >
           <Grid item>
-            <Typography variant="title">
-              <Link component={RouterLink} to="/">
-                Homie
-              </Link>
+            <Typography
+              className={classes.navText}
+              component={RouterLink}
+              variant="subtitle1"
+              to="/"
+            >
+              Homie
             </Typography>
-            <Typography variant="title">
-              <Link component={RouterLink} to="/new">
-                New Listing
-              </Link>
+            <Typography
+              className={classes.navText}
+              component={RouterLink}
+              variant="subtitle1"
+              to="/new"
+            >
+              New Listing
             </Typography>
           </Grid>
           <Grid item>
