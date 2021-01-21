@@ -1,9 +1,17 @@
-import { Typography, Grid, Box, Button, IconButton } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 import RoomRoundedIcon from "@material-ui/icons/RoomRounded";
-import ApartmentRoundedIcon from "@material-ui/icons/ApartmentRounded";
+
+const useStyles = makeStyles({
+  icon: {
+    height: "2em",
+    width: "2em",
+    transform: "translate(-50%, -100%)",
+  },
+});
 
 function MapMarker(props) {
+  const classes = useStyles();
   return (
     <div
       onMouseEnter={() => props.setHovered && props.setHovered(props.id)}
@@ -11,9 +19,9 @@ function MapMarker(props) {
       onClick={() => props.setDetailed && props.setDetailed(props.id)}
     >
       {props.$hover || props.hovered ? (
-        <ApartmentRoundedIcon color="secondary" fontSize="large" />
+        <RoomRoundedIcon color="secondary" className={classes.icon} />
       ) : (
-        <ApartmentRoundedIcon fontSize="large" />
+        <RoomRoundedIcon className={classes.icon} />
       )}
     </div>
   );

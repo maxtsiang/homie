@@ -92,6 +92,8 @@ function Detail(props) {
       });
   }, []);
 
+  console.log(props.info);
+
   return (
     <Box
       className={classes.container}
@@ -168,7 +170,16 @@ function Detail(props) {
         <Typography variant="subtitle1" className={classes.text}>
           {props.info.address}
         </Typography>
-        <Map hovered={0} listings={[props.info]} height="30vh" width="100%" />
+        <Map
+          hovered={0}
+          listings={[props.info]}
+          height="30vh"
+          width="100%"
+          center={{
+            lat: props.info.location.latitude,
+            lng: props.info.location.longitude,
+          }}
+        />
       </Box>
     </Box>
   );

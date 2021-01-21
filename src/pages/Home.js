@@ -276,6 +276,7 @@ function Home(props) {
       <Grid item className={classes.item}>
         {detailed >= 0 && (
           <Detail
+            id={detailed}
             close={() => setDetailed(-1)}
             info={filteredListings[detailed]}
             height="88vh"
