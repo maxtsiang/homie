@@ -20,6 +20,7 @@ import {
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
 import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
 import NotificationsNoneRoundedIcon from "@material-ui/icons/NotificationsNoneRounded";
+import AddRoundedIcon from "@material-ui/icons/AddRounded";
 
 const useStyles = makeStyles({
   navText: {
@@ -82,22 +83,18 @@ function Nav() {
             >
               Homie
             </Typography>
-            <Typography
-              className={classes.navText}
-              component={RouterLink}
-              variant="subtitle1"
-              to="/new"
-            >
-              New Listing
-            </Typography>
           </Grid>
           <Grid item>
             <div>
+              <IconButton component={RouterLink} to="/new" aria-label="chats">
+                <AddRoundedIcon />
+              </IconButton>
+
               <IconButton component={RouterLink} to="/chats" aria-label="chats">
                 <ChatBubbleOutlineRoundedIcon />
               </IconButton>
 
-              <Typography variant="title">
+              {/* <Typography variant="title">
                 <IconButton
                   component={RouterLink}
                   to="/saved"
@@ -110,7 +107,7 @@ function Nav() {
                 <IconButton aria-label="notifications">
                   <NotificationsNoneRoundedIcon />
                 </IconButton>
-              </Typography>
+              </Typography> */}
               <Typography variant="title">
                 <IconButton aria-label="profile" onClick={handleClick}>
                   <Avatar
@@ -134,6 +131,7 @@ function Nav() {
                   <MenuItem component={RouterLink} to="/editprofile">
                     Edit Profile
                   </MenuItem>
+
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Popover>
               </Typography>

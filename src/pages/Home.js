@@ -12,7 +12,9 @@ import {
   Menu,
   MenuItem,
   Button,
+  Paper,
 } from "@material-ui/core";
+import Backdrop from "@material-ui/core/Backdrop";
 
 import React, { useEffect, useState } from "react";
 
@@ -21,8 +23,19 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
+import Profile from "../components/Profile";
 
-const useStyles = makeStyles({
+import CloseIcon from "@material-ui/icons/Close";
+
+const useStyles = makeStyles((theme) => ({
+  overlay: {
+    padding: "1em",
+    width: "15%",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
   header: {
     marginBottom: "1em",
   },
@@ -34,7 +47,7 @@ const useStyles = makeStyles({
   subheader: {
     color: "lightgrey",
   },
-});
+}));
 
 const SORT_OPTIONS = {
   PRICE_ASC: { column: "price", direction: "asc" },
@@ -153,6 +166,16 @@ function Home(props) {
 
   filteredListings = filter(filteredListings);
 
+  const [openInterestedOverlay, setOpenInterestedOverlay] = useState(false);
+  const handleCloseInterestedOverlay = () => {
+    setOpenInterestedOverlay(false);
+  };
+  const handleToggleInterestedOverlay = () => {
+    setOpenInterestedOverlay(!openInterestedOverlay);
+  };
+
+  const [interestedUsers, setInterestedUsers] = useState([]);
+
   return (
     <Grid
       container
@@ -240,6 +263,9 @@ function Home(props) {
                     setHovered={setHovered}
                     setDetailed={setDetailed}
                     info={listing}
+                    edit={listing.creator === currentUser.uid}
+                    handleInterestedOverlay={handleToggleInterestedOverlay}
+                    setInterestedUsers={setInterestedUsers}
                   />
                 );
               })}
@@ -268,6 +294,24 @@ function Home(props) {
           position="fixed"
         />
       </Grid>
+      <Backdrop className={classes.backdrop} open={openInterestedOverlay}>
+        <Paper className={classes.overlay}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            style={{ marginBottom: "0.5em" }}
+          >
+            <Typography variant="h6">Interested</Typography>
+            <IconButton onClick={handleCloseInterestedOverlay}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {interestedUsers.map((user) => (
+            <Profile user={user} popover />
+          ))}
+        </Paper>
+      </Backdrop>
     </Grid>
   );
 }

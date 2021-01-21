@@ -11,7 +11,14 @@ import { useAuth } from "../contexts/AuthContext";
 
 import firebase from "../firebase";
 
+import DeleteIcon from "@material-ui/icons/Delete";
+
 const useStyles = makeStyles({
+  interestedText: {
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
   avatar: {
     height: "1em",
     width: "1em",
@@ -37,6 +44,16 @@ const useStyles = makeStyles({
     "&:hover": {
       background: "#ffcccc",
     },
+  },
+  deleteButton: {
+    width: "100%",
+    padding: "0.5em",
+    marginTop: "1em",
+    background: "#FF6961",
+    "&:hover": {
+      background: "#FF1205",
+    },
+    color: "white",
   },
 });
 
@@ -69,8 +86,7 @@ function Interested(props) {
         .then((snapshot) => {
           const user = {
             id: snapshot.id,
-            name: snapshot.data().name,
-            profile: snapshot.data().profile,
+            ...snapshot.data(),
           };
           setInterestedUsers((prevUsers) => [...prevUsers, user]);
         });
@@ -121,10 +137,24 @@ function Interested(props) {
     }
   }
 
+  function handleInterestedOverlay() {
+    props.handleInterestedOverlay();
+    props.setInterestedUsers(interestedUsers);
+  }
+
+  async function handleClickDelete() {
+    await listing_ref.delete();
+  }
+
   return (
     <Box>
       {interestedNumber > 0 && (
-        <Box container display="flex" alignItems="center">
+        <Box
+          container
+          display="flex"
+          alignItems="center"
+          onClick={handleInterestedOverlay}
+        >
           <Box>
             <AvatarGroup
               max={3}
@@ -143,7 +173,7 @@ function Interested(props) {
             </AvatarGroup>
           </Box>
           <Box>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" className={classes.interestedText}>
               {interestedUsers[0].name}{" "}
               {interestedNumber - 3 > 0 ? (
                 <>and {interestedNumber} others</>
@@ -153,18 +183,31 @@ function Interested(props) {
           </Box>
         </Box>
       )}
-
-      <Button
-        className={
-          selected ? classes.interestedButtonSelected : classes.interestedButton
-        }
-        variant="contained"
-        disableElevation
-        onClick={handleClickInterested}
-      >
-        <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />
-        {selected ? <>Interested!</> : <>Interested</>}
-      </Button>
+      {props.edit ? (
+        <Button
+          className={classes.deleteButton}
+          style={{ marginRight: "0.2em" }}
+          disableElevation
+          variant="contained"
+          onClick={handleClickDelete}
+        >
+          <DeleteIcon /> Delete
+        </Button>
+      ) : (
+        <Button
+          className={
+            selected
+              ? classes.interestedButtonSelected
+              : classes.interestedButton
+          }
+          variant="contained"
+          disableElevation
+          onClick={handleClickInterested}
+        >
+          <FavoriteBorderRoundedIcon style={{ marginRight: "0.2em" }} />
+          {selected ? <>Interested!</> : <>Interested</>}
+        </Button>
+      )}
     </Box>
   );
 }

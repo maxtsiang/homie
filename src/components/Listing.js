@@ -15,13 +15,8 @@ import {
 
 import firebase from "../firebase";
 
-import bedroom from "../dev-imgs/bedroom.jpg";
-import profile from "../dev-imgs/profile.jpg";
-
 import Profile from "./Profile";
 import Interested from "./Interested";
-
-import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
 
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
@@ -144,6 +139,9 @@ function Listing(props) {
                 <Interested
                   listingid={props.info.id}
                   interested={props.info.interested}
+                  edit={props.edit}
+                  handleInterestedOverlay={props.handleInterestedOverlay}
+                  setInterestedUsers={props.setInterestedUsers}
                 />
               </Box>
             </CardContent>
