@@ -3,6 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Nav from "../components/Nav";
 import Verify from "../pages/Verify";
+import EditProfile from "../pages/EditProfile";
 
 function PrivateRoute({ component: Component, ...rest }) {
   const { currentUser } = useAuth();
@@ -11,12 +12,21 @@ function PrivateRoute({ component: Component, ...rest }) {
       {...rest}
       render={(props) => {
         if (currentUser && currentUser.emailVerified) {
-          return (
-            <>
-              <Nav />
-              <Component {...props} />
-            </>
-          );
+          if (currentUser && currentUser.displayName && currentUser.photoURL) {
+            return (
+              <>
+                <Nav />
+                <Component {...props} />
+              </>
+            );
+          } else {
+            return (
+              <>
+                <Nav />
+                <EditProfile new />
+              </>
+            );
+          }
         } else if (currentUser && !currentUser.emailVerified) {
           return <Verify />;
         } else {

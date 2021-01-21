@@ -175,8 +175,8 @@ function Interested(props) {
           <Box>
             <Typography variant="subtitle1" className={classes.interestedText}>
               {interestedUsers[0].name}{" "}
-              {interestedNumber - 3 > 0 ? (
-                <>and {interestedNumber} others</>
+              {interestedNumber > 1 ? (
+                <>and {interestedNumber - 1} others</>
               ) : null}{" "}
               interested
             </Typography>

@@ -73,14 +73,14 @@ function Signup(props) {
   const pennDomain = "upenn.edu";
 
   async function handleSubmit() {
-    if (
-      /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(
-        emailRef.current.value
-      ) == false ||
-      emailRef.current.value.substr(-pennDomain.length) !== pennDomain
-    ) {
-      return setError("Invalid email address");
-    }
+    // if (
+    //   /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(
+    //     emailRef.current.value
+    //   ) == false ||
+    //   emailRef.current.value.substr(-pennDomain.length) !== pennDomain
+    // ) {
+    //   return setError("Invalid email address");
+    // }
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError("Passwords do not match");

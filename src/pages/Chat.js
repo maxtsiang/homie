@@ -20,13 +20,13 @@ const Chat = () => {
   return (
     <div>
       <Grid container className={classes.container}>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Typography variant="h3" className={classes.header}>
             Chats{" "}
           </Typography>
           <ChatContacts></ChatContacts>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <ChatWindow></ChatWindow>
         </Grid>
       </Grid>

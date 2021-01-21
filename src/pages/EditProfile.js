@@ -24,6 +24,7 @@ import { storage } from "../firebase";
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
+import { datePickerDefaultProps } from "@material-ui/pickers/constants/prop-types";
 
 const useStyles = makeStyles({
   container: {
@@ -88,7 +89,7 @@ const useStyles = makeStyles({
   },
 });
 
-function EditProfile() {
+function EditProfile(props) {
   const classes = useStyles();
   const { currentUser } = useAuth();
 
@@ -107,6 +108,8 @@ function EditProfile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
+  const history = useHistory();
 
   const handleSetName = (e) => {
     setName(e.target.value);
@@ -141,14 +144,17 @@ function EditProfile() {
   };
 
   useEffect(() => {
-    userRef.get().then((snapshot) => {
-      const doc = snapshot.data();
-      setPronouns(doc.pronouns);
-      setMajor(doc.major);
-      setGrad(doc.grad);
-      setGreek(doc.greek);
-      setMyHabits(doc.habits);
-    });
+    if (!props.new) {
+      userRef.get().then((snapshot) => {
+        const doc = snapshot.data();
+        setPronouns(doc.pronouns);
+        setMajor(doc.major);
+        setGrad(doc.grad);
+        setGreek(doc.greek);
+        setMyHabits(doc.habits);
+      });
+    }
+
     habitsRef.get().then((snapshot) => {
       snapshot.docs.map((doc) => {
         const habit = {
@@ -160,8 +166,6 @@ function EditProfile() {
       });
     });
   }, []);
-
-  console.log("MYHABITS", myHabits);
 
   const handleFileChange = (e) => {
     setError("");
@@ -223,6 +227,18 @@ function EditProfile() {
   async function handleSubmit() {
     setError("");
     setMessage("");
+
+    if (
+      !name ||
+      !pronouns ||
+      !major ||
+      !grad ||
+      (!currentUser.photoURL && !photo)
+    ) {
+      setError("Please fill out everything (greek life optional) :)");
+      return;
+    }
+
     setLoading(true);
     await currentUser.updateProfile({
       displayName: name,
@@ -241,13 +257,19 @@ function EditProfile() {
 
     setLoading(false);
     setMessage("Success!");
+
+    if (props.new) {
+      history.push("/");
+    }
   }
 
   return (
     <div>
       <Box className={classes.container}>
         <Box display="flex" justifyContent="space-between">
-          <Typography variant="h3">Edit Profile</Typography>
+          <Typography variant="h3">
+            {props.new ? <>Set Profile</> : <>Edit Profile</>}
+          </Typography>
           {loading ? (
             <CircularProgress />
           ) : (
