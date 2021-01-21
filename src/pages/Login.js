@@ -1,11 +1,4 @@
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Paper,
-  Link,
-} from "@material-ui/core";
+import { Typography, Button, TextField, Paper, Link } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,8 +6,6 @@ import { Alert } from "@material-ui/lab";
 import { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-
-import firebase from "../firebase";
 
 const useStyles = makeStyles({
   container: {
@@ -65,7 +56,7 @@ function Login(props) {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const { login, currentUser } = useAuth();
+  const { login } = useAuth();
 
   const history = useHistory();
 

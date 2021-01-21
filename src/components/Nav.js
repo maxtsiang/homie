@@ -10,16 +10,11 @@ import {
   Popover,
   IconButton,
   Avatar,
-  Button,
-  Link,
-  Menu,
   MenuItem,
   makeStyles,
 } from "@material-ui/core";
 
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
-import FavoriteBorderRoundedIcon from "@material-ui/icons/FavoriteBorderRounded";
-import NotificationsNoneRoundedIcon from "@material-ui/icons/NotificationsNoneRounded";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 
 const useStyles = makeStyles({
@@ -33,7 +28,7 @@ const useStyles = makeStyles({
 function Nav() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [error, setError] = useState("");
+
   const { logout, currentUser } = useAuth();
   const history = useHistory();
 
@@ -48,13 +43,10 @@ function Nav() {
   const open = Boolean(anchorEl);
 
   async function handleLogout() {
-    setError("");
     try {
       await logout();
       history.push("/login");
-    } catch {
-      setError("Failed to log out");
-    }
+    } catch (err) {}
   }
 
   return (
@@ -94,20 +86,6 @@ function Nav() {
                 <ChatBubbleOutlineRoundedIcon />
               </IconButton>
 
-              {/* <Typography variant="title">
-                <IconButton
-                  component={RouterLink}
-                  to="/saved"
-                  aria-label="saved"
-                >
-                  <FavoriteBorderRoundedIcon />
-                </IconButton>
-              </Typography>
-              <Typography variant="title">
-                <IconButton aria-label="notifications">
-                  <NotificationsNoneRoundedIcon />
-                </IconButton>
-              </Typography> */}
               <Typography variant="title">
                 <IconButton aria-label="profile" onClick={handleClick}>
                   <Avatar

@@ -28,39 +28,42 @@ const Chat = () => {
 
   const [selected, setSelected] = useState(0);
 
-  useEffect(async () => {
-    const currentUserDoc = await firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUser.uid)
-      .get();
+  useEffect(() => {
+    async function fetchData() {
+      const currentUserDoc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUser.uid)
+        .get();
 
-    const chatIds = currentUserDoc.data().chats;
+      const chatIds = currentUserDoc.data().chats;
 
-    if (chatIds) {
-      setChatRooms(chatIds);
-      chatIds.map(async (id) => {
-        const chatRoomDoc = await firebase
-          .firestore()
-          .collection("chats")
-          .doc(id)
-          .get();
-        const members = chatRoomDoc.data().members;
-        const userId = members.find((id) => id !== currentUser.uid);
-        const userDoc = await firebase
-          .firestore()
-          .collection("users")
-          .doc(userId)
-          .get();
-        const user = {
-          id: userId,
-          name: userDoc.data().name,
-          profile: userDoc.data().profile,
-        };
-        setChatUsers((oldUser) => [...oldUser, user]);
-      });
+      if (chatIds) {
+        setChatRooms(chatIds);
+        chatIds.map(async (id) => {
+          const chatRoomDoc = await firebase
+            .firestore()
+            .collection("chats")
+            .doc(id)
+            .get();
+          const members = chatRoomDoc.data().members;
+          const userId = members.find((id) => id !== currentUser.uid);
+          const userDoc = await firebase
+            .firestore()
+            .collection("users")
+            .doc(userId)
+            .get();
+          const user = {
+            id: userId,
+            name: userDoc.data().name,
+            profile: userDoc.data().profile,
+          };
+          setChatUsers((oldUser) => [...oldUser, user]);
+        });
+      }
     }
-  }, []);
+    fetchData();
+  }, [currentUser.uid]);
 
   return (
     <div>

@@ -77,7 +77,7 @@ function Interested(props) {
     .doc(props.listingid);
 
   useEffect(() => {
-    props.interested.map((id) => {
+    props.interested.forEach((id) => {
       firebase
         .firestore()
         .collection("users")
@@ -91,7 +91,7 @@ function Interested(props) {
           setInterestedUsers((prevUsers) => [...prevUsers, user]);
         });
     });
-  }, []);
+  }, [props.interested]);
 
   useEffect(() => {
     interested_ref.get().then((snapshot) => {
@@ -101,7 +101,7 @@ function Interested(props) {
         setSelected(false);
       }
     });
-  }, []);
+  }, [interested_ref]);
 
   function handleClickInterested() {
     if (selected) {

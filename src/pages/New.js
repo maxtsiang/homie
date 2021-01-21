@@ -1,13 +1,10 @@
 import {
   Typography,
-  Grid,
   Box,
   Button,
   IconButton,
-  TextField,
   InputAdornment,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   FormGroup,
@@ -27,7 +24,7 @@ import { useHistory } from "react-router-dom";
 import Counter from "../components/Counter";
 import Amenity, { amenitiesList } from "../components/Amenity";
 
-import React, { useState, useRef, Image } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -35,7 +32,6 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import PlacesSearch from "../components/PlacesSearch";
 
 import { storage } from "../firebase";
-import { Remove } from "@material-ui/icons";
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
@@ -166,7 +162,7 @@ function New() {
   const handleFileChange = (e) => {
     setError("");
     const fileList = Array.from(e.target.files);
-    fileList.map((newPhoto) => {
+    fileList.forEach((newPhoto) => {
       if (newPhoto.size > 1000000) {
         setError("Image must be less than 1mb");
         return;
@@ -209,7 +205,7 @@ function New() {
       setError("Please enter a valid price");
       setLoading(false);
       return;
-    } else if (description.length == 0) {
+    } else if (description.length === 0) {
       setError("Please enter a description");
       setLoading(false);
       return;

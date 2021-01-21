@@ -1,6 +1,5 @@
 import Home from "./pages/Home";
 import New from "./pages/New";
-import Nav from "./components/Nav";
 import Chat from "./pages/Chat";
 
 import Signup from "./pages/Signup";

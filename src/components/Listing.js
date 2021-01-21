@@ -2,15 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   Typography,
   Divider,
-  Button,
   Card,
   CardActionArea,
-  CardMedia,
   CardContent,
-  IconButton,
   Box,
   Grid,
-  CircularProgress,
 } from "@material-ui/core";
 
 import firebase from "../firebase";
@@ -87,7 +83,7 @@ function Listing(props) {
         };
         setCreator(user);
       });
-  }, []);
+  }, [props.info.creator, props.info.id]);
 
   const selected =
     props.index === props.hovered || props.index === props.detailed;
@@ -109,7 +105,7 @@ function Listing(props) {
                 height: "100%",
               }}
             >
-              <img src={image} className={classes.cardimg} />
+              <img src={image} alt="" className={classes.cardimg} />
             </Box>
           </Grid>
           <Grid item className={classes.item}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useState } from "react";
 
 import {
   Typography,
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 function Profile(props) {
   const { currentUser } = useAuth();
   const history = useHistory();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const classes = useStyles();
 

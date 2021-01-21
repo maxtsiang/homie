@@ -1,16 +1,9 @@
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Paper,
-  Link,
-} from "@material-ui/core";
+import { Typography, Button, Paper, Link } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { Alert } from "@material-ui/lab";
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles({
@@ -78,6 +71,8 @@ function Verify(props) {
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.container} variant="outlined">
+        {error && <Alert severity="error">{error}</Alert>}
+        {message && <Alert severity="success">{message}</Alert>}
         <Typography variant="h3" className={classes.label}>
           Verify your email
         </Typography>

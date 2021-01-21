@@ -90,7 +90,7 @@ function Detail(props) {
         };
         setCreator(user);
       });
-  }, []);
+  }, [props.info.creator, props.info.id]);
 
   console.log(props.info);
 

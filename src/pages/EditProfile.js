@@ -17,14 +17,13 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 
 import { useHistory } from "react-router-dom";
 
-import React, { useState, useRef, Image, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { storage } from "../firebase";
 
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
-import { datePickerDefaultProps } from "@material-ui/pickers/constants/prop-types";
 
 const useStyles = makeStyles({
   container: {
@@ -50,13 +49,6 @@ const useStyles = makeStyles({
     width: "100%",
     overflow: "visible",
   },
-  inputField: {
-    marginBottom: "1em",
-    marginRight: "1em",
-    marginTop: "1em",
-    width: "100%",
-  },
-
   button: {
     width: "10%",
     marginTop: "1em",
@@ -94,7 +86,6 @@ function EditProfile(props) {
   const { currentUser } = useAuth();
 
   const userRef = firebase.firestore().collection("users").doc(currentUser.uid);
-  const habitsRef = firebase.firestore().collection("habits");
 
   const [name, setName] = useState(currentUser.displayName);
   const [pronouns, setPronouns] = useState("");
@@ -154,23 +145,29 @@ function EditProfile(props) {
         setMyHabits(doc.habits);
       });
     }
+  }, [props.new, userRef]);
 
-    habitsRef.get().then((snapshot) => {
-      snapshot.docs.map((doc) => {
-        const habit = {
-          id: doc.id,
-          ...doc.data(),
-        };
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("habits")
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          const habit = {
+            id: doc.id,
+            ...doc.data(),
+          };
 
-        setHabits((oldHabits) => [...oldHabits, habit]);
+          setHabits((oldHabits) => [...oldHabits, habit]);
+        });
       });
-    });
   }, []);
 
   const handleFileChange = (e) => {
     setError("");
     const fileList = Array.from(e.target.files);
-    fileList.map((newPhoto) => {
+    fileList.forEach((newPhoto) => {
       if (newPhoto.size > 1000000) {
         setError("Image must be less than 1mb");
         return;

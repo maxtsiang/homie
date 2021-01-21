@@ -1,19 +1,19 @@
-import { React, useState, useEffect, useRef, createRef } from "react";
+import { useState, useEffect, useRef } from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Icon from "@material-ui/core/Icon";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import profile from "../dev-imgs/profile.jpg";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  TextField,
+  Button,
+  Box,
+  Paper,
+} from "@material-ui/core";
+
 import moment from "moment";
-// import { FixedSizeList as List } from "react-window";
-// import AutoSizer from "react-virtualized-auto-sizer";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
 
@@ -25,11 +25,6 @@ const useStyles = makeStyles({
     width: "80%",
     margin: "2em",
     overflow: "scroll",
-  },
-  msgBar: {
-    marginTop: "3vh",
-    justifyContent: "space-between",
-    width: "95%",
   },
   receivedtxtMsg: {
     border: "1px solid lightgrey",
@@ -187,7 +182,6 @@ const ChatWindow = (props) => {
         })}
         <div ref={messagesEnd} />
       </List>
-      {/* need to prevent form from submitting */}
       <Paper className={classes.msgBox} elevation={0}>
         <TextField
           placeholder="Type your message..."

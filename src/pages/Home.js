@@ -88,7 +88,7 @@ function useListings(sortBy = "CREATEDAT_DESC", saved = false, creator) {
     }
 
     return () => unsubscribe();
-  }, [sortBy, creator]);
+  }, [sortBy, creator, saved]);
 
   return listings;
 }

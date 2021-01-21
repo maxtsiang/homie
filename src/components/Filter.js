@@ -2,23 +2,18 @@ import {
   Box,
   Typography,
   Button,
-  TextField,
-  Input,
   InputAdornment,
   FormControl,
   InputLabel,
   OutlinedInput,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 import { KeyboardDatePicker } from "@material-ui/pickers";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import Counter from "../components/Counter";
-import Amenity, { amenitiesList } from "../components/Amenity";
 
 import RemoveIcon from "@material-ui/icons/Remove";
 import { useState } from "react";
@@ -43,10 +38,6 @@ const useStyles = makeStyles({
   separator: {
     fontSize: "1.3em",
     marginRight: "1em",
-  },
-  subtitle: {
-    fontSize: "1em",
-    fontWeight: 400,
   },
   button: {
     width: "100%",
@@ -74,7 +65,6 @@ function Filter(props) {
   const [persons, setPersons] = useState(props.filters.persons);
   const [bedrooms, setBedrooms] = useState(props.filters.bedrooms);
   const [bathrooms, setBathrooms] = useState(props.filters.bathrooms);
-  // const [amenities, setAmenities] = useState(props.filters.amenities);
 
   const [error, setError] = useState("");
 
@@ -85,10 +75,6 @@ function Filter(props) {
   const handleSetMax = (e) => {
     setMax(e.target.value);
   };
-
-  // const handleCheck = (e) => {
-  //   setAmenities({ ...amenities, [e.target.name]: e.target.checked });
-  // };
 
   const handleSetFilters = (e) => {
     if (min) {
@@ -130,16 +116,6 @@ function Filter(props) {
       props.addFilter("bathrooms", bathrooms);
     }
 
-    // if (amenities) {
-    //   let selectedAmenities = [];
-    //   for (let amenity in amenities) {
-    //     if (amenities[amenity]) {
-    //       selectedAmenities.push(amenity);
-    //     }
-    //   }
-    //   props.addFilter("amenities", amenities)
-    // }
-
     props.close();
   };
 
@@ -150,6 +126,7 @@ function Filter(props) {
 
   return (
     <Box className={classes.container}>
+      {error && <Alert severity="error">{error}</Alert>}
       <Box className={classes.group}>
         <Typography variant="h6" className={classes.label}>
           Price
@@ -237,34 +214,6 @@ function Filter(props) {
           count={bathrooms}
         />
       </Box>
-
-      {/* <Box className={classes.group}>
-        <Typography variant="h6" className={classes.label}>
-          Amenities
-        </Typography>
-
-        <FormControl component="fieldset">
-          <FormGroup className={classes.checkboxGroup}>
-            {amenitiesList.map((amenityName) => {
-              return (
-                <Box display="flex" alignItems="center">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={amenities ? amenities[amenityName] : false}
-                        onChange={handleCheck}
-                        name={amenityName}
-                      />
-                    }
-                    className={classes.checkbox}
-                  />
-                  <Amenity id={amenityName} />
-                </Box>
-              );
-            })}
-          </FormGroup>
-        </FormControl>
-      </Box> */}
 
       <Box>
         <Button
