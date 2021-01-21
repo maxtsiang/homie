@@ -143,7 +143,7 @@ const ChatWindow = (props) => {
     }
   });
 
-  const sentMessage = (msgContent, user) => {
+  const sentMessage = (msgContent) => {
     return (
       <ListItem className={classes.bubbleWrapper}>
         <Box className={classes.invisible} />
@@ -153,7 +153,7 @@ const ChatWindow = (props) => {
             primary={msgContent}
           ></ListItemText>
           <ListItemAvatar>
-            <Avatar alt={user.name} src={user.profile} />
+            <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
           </ListItemAvatar>
         </Box>
       </ListItem>
@@ -182,7 +182,7 @@ const ChatWindow = (props) => {
       <List>
         {messages.map((message) => {
           return message.creator === currentUser.uid
-            ? sentMessage(message.content, currentUser.uid)
+            ? sentMessage(message.content)
             : receivedMessage(message.content, props.user);
         })}
         <div ref={messagesEnd} />

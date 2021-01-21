@@ -54,28 +54,36 @@ function Profile(props) {
     firebase
       .firestore()
       .collection("chats")
-      .add({
-        members: [props.user.id, currentUser.uid],
-        creator: currentUser.uid,
-        type: 1,
-      })
-      .then(async (docRef) => {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(currentUser.uid)
-          .update({
-            chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
-          });
+      .where("members", "array-contains", currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          firebase
+            .firestore()
+            .collection("chats")
+            .add({
+              members: [props.user.id, currentUser.uid],
+              creator: currentUser.uid,
+              type: 1,
+            })
+            .then(async (docRef) => {
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .update({
+                  chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+                });
 
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(props.user.id)
-          .update({
-            chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
-          });
-
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(props.user.id)
+                .update({
+                  chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+                });
+            });
+        }
         history.push("/chats");
       });
   }
