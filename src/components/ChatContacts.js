@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -8,6 +8,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import firebase from "../firebase";
+
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,39 +29,40 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    borderRadius: "0.5em",
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
 }));
 
-const ChatContacts = () => {
+const ChatContacts = (props) => {
   const classes = useStyles();
 
-  const ChatPreview = (userName, avatar, lastmsg) => {
-    return (
-      <ListItem className={classes.listItem}>
-        <Box className={classes.sender}>
-          <ListItemAvatar>
-            <Avatar alt="Max Tsiang" src={avatar} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={userName}
-            secondary={<React.Fragment>{lastmsg}</React.Fragment>}
-          />
-        </Box>
-        <Box>
-          <Typography variant="subtitle2">1 MIN AGO</Typography>
-        </Box>
-      </ListItem>
-    );
-  };
-
   return (
-    // obviously this will have to be a template that pulls data from the database
     <List>
-      {ChatPreview("Max Tsiang", null, "hello this is a preview")}
-
-      {ChatPreview("Max Tsiang", null, "hello this is another preview")}
-
-      {ChatPreview("Max Tsiang", null, "wfjbfjewhflef")}
+      {props.users.map((user, index) => (
+        <ListItem
+          className={classes.listItem}
+          style={{
+            background: props.selected === index ? "lightgrey" : "none",
+          }}
+          onClick={props.setSelected(index)}
+        >
+          <Box className={classes.sender}>
+            <ListItemAvatar>
+              <Avatar alt={user.name} src={user.profile} />
+            </ListItemAvatar>
+            <ListItemText
+              primary={user.name}
+              secondary={<React.Fragment>preview</React.Fragment>}
+            />
+          </Box>
+          <Box>
+            <Typography variant="subtitle2">1 MIN AGO</Typography>
+          </Box>
+        </ListItem>
+      ))}
     </List>
   );
 };

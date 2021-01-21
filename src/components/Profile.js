@@ -9,6 +9,9 @@ import {
   Chip,
   Button,
 } from "@material-ui/core";
+import { useAuth } from "../contexts/AuthContext";
+import firebase from "../firebase";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   popoverContainer: {
@@ -19,7 +22,7 @@ const useStyles = makeStyles({
     color: "white",
     padding: "0.5em",
     borderRadius: "0.5em",
-    margin: "0.5em",
+    margin: "0.2em",
   },
   button: {
     width: "100%",
@@ -29,6 +32,8 @@ const useStyles = makeStyles({
   },
 });
 function Profile(props) {
+  const { currentUser } = useAuth();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const classes = useStyles();
@@ -42,6 +47,38 @@ function Profile(props) {
   };
 
   const open = Boolean(anchorEl);
+
+  const isSelfProfile = currentUser.uid === props.user.id;
+
+  function handleChat() {
+    firebase
+      .firestore()
+      .collection("chats")
+      .add({
+        members: [props.user.id, currentUser.uid],
+        creator: currentUser.uid,
+        type: 1,
+      })
+      .then(async (docRef) => {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(currentUser.uid)
+          .update({
+            chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+          });
+
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(props.user.id)
+          .update({
+            chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
+          });
+
+        history.push("/chats");
+      });
+  }
 
   return (
     <>
@@ -58,7 +95,7 @@ function Profile(props) {
           <Typography variant="subtitle1">{props.user.name}</Typography>
         </Box>
       </Box>
-      {props.popover && (
+      {!isSelfProfile && props.popover && (
         <Popover
           open={open}
           anchorEl={anchorEl}
@@ -99,6 +136,7 @@ function Profile(props) {
               color="primary"
               variant="contained"
               className={classes.button}
+              onClick={handleChat}
             >
               Chat
             </Button>

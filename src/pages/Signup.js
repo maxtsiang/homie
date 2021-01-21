@@ -96,6 +96,8 @@ function Signup(props) {
       await res.user.sendEmailVerification();
       firebase.firestore().collection("users").doc(res.user.uid).set({
         email: res.user.email,
+        habits: [],
+        chats: [],
       });
       history.push("/");
     } catch {

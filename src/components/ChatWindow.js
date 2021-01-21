@@ -11,8 +11,11 @@ import Icon from "@material-ui/core/Icon";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import profile from "../dev-imgs/profile.jpg";
+import moment from "moment";
 // import { FixedSizeList as List } from "react-window";
 // import AutoSizer from "react-virtualized-auto-sizer";
+import { useAuth } from "../contexts/AuthContext";
+import firebase from "../firebase";
 
 const useStyles = makeStyles({
   container: {
@@ -74,23 +77,52 @@ const useStyles = makeStyles({
   },
 });
 
-const ChatWindow = () => {
+function useMessages(id) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = firebase
+      .firestore()
+      .collection("messages")
+      .doc(id)
+      .collection("messages")
+      .orderBy("createdAt", "asc")
+      .onSnapshot((snapshot) => {
+        const newMessages = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setMessages(newMessages);
+      });
+
+    return () => unsubscribe();
+  }, [id]);
+
+  return messages;
+}
+
+const ChatWindow = (props) => {
   const [textContent, setTextContent] = useState("");
-  const [msgs, setMsgs] = useState([
-    {
-      msg: "your next line is jojo references are dumb",
-      sentMessage: false,
-      avatar: null,
-    },
-    {
-      msg: "jojo references are dumb",
-      sentMessage: true,
-      avatar: null,
-    },
-  ]); // pulled from db in future
+  const { currentUser } = useAuth();
+  const messages = useMessages(props.chatId);
+
   const classes = useStyles();
 
   const messagesEnd = useRef();
+
+  const handleSendMessage = () => {
+    setTextContent("");
+    firebase
+      .firestore()
+      .collection("messages")
+      .doc(props.chatId)
+      .collection("messages")
+      .add({
+        content: textContent,
+        creator: currentUser.uid,
+        createdAt: Number(moment().unix().valueOf() * 1000),
+      });
+  };
 
   const handleChange = (event) => {
     setTextContent(event.target.value);
@@ -111,7 +143,7 @@ const ChatWindow = () => {
     }
   });
 
-  const sentMessage = (msgContent, avatar) => {
+  const sentMessage = (msgContent, user) => {
     return (
       <ListItem className={classes.bubbleWrapper}>
         <Box className={classes.invisible} />
@@ -121,19 +153,19 @@ const ChatWindow = () => {
             primary={msgContent}
           ></ListItemText>
           <ListItemAvatar>
-            <Avatar alt="Max Tsiang" src={profile} />
+            <Avatar alt={user.name} src={user.profile} />
           </ListItemAvatar>
         </Box>
       </ListItem>
     );
   };
 
-  const receivedMessage = (msgContent, avatar) => {
+  const receivedMessage = (msgContent, user) => {
     return (
       <ListItem className={classes.bubbleWrapper}>
         <Box className={classes.msgGroup}>
           <ListItemAvatar>
-            <Avatar alt="Max Tsiang" src={profile} />
+            <Avatar alt={user.name} src={user.profile} />
           </ListItemAvatar>
           <ListItemText
             className={classes.receivedtxtMsg}
@@ -148,10 +180,10 @@ const ChatWindow = () => {
   return (
     <Box className={classes.container}>
       <List>
-        {msgs.map((message) => {
-          return message.sentMessage
-            ? sentMessage(message.msg, message.avatar)
-            : receivedMessage(message.msg, message.avatar);
+        {messages.map((message) => {
+          return message.creator === currentUser.uid
+            ? sentMessage(message.content, currentUser.uid)
+            : receivedMessage(message.content, props.user);
         })}
         <div ref={messagesEnd} />
       </List>
@@ -169,18 +201,7 @@ const ChatWindow = () => {
           variant="contained"
           color="primary"
           className={classes.button}
-          onClick={() => {
-            setMsgs((oldMsgs) => [
-              ...oldMsgs,
-              {
-                msg: textContent,
-                sentMessage: true,
-                avatar: null,
-              },
-            ]);
-            setTextContent("");
-            // this stuff will be replaced by saving to db
-          }}
+          onClick={handleSendMessage}
         >
           Send
         </Button>
