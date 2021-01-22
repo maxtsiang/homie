@@ -12,6 +12,7 @@ import {
   Box,
   Paper,
   CircularProgress,
+  Typography,
 } from "@material-ui/core";
 
 import moment from "moment";
@@ -73,7 +74,7 @@ const useStyles = makeStyles({
   },
 });
 
-const LIMIT = 12;
+const LIMIT = 15;
 
 const ChatWindow = (props) => {
   const [textContent, setTextContent] = useState("");
@@ -128,6 +129,7 @@ const ChatWindow = (props) => {
             id: doc.id,
             ...doc.data(),
           }));
+          setIsEnd(false);
           setMessages(newMessages);
           setLastMessage(messages[0]);
           scrollToBottom();
@@ -178,7 +180,7 @@ const ChatWindow = (props) => {
 
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0) {
-      if (!loading) {
+      if (!loading && !isEnd) {
         getMessages();
       }
     }
@@ -221,8 +223,19 @@ const ChatWindow = (props) => {
   return (
     <Box className={classes.container} onScroll={handleScroll}>
       <List>
-        {loading && <CircularProgress />}
-        {isEnd && <div>End of messages</div>}
+        {isEnd && (
+          <ListItem>
+            <ListItemText>
+              <Typography variant="subtitle2">End of messages</Typography>
+            </ListItemText>
+          </ListItem>
+        )}
+        {loading && (
+          <ListItem>
+            <CircularProgress size={30} />
+          </ListItem>
+        )}
+
         {props.chat &&
           messages.map((message, index) => {
             return message.creator === currentUser.uid
