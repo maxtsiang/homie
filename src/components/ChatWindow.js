@@ -11,6 +11,7 @@ import {
   Button,
   Box,
   Paper,
+  CircularProgress,
 } from "@material-ui/core";
 
 import moment from "moment";
@@ -72,39 +73,70 @@ const useStyles = makeStyles({
   },
 });
 
-function useMessages(id) {
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    const unsubscribe = firebase
-      .firestore()
-      .collection("messages")
-      .doc(id)
-      .collection("messages")
-      .orderBy("createdAt", "asc")
-      .onSnapshot((snapshot) => {
-        const newMessages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMessages(newMessages);
-      });
-
-    return () => unsubscribe();
-  }, [id]);
-
-  return messages;
-}
+const LIMIT = 12;
 
 const ChatWindow = (props) => {
   const [textContent, setTextContent] = useState("");
   const { currentUser } = useAuth();
 
-  const messages = useMessages(props.chat.id);
-
-  const classes = useStyles();
+  const [lastMessage, setLastMessage] = useState();
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
 
   const messagesEnd = useRef();
+
+  function getMessages() {
+    setLoading(true);
+    firebase
+      .firestore()
+      .collection("messages")
+      .doc(props.chat.id)
+      .collection("messages")
+      .orderBy("createdAt", "desc")
+      .startAfter(lastMessage)
+      .limit(LIMIT)
+      .get()
+      .then((snapshot) => {
+        const messages = snapshot.docs.reverse();
+        if (messages.length > 0) {
+          const newMessages = messages.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setMessages((oldMessages) => [...newMessages, ...oldMessages]);
+          setLastMessage(messages[0]);
+        } else {
+          setIsEnd(true);
+        }
+        setLoading(false);
+      });
+  }
+
+  useEffect(() => {
+    const unsubscribe = firebase
+      .firestore()
+      .collection("messages")
+      .doc(props.chat.id)
+      .collection("messages")
+      .orderBy("createdAt", "desc")
+      .limit(20)
+      .onSnapshot((snapshot) => {
+        const messages = snapshot.docs.reverse();
+        if (messages.length > 0) {
+          const newMessages = messages.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setMessages(newMessages);
+          setLastMessage(messages[0]);
+        }
+      });
+
+    return () => unsubscribe();
+  }, []);
+
+  const classes = useStyles();
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -132,6 +164,7 @@ const ChatWindow = (props) => {
     //       createdAt: time,
     //     },
     //   });
+    scrollToBottom();
   };
 
   const handleChange = (event) => {
@@ -151,7 +184,15 @@ const ChatWindow = (props) => {
       // do componentDidUpdate logic
       scrollToBottom();
     }
-  });
+  }, []);
+
+  const handleScroll = (e) => {
+    if (e.target.scrollTop === 0) {
+      if (!loading) {
+        getMessages();
+      }
+    }
+  };
 
   const sentMessage = (msgContent) => {
     return (
@@ -162,9 +203,9 @@ const ChatWindow = (props) => {
             className={classes.senttxtMsg}
             primary={msgContent}
           ></ListItemText>
-          <ListItemAvatar>
+          {/* <ListItemAvatar>
             <Avatar alt={currentUser.displayName} src={currentUser.photoURL} />
-          </ListItemAvatar>
+          </ListItemAvatar> */}
         </Box>
       </ListItem>
     );
@@ -174,9 +215,9 @@ const ChatWindow = (props) => {
     return (
       <ListItem className={classes.bubbleWrapper}>
         <Box className={classes.msgGroup}>
-          <ListItemAvatar>
+          {/* <ListItemAvatar>
             <Avatar alt={user.name} src={user.profile} />
-          </ListItemAvatar>
+          </ListItemAvatar> */}
           <ListItemText
             className={classes.receivedtxtMsg}
             primary={msgContent}
@@ -188,10 +229,12 @@ const ChatWindow = (props) => {
   };
 
   return (
-    <Box className={classes.container}>
+    <Box className={classes.container} onScroll={handleScroll}>
       <List>
+        {loading && <CircularProgress />}
+        {isEnd && <div>End of messages</div>}
         {props.chat &&
-          messages.map((message) => {
+          messages.map((message, index) => {
             return message.creator === currentUser.uid
               ? sentMessage(message.content)
               : receivedMessage(message.content, props.chat.otherUser);
