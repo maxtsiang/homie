@@ -77,6 +77,7 @@ function Interested(props) {
     .doc(props.listingid);
 
   useEffect(() => {
+    setInterestedUsers([]);
     props.interested.forEach((id) => {
       firebase
         .firestore()
@@ -112,10 +113,6 @@ function Interested(props) {
       });
 
       setSelected(false);
-
-      setInterestedUsers(
-        interestedUsers.filter((user) => user.id !== currentUser.uid)
-      );
     } else {
       interested_ref.set({
         creator: currentUser.uid,
@@ -127,13 +124,6 @@ function Interested(props) {
       });
 
       setSelected(true);
-
-      const currentUserObject = {
-        id: currentUser.uid,
-        name: currentUser.displayName,
-        profile: currentUser.photoURL,
-      };
-      setInterestedUsers((prevUsers) => [...prevUsers, currentUserObject]);
     }
   }
 
@@ -142,8 +132,8 @@ function Interested(props) {
     props.setInterestedUsers(interestedUsers);
   }
 
-  async function handleClickDelete() {
-    await listing_ref.delete();
+  function handleClickDelete() {
+    listing_ref.delete();
   }
 
   return (

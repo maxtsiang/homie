@@ -55,40 +55,24 @@ const SORT_OPTIONS = {
   CREATEDAT_DESC: { column: "createdAt", direction: "desc" },
 };
 
-function useListings(sortBy = "CREATEDAT_DESC", saved = false, creator) {
+function useListings(sortBy = "CREATEDAT_DESC") {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
-    let unsubscribe;
-    if (saved) {
-      unsubscribe = firebase
-        .firestore()
-        .collection("listings")
-        .where("creator", "==", creator)
-        .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
-        .onSnapshot((snapshot) => {
-          const newListings = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setListings(newListings);
-        });
-    } else {
-      unsubscribe = firebase
-        .firestore()
-        .collection("listings")
-        .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
-        .onSnapshot((snapshot) => {
-          const newListings = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setListings(newListings);
-        });
-    }
+    const unsubscribe = firebase
+      .firestore()
+      .collection("listings")
+      .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
+      .onSnapshot((snapshot) => {
+        const newListings = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setListings(newListings);
+      });
 
     return () => unsubscribe();
-  }, [sortBy, creator, saved]);
+  }, [sortBy]);
 
   return listings;
 }
@@ -120,7 +104,7 @@ function Home(props) {
     setAnchorEl(null);
   };
 
-  const listings = useListings(sortBy, props.saved, currentUser.uid);
+  const listings = useListings(sortBy);
   let filteredListings = listings;
 
   function filter(list) {
@@ -189,9 +173,7 @@ function Home(props) {
             <Typography variant="h3">Filter</Typography>
           ) : (
             <Box display="flex">
-              <Typography variant="h3">
-                {props.saved ? <>Saved places</> : <>Find a place</>}
-              </Typography>
+              <Typography variant="h3">Find a place</Typography>
               <IconButton
                 aria-label="filter"
                 onClick={() => setFilterMode(true)}
@@ -274,7 +256,7 @@ function Home(props) {
       </Grid>
 
       <Grid item className={classes.item}>
-        {detailed >= 0 && (
+        {detailed >= 0 && filteredListings.length > 0 && (
           <Detail
             id={detailed}
             close={() => setDetailed(-1)}

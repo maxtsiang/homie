@@ -180,7 +180,26 @@ function New() {
 
     try {
       for (let i = 0; i < imgs.length; i++) {
-        storage.ref(`listing_images/${id}/${imgs[i].name}`).put(imgs[i]);
+        const storageRef = storage.ref(`listing_images/${id}/${imgs[i].name}`);
+        const uploadTask = storageRef.put(imgs[i]);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {},
+          (error) => {
+            console.log(error);
+          },
+          () => {
+            storageRef.getDownloadURL().then((url) => {
+              firebase
+                .firestore()
+                .collection("listings")
+                .doc(id)
+                .update({
+                  images: firebase.firestore.FieldValue.arrayUnion(url),
+                });
+            });
+          }
+        );
       }
     } catch (err) {
       setError("Something went wrong uploading the images...");

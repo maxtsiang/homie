@@ -16,7 +16,6 @@ import Interested from "./Interested";
 
 import { makeStyles } from "@material-ui/core/styles";
 import moment from "moment";
-import { storage } from "../firebase";
 
 const useStyles = makeStyles({
   card: {
@@ -55,21 +54,9 @@ const useStyles = makeStyles({
 
 function Listing(props) {
   const classes = useStyles();
-  const [image, setImage] = useState();
   const [creator, setCreator] = useState();
 
   useEffect(() => {
-    storage
-      .ref(`listing_images/${props.info.id}`)
-      .listAll()
-      .then((res) => {
-        if (res.items.length > 0) {
-          res.items[0].getDownloadURL().then((url) => {
-            setImage(url);
-          });
-        }
-      });
-
     firebase
       .firestore()
       .collection("users")
@@ -83,7 +70,7 @@ function Listing(props) {
         };
         setCreator(user);
       });
-  }, [props.info.creator, props.info.id]);
+  }, [props.info]);
 
   const selected =
     props.index === props.hovered || props.index === props.detailed;
@@ -105,7 +92,11 @@ function Listing(props) {
                 height: "100%",
               }}
             >
-              <img src={image} alt="" className={classes.cardimg} />
+              <img
+                src={props.info.images[0]}
+                alt=""
+                className={classes.cardimg}
+              />
             </Box>
           </Grid>
           <Grid item className={classes.item}>

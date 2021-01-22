@@ -1,9 +1,4 @@
-import {
-  IconButton,
-  Box,
-  Typography,
-  CircularProgress,
-} from "@material-ui/core";
+import { IconButton, Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Carousel from "react-material-ui-carousel";
 
@@ -13,7 +8,7 @@ import Map from "../components/Map";
 import Profile from "../components/Profile";
 import Amenity from "../components/Amenity";
 import moment from "moment";
-import { storage } from "../firebase";
+
 import React, { useEffect, useState } from "react";
 
 import firebase from "../firebase";
@@ -63,20 +58,9 @@ const useStyles = makeStyles({
 
 function Detail(props) {
   const classes = useStyles();
-  const [images, setImages] = useState([]);
   const [creator, setCreator] = useState();
 
   useEffect(() => {
-    storage
-      .ref(`listing_images/${props.info.id}`)
-      .listAll()
-      .then((res) => {
-        res.items.forEach((img) => {
-          img.getDownloadURL().then((url) => {
-            setImages((prevImages) => [...prevImages, url]);
-          });
-        });
-      });
     firebase
       .firestore()
       .collection("users")
@@ -90,9 +74,7 @@ function Detail(props) {
         };
         setCreator(user);
       });
-  }, [props.info.creator, props.info.id]);
-
-  console.log(props.info);
+  }, [props.info]);
 
   return (
     <Box
@@ -109,22 +91,16 @@ function Detail(props) {
 
       <Box m={1}>
         <Carousel navButtonsAlwaysVisible autoPlay={false}>
-          {images.length > 0 ? (
-            images.map((image, index) => (
-              <div className={classes.imgWrapper}>
-                <img
-                  className={classes.img}
-                  key={index}
-                  src={image}
-                  alt={image.name}
-                />
-              </div>
-            ))
-          ) : (
+          {props.info.images.map((image, index) => (
             <div className={classes.imgWrapper}>
-              <CircularProgress className={classes.img} />
+              <img
+                className={classes.img}
+                key={index}
+                src={image}
+                alt={image.name}
+              />
             </div>
-          )}
+          ))}
         </Carousel>
       </Box>
 
