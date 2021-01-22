@@ -120,7 +120,7 @@ const ChatWindow = (props) => {
       .doc(props.chat.id)
       .collection("messages")
       .orderBy("createdAt", "desc")
-      .limit(20)
+      .limit(LIMIT)
       .onSnapshot((snapshot) => {
         const messages = snapshot.docs.reverse();
         if (messages.length > 0) {

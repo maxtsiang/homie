@@ -50,9 +50,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SORT_OPTIONS = {
-  PRICE_ASC: { column: "price", direction: "asc" },
-  AVAILABILITY_ASC: { column: "start", direction: "asc" },
-  CREATEDAT_DESC: { column: "createdAt", direction: "desc" },
+  PRICE_ASC: { name: "Most Cheap", column: "price", direction: "asc" },
+  AVAILABILITY_ASC: {
+    name: "Earliest Available",
+    column: "start",
+    direction: "asc",
+  },
+  CREATEDAT_DESC: {
+    name: "Most Recent",
+    column: "createdAt",
+    direction: "desc",
+  },
 };
 
 function useListings(sortBy = "CREATEDAT_DESC") {
@@ -201,24 +209,19 @@ function Home(props) {
               <>
                 <Button onClick={handleOpenSortBy}>Sort By</Button>
                 <Menu
-                  id="lock-menu"
                   anchorEl={anchorEl}
                   keepMounted
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem
-                    selected={sortBy === "PRICE_ASC"}
-                    onClick={() => handleSortBy("PRICE_ASC")}
-                  >
-                    Price (cheapest first)
-                  </MenuItem>
-                  <MenuItem
-                    selected={sortBy === "AVAILABILITY_ASC"}
-                    onClick={() => handleSortBy("AVAILABILITY_ASC")}
-                  >
-                    Availability (earliest first)
-                  </MenuItem>
+                  {Object.keys(SORT_OPTIONS).map((key) => (
+                    <MenuItem
+                      selected={sortBy === key}
+                      onClick={() => handleSortBy(key)}
+                    >
+                      {SORT_OPTIONS[key].name}
+                    </MenuItem>
+                  ))}
                 </Menu>
               </>
             )}

@@ -25,8 +25,9 @@ const useStyles = makeStyles({
   },
   cardSelected: {
     marginBottom: "1em",
-    boxShadow: "1em",
+    boxShadow: "none",
     height: "20%",
+    background: "#f1f1ee",
   },
   cardimg: {
     height: "auto",
