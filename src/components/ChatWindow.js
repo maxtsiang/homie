@@ -130,6 +130,7 @@ const ChatWindow = (props) => {
           }));
           setMessages(newMessages);
           setLastMessage(messages[0]);
+          scrollToBottom();
         }
       });
 
@@ -174,17 +175,6 @@ const ChatWindow = (props) => {
   const scrollToBottom = () => {
     messagesEnd.current.scrollIntoView({ behavior: "smooth" });
   };
-
-  const mounted = useRef();
-  useEffect(() => {
-    if (!mounted.current) {
-      // do componentDidMount logic
-      mounted.current = true;
-    } else {
-      // do componentDidUpdate logic
-      scrollToBottom();
-    }
-  }, []);
 
   const handleScroll = (e) => {
     if (e.target.scrollTop === 0) {
