@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   container: {
     border: "1px solid lightgrey",
     borderRadius: "0.7em",
-    height: "78vh",
+    height: "80vh",
     width: "80%",
     margin: "2em",
     overflow: "scroll",
@@ -99,24 +99,39 @@ function useMessages(id) {
 const ChatWindow = (props) => {
   const [textContent, setTextContent] = useState("");
   const { currentUser } = useAuth();
-  const messages = useMessages(props.chatId);
+
+  const messages = useMessages(props.chat.id);
 
   const classes = useStyles();
 
   const messagesEnd = useRef();
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (e) => {
+    e.preventDefault();
     setTextContent("");
+    const time = Number(moment().unix().valueOf() * 1000);
     firebase
       .firestore()
       .collection("messages")
-      .doc(props.chatId)
+      .doc(props.chat.id)
       .collection("messages")
       .add({
         content: textContent,
         creator: currentUser.uid,
-        createdAt: Number(moment().unix().valueOf() * 1000),
+        createdAt: time,
       });
+    // firebase
+    //   .firestore()
+    //   .collection("chats")
+    //   .doc(props.chat.id)
+    //   .update({
+    //     lastUpdated: time,
+    //     recentMessage: {
+    //       content: textContent,
+    //       creator: currentUser.uid,
+    //       createdAt: time,
+    //     },
+    //   });
   };
 
   const handleChange = (event) => {
@@ -175,30 +190,32 @@ const ChatWindow = (props) => {
   return (
     <Box className={classes.container}>
       <List>
-        {messages.map((message) => {
-          return message.creator === currentUser.uid
-            ? sentMessage(message.content)
-            : receivedMessage(message.content, props.user);
-        })}
+        {props.chat &&
+          messages.map((message) => {
+            return message.creator === currentUser.uid
+              ? sentMessage(message.content)
+              : receivedMessage(message.content, props.chat.otherUser);
+          })}
         <div ref={messagesEnd} />
       </List>
-      <Paper className={classes.msgBox} elevation={0}>
-        <TextField
-          placeholder="Type your message..."
-          multiline
-          value={textContent}
-          onChange={handleChange}
-          fullWidth
-        />
+      <Paper elevation={0}>
+        <form className={classes.msgBox} onSubmit={handleSendMessage}>
+          <TextField
+            placeholder="Type your message..."
+            value={textContent}
+            onChange={handleChange}
+            fullWidth
+          />
 
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            type="submit"
+          >
+            Send
+          </Button>
+        </form>
       </Paper>
     </Box>
   );

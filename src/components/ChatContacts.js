@@ -33,7 +33,7 @@ const ChatContacts = (props) => {
 
   return (
     <List>
-      {props.users.map((user, index) => (
+      {props.chats.map((chat, index) => (
         <ListItem
           className={classes.listItem}
           style={{
@@ -43,15 +43,15 @@ const ChatContacts = (props) => {
         >
           <Box className={classes.sender}>
             <ListItemAvatar>
-              <Avatar alt={user.name} src={user.profile} />
+              <Avatar alt={chat.otherUser.name} src={chat.otherUser.profile} />
             </ListItemAvatar>
             <ListItemText
-              primary={user.name}
-              secondary={<React.Fragment>preview</React.Fragment>}
+              primary={chat.otherUser.name}
+              // secondary={<React.Fragment>preview</React.Fragment>}
             />
           </Box>
           <Box>
-            <Typography variant="subtitle2">1 MIN AGO</Typography>
+            {/* <Typography variant="subtitle2">1 MIN AGO</Typography> */}
           </Box>
         </ListItem>
       ))}

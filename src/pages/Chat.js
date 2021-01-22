@@ -23,46 +23,58 @@ const Chat = () => {
   const classes = useStyles();
 
   const { currentUser } = useAuth();
-  const [chatUsers, setChatUsers] = useState([]);
-  const [chatRooms, setChatRooms] = useState([]);
+
+  const [chats, setChats] = useState([]);
 
   const [selected, setSelected] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
-      const currentUserDoc = await firebase
-        .firestore()
-        .collection("users")
-        .doc(currentUser.uid)
-        .get();
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        const currentUserChats = snapshot.data().chats;
 
-      const chatIds = currentUserDoc.data().chats;
+        if (currentUserChats) {
+          currentUserChats.forEach((chatId) => {
+            firebase
+              .firestore()
+              .collection("chats")
+              .doc(chatId)
+              .get()
+              .then((snapshot) => {
+                const chatDoc = snapshot.data();
+                const chatMembers = chatDoc.members;
+                // const recentMessage = chatDoc.recentMessage;
+                const otherUserId = chatMembers.find(
+                  (id) => id !== currentUser.uid
+                );
+                firebase
+                  .firestore()
+                  .collection("users")
+                  .doc(otherUserId)
+                  .get()
+                  .then((snapshot) => {
+                    const otherUserDoc = snapshot.data();
+                    const otherUser = {
+                      id: otherUserId,
+                      name: otherUserDoc.name,
+                      profile: otherUserDoc.profile,
+                    };
+                    const newChat = {
+                      id: chatId,
+                      otherUser,
+                      // recentMessage,
+                    };
 
-      if (chatIds) {
-        setChatRooms(chatIds);
-        chatIds.map(async (id) => {
-          const chatRoomDoc = await firebase
-            .firestore()
-            .collection("chats")
-            .doc(id)
-            .get();
-          const members = chatRoomDoc.data().members;
-          const userId = members.find((id) => id !== currentUser.uid);
-          const userDoc = await firebase
-            .firestore()
-            .collection("users")
-            .doc(userId)
-            .get();
-          const user = {
-            id: userId,
-            name: userDoc.data().name,
-            profile: userDoc.data().profile,
-          };
-          setChatUsers((oldUser) => [...oldUser, user]);
-        });
-      }
-    }
-    fetchData();
+                    setChats((prevChats) => [...prevChats, newChat]);
+                  });
+              });
+          });
+        }
+      });
   }, [currentUser.uid]);
 
   return (
@@ -73,16 +85,13 @@ const Chat = () => {
             Chats
           </Typography>
           <ChatContacts
-            users={chatUsers}
+            chats={chats}
             selected={selected}
             setSelected={setSelected}
           ></ChatContacts>
         </Grid>
         <Grid item xs={9}>
-          <ChatWindow
-            chatId={chatRooms[selected]}
-            user={chatUsers[selected]}
-          ></ChatWindow>
+          {chats[selected] && <ChatWindow chat={chats[selected]}></ChatWindow>}
         </Grid>
       </Grid>
     </div>
