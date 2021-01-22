@@ -91,16 +91,17 @@ function Detail(props) {
 
       <Box m={1}>
         <Carousel navButtonsAlwaysVisible autoPlay={false}>
-          {props.info.images.map((image, index) => (
-            <div className={classes.imgWrapper}>
-              <img
-                className={classes.img}
-                key={index}
-                src={image}
-                alt={image.name}
-              />
-            </div>
-          ))}
+          {props.info.images &&
+            props.info.images.map((image, index) => (
+              <div className={classes.imgWrapper}>
+                <img
+                  className={classes.img}
+                  key={index}
+                  src={image}
+                  alt={image.name}
+                />
+              </div>
+            ))}
         </Carousel>
       </Box>
 

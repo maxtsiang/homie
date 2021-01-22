@@ -92,11 +92,13 @@ function Listing(props) {
                 height: "100%",
               }}
             >
-              <img
-                src={props.info.images[0]}
-                alt=""
-                className={classes.cardimg}
-              />
+              {props.info.images && (
+                <img
+                  src={props.info.images[0]}
+                  alt=""
+                  className={classes.cardimg}
+                />
+              )}
             </Box>
           </Grid>
           <Grid item className={classes.item}>

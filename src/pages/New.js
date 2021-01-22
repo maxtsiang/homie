@@ -133,9 +133,9 @@ function New() {
   const [price, setPrice] = useState(0);
   const [start, setStart] = useState(moment());
   const [end, setEnd] = useState(moment());
-  const [persons, setPersons] = useState(0);
-  const [bedrooms, setBedrooms] = useState(0);
-  const [bathrooms, setBathrooms] = useState(0);
+  const [persons, setPersons] = useState(1);
+  const [bedrooms, setBedrooms] = useState(1);
+  const [bathrooms, setBathrooms] = useState(1);
   const [amenities, setAmenities] = useState({});
   const [description, setDescription] = useState("");
   const [photos, setPhotos] = useState([]);

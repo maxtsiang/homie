@@ -267,7 +267,7 @@ function Home(props) {
           />
         )}
         <Map
-          hidden={detailed >= 0}
+          hidden={detailed >= 0 && filteredListings.length > 0}
           hovered={hovered}
           listings={filteredListings}
           setHovered={setHovered}

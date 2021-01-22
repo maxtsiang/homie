@@ -12,6 +12,7 @@ import {
   Avatar,
   MenuItem,
   makeStyles,
+  Box,
 } from "@material-ui/core";
 
 import ChatBubbleOutlineRoundedIcon from "@material-ui/icons/ChatBubbleOutlineRounded";
@@ -77,7 +78,7 @@ function Nav() {
             </Typography>
           </Grid>
           <Grid item>
-            <div>
+            <Box display="flex" alignItems="center">
               <IconButton component={RouterLink} to="/new" aria-label="chats">
                 <AddRoundedIcon />
               </IconButton>
@@ -86,34 +87,32 @@ function Nav() {
                 <ChatBubbleOutlineRoundedIcon />
               </IconButton>
 
-              <Typography variant="title">
-                <IconButton aria-label="profile" onClick={handleClick}>
-                  <Avatar
-                    alt={currentUser.displayName}
-                    src={currentUser.photoURL}
-                  />
-                </IconButton>
-                <Popover
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  <MenuItem component={RouterLink} to="/editprofile">
-                    Edit Profile
-                  </MenuItem>
+              <IconButton aria-label="profile" onClick={handleClick}>
+                <Avatar
+                  alt={currentUser.displayName}
+                  src={currentUser.photoURL}
+                />
+              </IconButton>
+              <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <MenuItem component={RouterLink} to="/editprofile">
+                  Edit Profile
+                </MenuItem>
 
-                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                </Popover>
-              </Typography>
-            </div>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Popover>
+            </Box>
           </Grid>
         </Grid>
         <Divider />
