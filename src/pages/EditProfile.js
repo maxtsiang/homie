@@ -136,16 +136,21 @@ function EditProfile(props) {
 
   useEffect(() => {
     if (!props.new) {
-      userRef.get().then((snapshot) => {
-        const doc = snapshot.data();
-        setPronouns(doc.pronouns);
-        setMajor(doc.major);
-        setGrad(doc.grad);
-        setGreek(doc.greek);
-        setMyHabits(doc.habits);
-      });
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUser.uid)
+        .get()
+        .then((snapshot) => {
+          const doc = snapshot.data();
+          setPronouns(doc.pronouns);
+          setMajor(doc.major);
+          setGrad(doc.grad);
+          setGreek(doc.greek);
+          setMyHabits(doc.habits);
+        });
     }
-  }, [props.new, userRef]);
+  }, [props.new, currentUser.uid]);
 
   useEffect(() => {
     firebase
