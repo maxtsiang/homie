@@ -11,13 +11,12 @@ const pennLocation = {
 function Map(props) {
   return (
     <Box
-      display={props.hidden ? "none" : "block"}
+      display={props.hidden ? "none" : null}
       style={{
         borderRadius: "1em",
         height: props.height,
         width: props.width,
         overflow: "hidden",
-        position: props.position,
       }}
     >
       <GoogleMapReact

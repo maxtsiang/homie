@@ -228,16 +228,14 @@ const ChatWindow = (props) => {
     <Box className={classes.container} onScroll={handleScroll}>
       <List>
         {isEnd && (
-          <ListItem>
-            <ListItemText>
-              <Typography variant="subtitle2">End of messages</Typography>
-            </ListItemText>
-          </ListItem>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Typography variant="subtitle2">End of messages</Typography>
+          </Box>
         )}
         {loading && (
-          <ListItem>
+          <Box display="flex" flexDirection="column" alignItems="center">
             <CircularProgress size={30} />
-          </ListItem>
+          </Box>
         )}
 
         {props.chat &&

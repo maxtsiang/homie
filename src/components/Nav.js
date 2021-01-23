@@ -51,7 +51,7 @@ function Nav() {
   }
 
   return (
-    <div style={{ marginBottom: "3em" }}>
+    <div style={{ marginBottom: "4em" }}>
       <AppBar
         style={{
           background: "#FFFFFF",

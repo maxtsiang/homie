@@ -14,9 +14,7 @@ import React, { useEffect, useState } from "react";
 import firebase from "../firebase";
 
 const useStyles = makeStyles({
-  container: {
-    overflow: "scroll",
-  },
+  container: {},
   imgWrapper: {
     height: "45vh",
     display: "flex",
@@ -77,14 +75,7 @@ function Detail(props) {
   }, [props.info]);
 
   return (
-    <Box
-      className={classes.container}
-      style={{
-        height: props.height,
-        width: props.width,
-        position: props.position,
-      }}
-    >
+    <Box className={classes.container}>
       <IconButton onClick={() => props.close()}>
         <CloseIcon />
       </IconButton>

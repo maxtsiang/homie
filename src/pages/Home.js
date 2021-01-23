@@ -13,6 +13,7 @@ import {
   MenuItem,
   Button,
   Paper,
+  CircularProgress,
 } from "@material-ui/core";
 import Backdrop from "@material-ui/core/Backdrop";
 
@@ -28,6 +29,12 @@ import Profile from "../components/Profile";
 import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    justify: "space-between",
+    alignItems: "center",
+    height: "90vh",
+  },
   overlay: {
     padding: "1em",
     width: "15%",
@@ -39,10 +46,11 @@ const useStyles = makeStyles((theme) => ({
   header: {
     marginBottom: "1em",
   },
-
   item: {
+    padding: "2em",
     width: "50%",
-    padding: "3em",
+    overflow: "scroll",
+    height: "100%",
   },
   subheader: {
     color: "lightgrey",
@@ -63,27 +71,7 @@ const SORT_OPTIONS = {
   },
 };
 
-function useListings(sortBy = "CREATEDAT_DESC") {
-  const [listings, setListings] = useState([]);
-
-  useEffect(() => {
-    const unsubscribe = firebase
-      .firestore()
-      .collection("listings")
-      .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
-      .onSnapshot((snapshot) => {
-        const newListings = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setListings(newListings);
-      });
-
-    return () => unsubscribe();
-  }, [sortBy]);
-
-  return listings;
-}
+const LIMIT = 10;
 
 function Home(props) {
   const classes = useStyles();
@@ -112,7 +100,54 @@ function Home(props) {
     setAnchorEl(null);
   };
 
-  const listings = useListings(sortBy);
+  const [listings, setListings] = useState([]);
+  const [lastListing, setLastListing] = useState();
+  const [isEnd, setIsEnd] = useState(false);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const unsubscribe = firebase
+      .firestore()
+      .collection("listings")
+      .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
+      .limit(LIMIT)
+      .onSnapshot((snapshot) => {
+        const newListings = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setIsEnd(false);
+        setListings(newListings);
+        setLastListing(snapshot.docs[snapshot.docs.length - 1]);
+      });
+
+    return () => unsubscribe();
+  }, [sortBy]);
+
+  function getListings() {
+    setLoading(true);
+    firebase
+      .firestore()
+      .collection("listings")
+      .orderBy(SORT_OPTIONS[sortBy].column, SORT_OPTIONS[sortBy].direction)
+      .startAfter(lastListing)
+      .limit(LIMIT)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.docs.length > 0) {
+          const newListings = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setListings((oldListings) => [...oldListings, ...newListings]);
+          setLastListing(snapshot.docs[snapshot.docs.length - 1]);
+        } else {
+          setIsEnd(true);
+        }
+
+        setLoading(false);
+      });
+  }
+
   let filteredListings = listings;
 
   function filter(list) {
@@ -168,19 +203,23 @@ function Home(props) {
 
   const [interestedUsers, setInterestedUsers] = useState([]);
 
+  const handleScroll = (e) => {
+    const triggerHeight = e.target.scrollTop + e.target.offsetHeight;
+    if (triggerHeight >= e.target.scrollHeight) {
+      if (!loading && !isEnd) {
+        getListings();
+      }
+    }
+  };
+
   return (
-    <Grid
-      container
-      direction="row"
-      justify="space-between"
-      alignItems="flex-start"
-    >
-      <Grid item className={classes.item}>
+    <Grid container className={classes.container}>
+      <Grid item className={classes.item} onScroll={handleScroll}>
         <Box className={classes.header}>
           {filterMode ? (
             <Typography variant="h3">Filter</Typography>
           ) : (
-            <Box display="flex">
+            <Box display="flex" alignItems="center">
               <Typography variant="h3">Find a place</Typography>
               <IconButton
                 aria-label="filter"
@@ -254,6 +293,16 @@ function Home(props) {
                   />
                 );
               })}
+            {loading && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <CircularProgress size={30} />
+              </Box>
+            )}
+            {isEnd && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="subtitle2">No more listings</Typography>
+              </Box>
+            )}
           </Box>
         )}
       </Grid>
@@ -266,7 +315,6 @@ function Home(props) {
             info={filteredListings[detailed]}
             height="88vh"
             width="45%"
-            position="fixed"
           />
         )}
         <Map
@@ -275,9 +323,8 @@ function Home(props) {
           listings={filteredListings}
           setHovered={setHovered}
           setDetailed={setDetailed}
-          height="88vh"
-          width="45%"
-          position="fixed"
+          height="100%"
+          width="100%"
         />
       </Grid>
       <Backdrop className={classes.backdrop} open={openInterestedOverlay}>
