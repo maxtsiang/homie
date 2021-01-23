@@ -21,8 +21,6 @@ import {
 } from "@material-ui/core/styles";
 import { AuthProvider } from "./contexts/AuthContext";
 
-import ReactDependentScript from "react-dependent-script";
-
 let theme = createMuiTheme({
   palette: {
     primary: {
