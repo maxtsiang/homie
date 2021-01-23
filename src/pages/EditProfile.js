@@ -27,8 +27,7 @@ import firebase from "../firebase";
 
 const useStyles = makeStyles({
   container: {
-    margin: "3em",
-    marginTop: "6em",
+    padding: "2em",
     width: "70vw",
     height: "70vh",
     display: "flex",
@@ -308,7 +307,10 @@ function EditProfile(props) {
               }}
               badgeContent={
                 <>
-                  <IconButton component="label">
+                  <IconButton
+                    style={{ background: "white", padding: "0.2em" }}
+                    component="label"
+                  >
                     <PhotoCameraIcon />
                     <input
                       type="file"
@@ -384,7 +386,7 @@ function EditProfile(props) {
           </Box>
           <Box className={classes.group}>
             <Typography variant="h6" className={classes.label}>
-              Greek Life
+              Greek Life (optional)
             </Typography>
 
             <OutlinedInput

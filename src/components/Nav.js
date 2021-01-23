@@ -105,6 +105,11 @@ function Nav() {
                   vertical: "top",
                   horizontal: "center",
                 }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
               >
                 <MenuItem component={RouterLink} to="/editprofile">
                   Edit Profile

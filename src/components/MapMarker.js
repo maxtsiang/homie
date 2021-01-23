@@ -7,6 +7,10 @@ const useStyles = makeStyles({
     height: "2em",
     width: "2em",
     transform: "translate(-50%, -100%)",
+
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
 });
 

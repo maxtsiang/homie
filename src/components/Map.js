@@ -24,7 +24,7 @@ function Map(props) {
         defaultCenter={pennLocation}
         center={props.center}
         defaultZoom={14}
-        hoverDistance={25}
+        hoverDistance={20}
         yesIWantToUseGoogleMapApiInternals
       >
         {props.listings &&
