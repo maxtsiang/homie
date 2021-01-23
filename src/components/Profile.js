@@ -125,8 +125,8 @@ function Profile(props) {
               className={classes.group}
             >
               <Typography variant="subtitle1">
-                {props.user.major} @ Penn '{props.user.grad - 2000} (
-                {props.user.greek})
+                {props.user.major} @ Penn '{props.user.grad - 2000}{" "}
+                {props.user.greek && <>({props.user.greek})</>}
               </Typography>
               <Typography variant="subtitle2">{props.user.pronouns}</Typography>
             </Box>

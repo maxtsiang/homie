@@ -45,7 +45,7 @@ const useStyles = makeStyles({
   },
   deleteButton: {
     width: "100%",
-    padding: "0.5em",
+
     marginTop: "1em",
     background: "#FF6961",
     "&:hover": {
