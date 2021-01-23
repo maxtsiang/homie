@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
   headerBox: {
-    marginBottom: "3em",
+    marginBottom: "2em",
     display: "flex",
     justifyContent: "space-between",
   },
@@ -135,7 +135,11 @@ function Detail(props) {
         <Typography variant="h6" className={classes.label}>
           Location
         </Typography>
-        <Typography variant="subtitle1" className={classes.text}>
+        <Typography
+          variant="subtitle1"
+          className={classes.text}
+          style={{ marginBottom: "1em" }}
+        >
           {props.info.address}
         </Typography>
         <Map

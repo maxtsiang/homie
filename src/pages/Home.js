@@ -320,7 +320,7 @@ function Home(props) {
           listings={filteredListings}
           setHovered={setHovered}
           setDetailed={setDetailed}
-          height="100%"
+          height="90vh"
           width="100%"
         />
       </Grid>

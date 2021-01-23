@@ -10,13 +10,13 @@ const pennLocation = {
 
 function Map(props) {
   return (
-    <Box
-      display={props.hidden ? "none" : null}
+    <div
       style={{
         borderRadius: "1em",
         height: props.height,
         width: props.width,
         overflow: "hidden",
+        display: props.hidden ? "none" : "block",
       }}
     >
       <GoogleMapReact
@@ -41,7 +41,7 @@ function Map(props) {
             );
           })}
       </GoogleMapReact>
-    </Box>
+    </div>
   );
 }
 
