@@ -28,7 +28,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import RemoveIcon from "@material-ui/icons/Remove";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 import PlacesSearch from "../components/PlacesSearch";
 
@@ -401,7 +400,7 @@ function New() {
               <FormGroup className={classes.checkboxGroup}>
                 {amenitiesList.map((amenityName) => {
                   return (
-                    <Box display="flex" alignItems="center">
+                    <Box display="flex" alignItems="center" key={amenityName}>
                       <FormControlLabel
                         control={
                           <Checkbox

@@ -66,30 +66,28 @@ theme = responsiveFontSizes(theme);
 function App() {
   return (
     <AuthProvider>
-      <ReactDependentScript scripts={[process.env.REACT_APP_GOOGLE_MAPS_API]}>
-        <ThemeProvider theme={theme}>
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <BrowserRouter>
-              <PrivateRoute exact path="/" component={() => <Home />} />
-              <PrivateRoute exact path="/new" component={() => <New />} />
-              <PrivateRoute exact path="/chats" component={() => <Chat />} />
-              <PrivateRoute
-                exact
-                path="/saved"
-                component={() => <Home saved />}
-              />
-              <PrivateRoute
-                exact
-                path="/editprofile"
-                component={() => <EditProfile />}
-              />
-              <Route exact path="/signup" component={() => <Signup />} />
-              <Route exact path="/login" component={() => <Login />} />
-              <Route exact path="/forgot" component={() => <Forgot />} />
-            </BrowserRouter>
-          </MuiPickersUtilsProvider>
-        </ThemeProvider>
-      </ReactDependentScript>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <BrowserRouter>
+            <PrivateRoute exact path="/" component={() => <Home />} />
+            <PrivateRoute exact path="/new" component={() => <New />} />
+            <PrivateRoute exact path="/chats" component={() => <Chat />} />
+            <PrivateRoute
+              exact
+              path="/saved"
+              component={() => <Home saved />}
+            />
+            <PrivateRoute
+              exact
+              path="/editprofile"
+              component={() => <EditProfile />}
+            />
+            <Route exact path="/signup" component={() => <Signup />} />
+            <Route exact path="/login" component={() => <Login />} />
+            <Route exact path="/forgot" component={() => <Forgot />} />
+          </BrowserRouter>
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

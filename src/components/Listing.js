@@ -38,8 +38,7 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    padding: 0,
-
+    padding: "0",
     height: "100%",
   },
   header: {
@@ -132,6 +131,7 @@ function Listing(props) {
                   edit={props.edit}
                   handleInterestedOverlay={props.handleInterestedOverlay}
                   setInterestedUsers={props.setInterestedUsers}
+                  setDetailed={props.setDetailed}
                 />
               </Box>
             </CardContent>

@@ -84,13 +84,8 @@ function Detail(props) {
         <Carousel navButtonsAlwaysVisible autoPlay={false}>
           {props.info.images &&
             props.info.images.map((image, index) => (
-              <div className={classes.imgWrapper}>
-                <img
-                  className={classes.img}
-                  key={index}
-                  src={image}
-                  alt={image.name}
-                />
+              <div className={classes.imgWrapper} key={index}>
+                <img className={classes.img} src={image} alt={image.name} />
               </div>
             ))}
         </Carousel>
@@ -125,8 +120,8 @@ function Detail(props) {
           Amenities
         </Typography>
         <Box display="flex">
-          {props.info.amenities.map((amenity) => {
-            return <Amenity id={amenity} />;
+          {props.info.amenities.map((amenity, index) => {
+            return <Amenity key={index} id={amenity} />;
           })}
         </Box>
       </Box>

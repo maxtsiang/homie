@@ -31,6 +31,7 @@ function Map(props) {
           props.listings.map((listing, index) => {
             return (
               <MapMarker
+                key={index}
                 hovered={index === props.hovered}
                 setHovered={props.setHovered}
                 setDetailed={props.setDetailed}

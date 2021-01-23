@@ -132,6 +132,7 @@ function Interested(props) {
 
   function handleClickDelete() {
     listing_ref.delete();
+    props.setDetailed(-1);
   }
 
   return (
@@ -152,6 +153,7 @@ function Interested(props) {
               {interestedUsers.map((user) => {
                 return (
                   <Avatar
+                    key={user.id}
                     alt={user.name}
                     src={user.profile}
                     className={classes.avatar}

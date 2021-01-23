@@ -250,8 +250,9 @@ function Home(props) {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  {Object.keys(SORT_OPTIONS).map((key) => (
+                  {Object.keys(SORT_OPTIONS).map((key, index) => (
                     <MenuItem
+                      key={index}
                       selected={sortBy === key}
                       onClick={() => handleSortBy(key)}
                     >
@@ -277,6 +278,7 @@ function Home(props) {
               filteredListings.map((listing, index) => {
                 return (
                   <Listing
+                    key={listing.id}
                     index={index}
                     id={listing.id}
                     detailed={detailed}
@@ -305,7 +307,7 @@ function Home(props) {
       </Grid>
 
       <Grid item className={classes.item}>
-        {detailed >= 0 && filteredListings.length > 0 && (
+        {filteredListings[detailed] && (
           <Detail
             id={detailed}
             close={() => setDetailed(-1)}
@@ -320,7 +322,7 @@ function Home(props) {
           listings={filteredListings}
           setHovered={setHovered}
           setDetailed={setDetailed}
-          height="90vh"
+          height="87vh"
           width="100%"
         />
       </Grid>
@@ -338,7 +340,7 @@ function Home(props) {
             </IconButton>
           </Box>
           {interestedUsers.map((user) => (
-            <Profile user={user} popover />
+            <Profile key={user.id} user={user} popover />
           ))}
         </Paper>
       </Backdrop>
