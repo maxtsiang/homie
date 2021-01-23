@@ -155,18 +155,18 @@ const ChatWindow = (props) => {
         creator: currentUser.uid,
         createdAt: time,
       });
-    // firebase
-    //   .firestore()
-    //   .collection("chats")
-    //   .doc(props.chat.id)
-    //   .update({
-    //     lastUpdated: time,
-    //     recentMessage: {
-    //       content: textContent,
-    //       creator: currentUser.uid,
-    //       createdAt: time,
-    //     },
-    //   });
+    firebase
+      .firestore()
+      .collection("chats")
+      .doc(props.chat.id)
+      .update({
+        lastUpdated: time,
+        recentMessage: {
+          content: textContent,
+          creator: currentUser.uid,
+          createdAt: time,
+        },
+      });
     scrollToBottom();
   };
 

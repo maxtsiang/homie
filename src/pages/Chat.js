@@ -25,8 +25,8 @@ const Chat = () => {
   const { currentUser } = useAuth();
 
   const [chats, setChats] = useState([]);
-
   const [selected, setSelected] = useState(0);
+  const selectedChat = chats[selected];
 
   useEffect(() => {
     firebase
@@ -47,7 +47,6 @@ const Chat = () => {
               .then((snapshot) => {
                 const chatDoc = snapshot.data();
                 const chatMembers = chatDoc.members;
-                // const recentMessage = chatDoc.recentMessage;
                 const otherUserId = chatMembers.find(
                   (id) => id !== currentUser.uid
                 );
@@ -66,9 +65,7 @@ const Chat = () => {
                     const newChat = {
                       id: chatId,
                       otherUser,
-                      // recentMessage,
                     };
-
                     setChats((prevChats) => [...prevChats, newChat]);
                   });
               });
@@ -84,14 +81,17 @@ const Chat = () => {
           <Typography variant="h3" className={classes.header}>
             Chats
           </Typography>
-          <ChatContacts
-            chats={chats}
-            selected={selected}
-            setSelected={setSelected}
-          ></ChatContacts>
+          {selectedChat && (
+            <ChatContacts
+              chats={chats}
+              selected={selected}
+              selectedChat={selectedChat}
+              setSelected={setSelected}
+            ></ChatContacts>
+          )}
         </Grid>
         <Grid item xs={9}>
-          {chats[selected] && <ChatWindow chat={chats[selected]}></ChatWindow>}
+          {selectedChat && <ChatWindow chat={selectedChat}></ChatWindow>}
         </Grid>
       </Grid>
     </div>
