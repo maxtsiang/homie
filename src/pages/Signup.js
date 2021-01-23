@@ -18,12 +18,19 @@ import firebase from "../firebase";
 
 const useStyles = makeStyles({
   container: {
+    marginTop: "-10em",
     width: "400px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "1em",
     borderRadius: "1em",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   label: {
     fontSize: "1.5em",
@@ -76,7 +83,8 @@ function Signup(props) {
 
   const pennDomain = "upenn.edu";
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
     // if (
     //   /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/.test(
     //     emailRef.current.value
@@ -122,40 +130,41 @@ function Signup(props) {
             {error}
           </Alert>
         )}
+        <form onSubmit={handleSubmit} className={classes.form}>
+          <TextField
+            className={classes.field}
+            label="Email"
+            variant="outlined"
+            inputRef={emailRef}
+          />
+          <TextField
+            className={classes.field}
+            label="Password"
+            type="password"
+            variant="outlined"
+            inputRef={passwordRef}
+          />
+          <TextField
+            className={classes.field}
+            label="Confirm Password"
+            type="password"
+            variant="outlined"
+            inputRef={passwordConfirmRef}
+          />
 
-        <TextField
-          className={classes.field}
-          label="Email"
-          variant="outlined"
-          inputRef={emailRef}
-        />
-        <TextField
-          className={classes.field}
-          label="Password"
-          type="password"
-          variant="outlined"
-          inputRef={passwordRef}
-        />
-        <TextField
-          className={classes.field}
-          label="Confirm Password"
-          type="password"
-          variant="outlined"
-          inputRef={passwordConfirmRef}
-        />
-
-        {loading ? (
-          <CircularProgress size={30} />
-        ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSubmit}
-          >
-            Sign up
-          </Button>
-        )}
+          {loading ? (
+            <CircularProgress size={30} />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleSubmit}
+            >
+              Sign up
+            </Button>
+          )}
+        </form>
         <Typography variant="subtitle2" className={classes.subtitle}>
           Already have an account?{" "}
           <Link component={RouterLink} to="/login">

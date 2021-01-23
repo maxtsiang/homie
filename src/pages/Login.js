@@ -16,12 +16,19 @@ import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles({
   container: {
+    marginTop: "-10em",
     width: "400px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     padding: "1em",
     borderRadius: "1em",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   label: {
     fontSize: "1.5em",
@@ -71,13 +78,15 @@ function Login(props) {
 
   const history = useHistory();
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
     try {
       setError("");
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
       history.push("/");
-    } catch {
+    } catch (error) {
+      console.log(error);
       setError("Failed to sign in");
     }
     setLoading(false);
@@ -94,33 +103,34 @@ function Login(props) {
             {error}
           </Alert>
         )}
+        <form onSubmit={handleSubmit} className={classes.form}>
+          <TextField
+            className={classes.field}
+            label="Email"
+            variant="outlined"
+            inputRef={emailRef}
+          />
+          <TextField
+            className={classes.field}
+            label="Password"
+            type="password"
+            variant="outlined"
+            inputRef={passwordRef}
+          />
 
-        <TextField
-          className={classes.field}
-          label="Email"
-          variant="outlined"
-          inputRef={emailRef}
-        />
-        <TextField
-          className={classes.field}
-          label="Password"
-          type="password"
-          variant="outlined"
-          inputRef={passwordRef}
-        />
-
-        {loading ? (
-          <CircularProgress size={30} />
-        ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSubmit}
-          >
-            Login
-          </Button>
-        )}
+          {loading ? (
+            <CircularProgress size={30} />
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              type="submit"
+            >
+              Login
+            </Button>
+          )}
+        </form>
         <Typography variant="subtitle2" className={classes.subtitle}>
           <Link component={RouterLink} to="/forgot">
             Forgot Password
