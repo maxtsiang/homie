@@ -101,7 +101,7 @@ function Detail(props) {
           <Typography variant="h3" className={classes.header}>
             ${props.info.price}/month
           </Typography>
-          <Typography variant="h4" className={classes.subheader}>
+          <Typography variant="subtitle2" className={classes.subheader}>
             {props.info.persons} PERSON • {props.info.bedrooms} BR,{" "}
             {props.info.bathrooms} BA •{" "}
             {moment(props.info.start).format("MMM DD").toUpperCase()} -{" "}

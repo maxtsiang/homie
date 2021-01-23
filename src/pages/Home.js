@@ -52,9 +52,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: "scroll",
     height: "100%",
   },
-  subheader: {
-    color: "lightgrey",
-  },
 }));
 
 const SORT_OPTIONS = {

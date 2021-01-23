@@ -19,7 +19,7 @@ function MapMarker(props) {
       onClick={() => props.setDetailed && props.setDetailed(props.id)}
     >
       {props.$hover || props.hovered ? (
-        <RoomRoundedIcon color="secondary" className={classes.icon} />
+        <RoomRoundedIcon color="primary" className={classes.icon} />
       ) : (
         <RoomRoundedIcon className={classes.icon} />
       )}

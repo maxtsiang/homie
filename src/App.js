@@ -21,7 +21,15 @@ import {
 } from "@material-ui/core/styles";
 import { AuthProvider } from "./contexts/AuthContext";
 
+import ReactDependentScript from "react-dependent-script";
+
 let theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#60BEEB",
+      contrastText: "#FFFFFF",
+    },
+  },
   typography: {
     fontFamily: '"Roboto"',
     h3: {
@@ -29,7 +37,7 @@ let theme = createMuiTheme({
     },
     h4: {
       fontWeight: 600,
-      color: "grey",
+      color: "lightgrey",
     },
     h5: {
       fontWeight: 700,
@@ -44,34 +52,44 @@ let theme = createMuiTheme({
       color: "grey",
     },
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: "1em",
+        padding: "0.75em",
+      },
+    },
+  },
 });
 theme = responsiveFontSizes(theme);
 
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-          <BrowserRouter>
-            <PrivateRoute exact path="/" component={() => <Home />} />
-            <PrivateRoute exact path="/new" component={() => <New />} />
-            <PrivateRoute exact path="/chats" component={() => <Chat />} />
-            <PrivateRoute
-              exact
-              path="/saved"
-              component={() => <Home saved />}
-            />
-            <PrivateRoute
-              exact
-              path="/editprofile"
-              component={() => <EditProfile />}
-            />
-            <Route exact path="/signup" component={() => <Signup />} />
-            <Route exact path="/login" component={() => <Login />} />
-            <Route exact path="/forgot" component={() => <Forgot />} />
-          </BrowserRouter>
-        </MuiPickersUtilsProvider>
-      </ThemeProvider>
+      <ReactDependentScript scripts={[process.env.REACT_APP_GOOGLE_MAPS_API]}>
+        <ThemeProvider theme={theme}>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <BrowserRouter>
+              <PrivateRoute exact path="/" component={() => <Home />} />
+              <PrivateRoute exact path="/new" component={() => <New />} />
+              <PrivateRoute exact path="/chats" component={() => <Chat />} />
+              <PrivateRoute
+                exact
+                path="/saved"
+                component={() => <Home saved />}
+              />
+              <PrivateRoute
+                exact
+                path="/editprofile"
+                component={() => <EditProfile />}
+              />
+              <Route exact path="/signup" component={() => <Signup />} />
+              <Route exact path="/login" component={() => <Login />} />
+              <Route exact path="/forgot" component={() => <Forgot />} />
+            </BrowserRouter>
+          </MuiPickersUtilsProvider>
+        </ThemeProvider>
+      </ReactDependentScript>
     </AuthProvider>
   );
 }

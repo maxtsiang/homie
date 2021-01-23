@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Typography, TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-import ReactDependentScript from "react-dependent-script";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -33,39 +32,37 @@ function PlacesSearch(props) {
   };
 
   return (
-    <ReactDependentScript scripts={[GOOGLE_MAPS_API_SCRIPT]}>
-      <PlacesAutocomplete
-        value={address}
-        onChange={handleChange}
-        onSelect={handleSelect}
-      >
-        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-          <div>
-            <Autocomplete
-              options={suggestions}
-              freeSolo
-              autoHighlight
-              getOptionLabel={(suggestion) => suggestion.description}
-              renderOption={(suggestion) => (
-                <div {...getSuggestionItemProps(suggestion)}>
-                  <Typography>{suggestion.description}</Typography>
-                </div>
-              )}
-              renderInput={(params) => (
-                <TextField
-                  variant="outlined"
-                  {...getInputProps({
-                    placeholder: "Search Places ...",
-                  })}
-                  {...params}
-                />
-              )}
-              {...props}
-            />
-          </div>
-        )}
-      </PlacesAutocomplete>
-    </ReactDependentScript>
+    <PlacesAutocomplete
+      value={address}
+      onChange={handleChange}
+      onSelect={handleSelect}
+    >
+      {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+        <div>
+          <Autocomplete
+            options={suggestions}
+            freeSolo
+            autoHighlight
+            getOptionLabel={(suggestion) => suggestion.description}
+            renderOption={(suggestion) => (
+              <div {...getSuggestionItemProps(suggestion)}>
+                <Typography>{suggestion.description}</Typography>
+              </div>
+            )}
+            renderInput={(params) => (
+              <TextField
+                variant="outlined"
+                {...getInputProps({
+                  placeholder: "Search Places ...",
+                })}
+                {...params}
+              />
+            )}
+            {...props}
+          />
+        </div>
+      )}
+    </PlacesAutocomplete>
   );
 }
 

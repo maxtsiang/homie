@@ -28,7 +28,6 @@ const useStyles = makeStyles({
   },
   interestedButton: {
     width: "100%",
-    padding: "0.5em",
     marginTop: "1em",
     background: "#ffcccc",
     "&:hover": {
@@ -37,7 +36,6 @@ const useStyles = makeStyles({
   },
   interestedButtonSelected: {
     width: "100%",
-    padding: "0.5em",
     marginTop: "1em",
     background: "#ff9eb5",
     color: "white",

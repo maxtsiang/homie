@@ -28,6 +28,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import RemoveIcon from "@material-ui/icons/Remove";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 import PlacesSearch from "../components/PlacesSearch";
 
@@ -39,10 +40,9 @@ import moment from "moment";
 
 const useStyles = makeStyles({
   container: {
-    margin: "3em",
-    marginTop: "6em",
+    padding: "2em",
     width: "80vw",
-    height: "85vh",
+    height: "80vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -54,22 +54,21 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     flexWrap: "wrap",
+    maxHeight: "15vh",
   },
-
   label: {
     fontSize: "1.3em",
   },
   input: {
     marginBottom: "1em",
     marginRight: "1em",
-    marginTop: "1em",
+    marginTop: "0.5em",
     width: "100%",
-    overflow: "visible",
   },
   inputField: {
     marginBottom: "1em",
     marginRight: "1em",
-    marginTop: "1em",
+    marginTop: "0.5em",
     width: "100%",
   },
   separator: {
@@ -89,12 +88,11 @@ const useStyles = makeStyles({
     alignSelf: "flex-end",
   },
   group: {
-    marginTop: "1em",
+    marginTop: "0.5em",
     marginRight: "1em",
     width: "100%",
   },
   fieldGroup: {
-    marginTop: "1em",
     marginRight: "1em",
     width: "100%",
   },
@@ -108,8 +106,8 @@ const useStyles = makeStyles({
     overflow: "hidden",
     backgroundColor: "white",
     height: "100%",
-
     width: "100%",
+    marginLeft: "1em",
   },
   gridList: {
     flexWrap: "nowrap",
@@ -144,18 +142,22 @@ function New() {
   const [error, setError] = useState(false);
 
   const handleSetType = (e) => {
+    setError("");
     setType(e.target.value);
   };
 
   const handleSetPrice = (e) => {
+    setError("");
     setPrice(e.target.value);
   };
 
   const handleCheck = (e) => {
+    setError("");
     setAmenities({ ...amenities, [e.target.name]: e.target.checked });
   };
 
   const handleSetDescription = (e) => {
+    setError("");
     setDescription(e.target.value);
   };
 
@@ -167,6 +169,7 @@ function New() {
         setError("Image must be less than 1mb");
         return;
       }
+      console.log(newPhoto);
       setPhotos((prevPhotos) => [...prevPhotos, newPhoto]);
     });
   };
@@ -315,7 +318,7 @@ function New() {
             </Typography>
             <FormControl fullWidth className={classes.input} variant="outlined">
               <Select value={type} onChange={handleSetType} displayEmpty>
-                <MenuItem value="">
+                <MenuItem value="" disabled={true}>
                   <em>Select one</em>
                 </MenuItem>
                 <MenuItem value="Apartment">Apartment</MenuItem>
@@ -380,7 +383,7 @@ function New() {
         </Box>
 
         <Box className={classes.groupWrapper}>
-          <Box className={classes.group}>
+          <Box className={classes.group} display="flex" flexDirection="column">
             <Typography variant="h6" className={classes.label}>
               Rooms and Beds
             </Typography>
@@ -405,6 +408,7 @@ function New() {
                             checked={amenities ? amenities[amenityName] : false}
                             onChange={handleCheck}
                             name={amenityName}
+                            color="primary"
                           />
                         }
                         className={classes.checkbox}
@@ -459,14 +463,24 @@ function New() {
                         style={{
                           maxHeight: "100%",
                           maxWidth: "100%",
+                          marginLeft: "1em",
                         }}
                       />
                     </div>
                     <GridListTileBar
                       className={classes.titleBar}
+                      titlePosition="top"
                       actionIcon={
-                        <IconButton onClick={() => removePhoto(index)}>
-                          <RemoveIcon />
+                        <IconButton
+                          style={{
+                            background: "white",
+                            padding: "0.2em",
+                            margin: "0.2em",
+                            boxShadow: "",
+                          }}
+                          onClick={() => removePhoto(index)}
+                        >
+                          <RemoveIcon color="secondary" />
                         </IconButton>
                       }
                     />

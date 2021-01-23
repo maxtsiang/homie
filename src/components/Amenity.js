@@ -11,6 +11,7 @@ const useStyles = makeStyles({
   amenityBox: {
     display: "flex",
     alignItems: "center",
+    marginRight: "3em",
   },
   icon: {
     marginRight: "0.3em",
