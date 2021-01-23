@@ -11,10 +11,9 @@ import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles({
   container: {
-    margin: "3em",
+    padding: "3em",
   },
   header: {
-    marginTop: "1em",
     marginLeft: "0.5em",
   },
 });

@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "0.5em",
     "&:hover": {
       cursor: "pointer",
+      background: "lightgrey",
     },
   },
 }));

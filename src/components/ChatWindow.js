@@ -23,9 +23,9 @@ const useStyles = makeStyles({
   container: {
     border: "1px solid lightgrey",
     borderRadius: "0.7em",
-    height: "80vh",
-    width: "80%",
-    margin: "2em",
+    height: "79vh",
+    width: "85%",
+    marginLeft: "1em",
     overflow: "scroll",
   },
   receivedtxtMsg: {
@@ -35,6 +35,8 @@ const useStyles = makeStyles({
     height: "auto",
     maxWidth: "100%",
     padding: "0.5em",
+    paddingLeft: "0.75em",
+    paddingRight: "0.75em",
   },
   senttxtMsg: {
     border: "1px solid lightgrey",
@@ -44,7 +46,9 @@ const useStyles = makeStyles({
     height: "auto",
     maxWidth: "100%",
     padding: "0.5em",
-    marginRight: "1em",
+    marginRight: "0.25em",
+    paddingLeft: "0.75em",
+    paddingRight: "0.75em",
   },
   invisible: {
     width: "60%",
@@ -67,7 +71,7 @@ const useStyles = makeStyles({
     alignItems: "center",
     width: "60%",
     background: "white",
-    padding: "0.5em",
+    padding: "0.25em",
   },
   button: {
     margin: "1em",
