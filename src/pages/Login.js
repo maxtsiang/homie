@@ -1,4 +1,11 @@
-import { Typography, Button, TextField, Paper, Link } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  TextField,
+  Paper,
+  Link,
+  CircularProgress,
+} from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,9 +48,13 @@ const useStyles = makeStyles({
   },
   wrapper: {
     display: "flex",
+    alignItems: "center",
     width: "100vw",
     justifyContent: "space-evenly",
-    marginTop: "6em",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    height: "100vh",
   },
 });
 
@@ -98,15 +109,18 @@ function Login(props) {
           inputRef={passwordRef}
         />
 
-        <Button
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={handleSubmit}
-        >
-          Login
-        </Button>
+        {loading ? (
+          <CircularProgress size={30} />
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={handleSubmit}
+          >
+            Login
+          </Button>
+        )}
         <Typography variant="subtitle2" className={classes.subtitle}>
           <Link component={RouterLink} to="/forgot">
             Forgot Password

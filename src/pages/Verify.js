@@ -1,4 +1,10 @@
-import { Typography, Button, Paper, Link } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  Paper,
+  Link,
+  CircularProgress,
+} from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -40,9 +46,13 @@ const useStyles = makeStyles({
   },
   wrapper: {
     display: "flex",
+    alignItems: "center",
     width: "100vw",
     justifyContent: "space-evenly",
-    marginTop: "6em",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    height: "100vh",
   },
 });
 
@@ -81,15 +91,19 @@ function Verify(props) {
           Please check your inbox for further instructions.
         </Typography>
 
-        <Button
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={verifyEmail}
-        >
-          Resend Email
-        </Button>
+        {loading ? (
+          <CircularProgress size={30} />
+        ) : (
+          <Button
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={verifyEmail}
+          >
+            Resend Email
+          </Button>
+        )}
         <Typography variant="subtitle2" className={classes.subtitle}>
           <Link component={RouterLink} to="/login">
             Back to login

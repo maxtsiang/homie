@@ -74,7 +74,7 @@ function Nav() {
               variant="subtitle1"
               to="/"
             >
-              Homie
+              homie
             </Typography>
           </Grid>
           <Grid item>
