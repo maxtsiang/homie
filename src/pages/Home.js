@@ -1,7 +1,13 @@
+import React, { useEffect, useState } from "react";
+
+import { useAuth } from "../contexts/AuthContext";
+import firebase from "../firebase";
+
 import Listing from "../components/Listing";
 import Map from "../components/Map";
 import Filter from "../components/Filter";
 import Detail from "../components/Detail";
+import Profile from "../components/Profile";
 
 import {
   Typography,
@@ -14,26 +20,16 @@ import {
   Button,
   Paper,
   CircularProgress,
+  Backdrop,
 } from "@material-ui/core";
-import Backdrop from "@material-ui/core/Backdrop";
-
-import React, { useEffect, useState } from "react";
-
-import TuneRoundedIcon from "@material-ui/icons/TuneRounded";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useAuth } from "../contexts/AuthContext";
-import firebase from "../firebase";
-import Profile from "../components/Profile";
-
+import TuneRoundedIcon from "@material-ui/icons/TuneRounded";
 import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    display: "flex",
-    justify: "space-between",
-    alignItems: "center",
-    height: "90vh",
+    height: "85vh",
   },
   overlay: {
     padding: "1em",
@@ -47,9 +43,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "1em",
   },
   item: {
-    overflow: "scroll",
     height: "100%",
+  },
+  itemContainer: {
     padding: "2em",
+    height: "100%",
+    overflow: "scroll",
   },
 }));
 
@@ -71,17 +70,14 @@ const LIMIT = 10;
 
 function Home(props) {
   const classes = useStyles();
+  const { currentUser } = useAuth();
 
-  const [filterMode, setFilterMode] = useState(false);
   const [hovered, setHovered] = useState(-1);
   const [detailed, setDetailed] = useState(-1);
 
-  const [filters, setFilters] = useState({});
-
-  const [anchorEl, setAnchorEl] = useState(null);
+  // Sort by
   const [sortBy, setSortBy] = useState("CREATEDAT_DESC");
-
-  const { currentUser } = useAuth();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpenSortBy = (event) => {
     setAnchorEl(event.currentTarget);
@@ -96,10 +92,12 @@ function Home(props) {
     setAnchorEl(null);
   };
 
+  // Listings
   const [listings, setListings] = useState([]);
   const [lastListing, setLastListing] = useState();
   const [isEnd, setIsEnd] = useState(false);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const unsubscribe = firebase
       .firestore()
@@ -144,7 +142,19 @@ function Home(props) {
       });
   }
 
+  const handleScroll = (e) => {
+    const triggerHeight = e.target.scrollTop + e.target.offsetHeight;
+    if (triggerHeight >= e.target.scrollHeight) {
+      if (!loading && !isEnd) {
+        getListings();
+      }
+    }
+  };
+
+  // Filtered listings
   let filteredListings = listings;
+  const [filters, setFilters] = useState({});
+  const [filterMode, setFilterMode] = useState(false);
 
   function filter(list) {
     for (let name in filters) {
@@ -189,7 +199,10 @@ function Home(props) {
 
   filteredListings = filter(filteredListings);
 
+  // Interested overlay
   const [openInterestedOverlay, setOpenInterestedOverlay] = useState(false);
+  const [interestedUsers, setInterestedUsers] = useState([]);
+
   const handleCloseInterestedOverlay = () => {
     setOpenInterestedOverlay(false);
   };
@@ -197,133 +210,122 @@ function Home(props) {
     setOpenInterestedOverlay(!openInterestedOverlay);
   };
 
-  const [interestedUsers, setInterestedUsers] = useState([]);
-
-  const handleScroll = (e) => {
-    const triggerHeight = e.target.scrollTop + e.target.offsetHeight;
-    if (triggerHeight >= e.target.scrollHeight) {
-      if (!loading && !isEnd) {
-        getListings();
-      }
-    }
-  };
-
   return (
     <Grid container className={classes.container}>
       <Grid item className={classes.item} onScroll={handleScroll} xs>
-        <Box className={classes.header}>
+        <Box className={classes.itemContainer}>
+          <Box className={classes.header}>
+            {filterMode ? (
+              <Typography variant="h3">Filter</Typography>
+            ) : (
+              <Box display="flex" alignItems="center">
+                <Typography variant="h3">Find a place</Typography>
+                <IconButton onClick={() => setFilterMode(true)}>
+                  <Badge
+                    badgeContent={Object.keys(filters).length}
+                    color="primary"
+                  >
+                    <TuneRoundedIcon />
+                  </Badge>
+                </IconButton>
+              </Box>
+            )}
+
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="h4">
+                {filteredListings.length} found near Penn
+              </Typography>
+              {!filterMode && (
+                <>
+                  <Button onClick={handleOpenSortBy}>Sort By</Button>
+                  <Menu
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    {Object.keys(SORT_OPTIONS).map((key, index) => (
+                      <MenuItem
+                        key={index}
+                        selected={sortBy === key}
+                        onClick={() => handleSortBy(key)}
+                      >
+                        {SORT_OPTIONS[key].name}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </>
+              )}
+            </Box>
+          </Box>
+
           {filterMode ? (
-            <Typography variant="h3">Filter</Typography>
+            <Filter
+              filters={filters}
+              addFilter={addFilter}
+              close={() => setFilterMode(false)}
+              clearFilters={clearFilters}
+            />
           ) : (
-            <Box display="flex" alignItems="center">
-              <Typography variant="h3">Find a place</Typography>
-              <IconButton
-                aria-label="filter"
-                onClick={() => setFilterMode(true)}
-              >
-                <Badge
-                  badgeContent={Object.keys(filters).length}
-                  color="primary"
-                >
-                  <TuneRoundedIcon />
-                </Badge>
-              </IconButton>
+            <Box>
+              {filteredListings &&
+                filteredListings.map((listing, index) => {
+                  return (
+                    <Listing
+                      key={listing.id}
+                      index={index}
+                      id={listing.id}
+                      detailed={detailed}
+                      hovered={hovered}
+                      setHovered={setHovered}
+                      setDetailed={setDetailed}
+                      info={listing}
+                      edit={listing.creator === currentUser.uid}
+                      handleInterestedOverlay={handleToggleInterestedOverlay}
+                      setInterestedUsers={setInterestedUsers}
+                    />
+                  );
+                })}
+              {loading && (
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <CircularProgress size={30} />
+                </Box>
+              )}
+              {isEnd && (
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Typography variant="subtitle2">No more listings</Typography>
+                </Box>
+              )}
             </Box>
           )}
-
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Typography variant="h4" className={classes.subheader}>
-              {filteredListings.length} places near University of Pennsylvania
-            </Typography>
-            {!filterMode && (
-              <>
-                <Button onClick={handleOpenSortBy}>Sort By</Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  {Object.keys(SORT_OPTIONS).map((key, index) => (
-                    <MenuItem
-                      key={index}
-                      selected={sortBy === key}
-                      onClick={() => handleSortBy(key)}
-                    >
-                      {SORT_OPTIONS[key].name}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
-            )}
-          </Box>
         </Box>
-
-        {filterMode ? (
-          <Filter
-            filters={filters}
-            addFilter={addFilter}
-            close={() => setFilterMode(false)}
-            clearFilters={clearFilters}
-          />
-        ) : (
-          <Box>
-            {filteredListings &&
-              filteredListings.map((listing, index) => {
-                return (
-                  <Listing
-                    key={listing.id}
-                    index={index}
-                    id={listing.id}
-                    detailed={detailed}
-                    hovered={hovered}
-                    setHovered={setHovered}
-                    setDetailed={setDetailed}
-                    info={listing}
-                    edit={listing.creator === currentUser.uid}
-                    handleInterestedOverlay={handleToggleInterestedOverlay}
-                    setInterestedUsers={setInterestedUsers}
-                  />
-                );
-              })}
-            {loading && (
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <CircularProgress size={30} />
-              </Box>
-            )}
-            {isEnd && (
-              <Box display="flex" flexDirection="column" alignItems="center">
-                <Typography variant="subtitle2">No more listings</Typography>
-              </Box>
-            )}
-          </Box>
-        )}
       </Grid>
 
       <Grid item className={classes.item} xs>
-        {filteredListings[detailed] && (
-          <Detail
-            id={detailed}
-            close={() => setDetailed(-1)}
-            info={filteredListings[detailed]}
-            height="88vh"
-            width="45%"
+        <Box className={classes.itemContainer}>
+          {filteredListings[detailed] && (
+            <Detail
+              id={detailed}
+              close={() => setDetailed(-1)}
+              info={filteredListings[detailed]}
+            />
+          )}
+          <Map
+            hidden={detailed >= 0 && filteredListings.length > 0}
+            hovered={hovered}
+            listings={filteredListings}
+            setHovered={setHovered}
+            setDetailed={setDetailed}
+            height="100%"
+            width="100%"
           />
-        )}
-        <Map
-          hidden={detailed >= 0 && filteredListings.length > 0}
-          hovered={hovered}
-          listings={filteredListings}
-          setHovered={setHovered}
-          setDetailed={setDetailed}
-          height="87vh"
-          width="100%"
-        />
+        </Box>
       </Grid>
+
       <Backdrop className={classes.backdrop} open={openInterestedOverlay}>
         <Paper className={classes.overlay}>
           <Box

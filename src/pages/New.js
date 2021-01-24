@@ -40,8 +40,7 @@ import moment from "moment";
 const useStyles = makeStyles({
   container: {
     padding: "2em",
-    width: "80vw",
-    height: "80vh",
+    width: "80%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -54,9 +53,6 @@ const useStyles = makeStyles({
     flexDirection: "column",
     flexWrap: "wrap",
     maxHeight: "15vh",
-  },
-  label: {
-    fontSize: "1.3em",
   },
   input: {
     marginBottom: "1em",
@@ -71,19 +67,12 @@ const useStyles = makeStyles({
     width: "100%",
   },
   separator: {
-    fontSize: "1.3em",
     marginRight: "1em",
   },
   subtitle: {
-    fontSize: "1em",
     fontWeight: 400,
   },
   button: {
-    width: "10%",
-    marginTop: "1em",
-    padding: "0.7em",
-    borderRadius: "1em",
-    boxShadow: "none",
     alignSelf: "flex-end",
   },
   group: {
@@ -301,9 +290,7 @@ function New() {
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Property Address
-            </Typography>
+            <Typography variant="h6">Property Address</Typography>
             <PlacesSearch
               className={classes.input}
               setaddresshandler={setAddress}
@@ -312,9 +299,7 @@ function New() {
           </Box>
 
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Property Type
-            </Typography>
+            <Typography variant="h6">Property Type</Typography>
             <FormControl fullWidth className={classes.input} variant="outlined">
               <Select value={type} onChange={handleSetType} displayEmpty>
                 <MenuItem value="" disabled={true}>
@@ -330,9 +315,7 @@ function New() {
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Price
-            </Typography>
+            <Typography variant="h6">Price</Typography>
 
             <FormControl fullWidth className={classes.input} variant="outlined">
               <OutlinedInput
@@ -345,9 +328,7 @@ function New() {
           </Box>
 
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Availability
-            </Typography>
+            <Typography variant="h6">Availability</Typography>
 
             <Box display="flex" alignItems="center">
               <KeyboardDatePicker
@@ -383,18 +364,14 @@ function New() {
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group} display="flex" flexDirection="column">
-            <Typography variant="h6" className={classes.label}>
-              Rooms and Beds
-            </Typography>
+            <Typography variant="h6">Rooms and Beds</Typography>
             <Counter label="Persons" setCountHandler={setPersons} />
             <Counter label="Bedroom" setCountHandler={setBedrooms} />
             <Counter label="Bathroom" setCountHandler={setBathrooms} />
           </Box>
 
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Amenities
-            </Typography>
+            <Typography variant="h6">Amenities</Typography>
 
             <FormControl component="fieldset">
               <FormGroup className={classes.checkboxGroup}>
@@ -422,9 +399,7 @@ function New() {
         </Box>
 
         <Box className={classes.fieldGroup}>
-          <Typography variant="h6" className={classes.label}>
-            Description
-          </Typography>
+          <Typography variant="h6">Description</Typography>
           <FormControl
             fullWidth
             className={classes.inputField}

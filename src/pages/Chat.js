@@ -13,9 +13,6 @@ const useStyles = makeStyles({
   container: {
     padding: "2em",
   },
-  header: {
-    marginLeft: "0.5em",
-  },
 });
 
 const Chat = () => {
@@ -77,9 +74,7 @@ const Chat = () => {
     <div>
       <Grid container className={classes.container}>
         <Grid item xs={3}>
-          <Typography variant="h3" className={classes.header}>
-            Chats
-          </Typography>
+          <Typography variant="h3">Chats</Typography>
           {selectedChat && (
             <ChatContacts
               chats={chats}

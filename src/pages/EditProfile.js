@@ -28,18 +28,14 @@ import firebase from "../firebase";
 const useStyles = makeStyles({
   container: {
     padding: "2em",
-    width: "70vw",
-    height: "70vh",
+    width: "70%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
   },
   avatar: {
     height: "15vh",
     width: "15vh",
-  },
-  label: {
-    fontSize: "1.3em",
   },
   input: {
     marginBottom: "1em",
@@ -330,9 +326,7 @@ function EditProfile(props) {
             </Badge>
           </Box>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Name
-            </Typography>
+            <Typography variant="h6">Name</Typography>
 
             <OutlinedInput
               onChange={handleSetName}
@@ -344,9 +338,7 @@ function EditProfile(props) {
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Pronouns
-            </Typography>
+            <Typography variant="h6">Pronouns</Typography>
 
             <OutlinedInput
               onChange={handleSetPronouns}
@@ -356,9 +348,7 @@ function EditProfile(props) {
           </Box>
 
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Major
-            </Typography>
+            <Typography variant="h6">Major</Typography>
 
             <OutlinedInput
               onChange={handleSetMajor}
@@ -370,9 +360,7 @@ function EditProfile(props) {
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Graduation Year
-            </Typography>
+            <Typography variant="h6">Graduation Year</Typography>
             <FormControl fullWidth className={classes.input} variant="outlined">
               <Select value={grad} onChange={handleSetGrad} displayEmpty>
                 <MenuItem value={0} disabled>
@@ -385,9 +373,7 @@ function EditProfile(props) {
             </FormControl>
           </Box>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              Greek Life (optional)
-            </Typography>
+            <Typography variant="h6">Greek Life (optional)</Typography>
 
             <OutlinedInput
               onChange={handleSetGreek}
@@ -399,9 +385,7 @@ function EditProfile(props) {
 
         <Box className={classes.groupWrapper}>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              My Habits
-            </Typography>
+            <Typography variant="h6">My Habits</Typography>
 
             <Box>
               {myHabits.map((habit) => (
@@ -416,9 +400,7 @@ function EditProfile(props) {
             </Box>
           </Box>
           <Box className={classes.group}>
-            <Typography variant="h6" className={classes.label}>
-              All Habits
-            </Typography>
+            <Typography variant="h6">All Habits</Typography>
 
             <Box>
               {habits.map((habit) => (

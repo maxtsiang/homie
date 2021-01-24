@@ -27,16 +27,12 @@ const useStyles = makeStyles({
   checkbox: {
     margin: 0,
   },
-  label: {
-    fontSize: "1.3em",
-  },
   input: {
     marginBottom: "1em",
     marginRight: "1em",
     marginTop: "1em",
   },
   separator: {
-    fontSize: "1.3em",
     marginRight: "1em",
   },
   button: {
@@ -128,9 +124,7 @@ function Filter(props) {
     <Box className={classes.container}>
       {error && <Alert severity="error">{error}</Alert>}
       <Box className={classes.group}>
-        <Typography variant="h6" className={classes.label}>
-          Price
-        </Typography>
+        <Typography variant="h6">Price</Typography>
         <Box display="flex" alignItems="center">
           <FormControl fullWidth className={classes.input} variant="outlined">
             <InputLabel>Min</InputLabel>
@@ -161,9 +155,7 @@ function Filter(props) {
       </Box>
 
       <Box className={classes.group}>
-        <Typography variant="h6" className={classes.label}>
-          Availability
-        </Typography>
+        <Typography variant="h6">Availability</Typography>
 
         <Box display="flex" alignItems="center">
           <KeyboardDatePicker
@@ -199,9 +191,7 @@ function Filter(props) {
       </Box>
 
       <Box className={classes.group}>
-        <Typography variant="h6" className={classes.label}>
-          Rooms and Beds
-        </Typography>
+        <Typography variant="h6">Rooms and Beds</Typography>
         <Counter label="Persons" setCountHandler={setPersons} count={persons} />
         <Counter
           label="Bedroom"

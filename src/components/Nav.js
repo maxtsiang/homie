@@ -22,7 +22,10 @@ const useStyles = makeStyles({
   navText: {
     color: "black",
     textDecoration: "none",
-    marginRight: "1em",
+  },
+  icon: {
+    height: "1.3em",
+    width: "1.3em",
   },
 });
 
@@ -51,13 +54,10 @@ function Nav() {
   }
 
   return (
-    <div style={{ marginBottom: "4em" }}>
+    <div style={{ margin: "3em" }}>
       <AppBar
         style={{
           background: "#FFFFFF",
-          overflow: "hidden",
-          paddingLeft: "3em",
-          paddingRight: "3em",
           boxShadow: "none",
         }}
       >
@@ -66,6 +66,7 @@ function Nav() {
           display="flex"
           alignItems="center"
           justify="space-between"
+          style={{ paddingLeft: "2em", paddingRight: "2em" }}
         >
           <Grid item>
             <Typography
@@ -79,18 +80,19 @@ function Nav() {
           </Grid>
           <Grid item>
             <Box display="flex" alignItems="center">
-              <IconButton component={RouterLink} to="/new" aria-label="chats">
+              <IconButton component={RouterLink} to="/new">
                 <AddRoundedIcon />
               </IconButton>
 
-              <IconButton component={RouterLink} to="/chats" aria-label="chats">
+              <IconButton component={RouterLink} to="/chats">
                 <ChatBubbleOutlineRoundedIcon />
               </IconButton>
 
-              <IconButton aria-label="profile" onClick={handleClick}>
+              <IconButton onClick={handleClick}>
                 <Avatar
                   alt={currentUser.displayName}
                   src={currentUser.photoURL}
+                  className={classes.icon}
                 />
               </IconButton>
               <Popover
