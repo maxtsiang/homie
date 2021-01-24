@@ -21,12 +21,12 @@ const useStyles = makeStyles({
   card: {
     marginBottom: "1em",
     boxShadow: "none",
-    height: "100%",
+    height: "auto",
   },
   cardSelected: {
     marginBottom: "1em",
     boxShadow: "none",
-    height: "20%",
+    height: "auto",
     background: "#f1f1ee",
   },
   cardimg: {
@@ -84,7 +84,7 @@ function Listing(props) {
     >
       <CardActionArea>
         <Grid container display="flex">
-          <Grid item className={classes.item}>
+          <Grid item className={classes.item} xs>
             <Box
               display="flex"
               alignItems="center"
@@ -101,7 +101,7 @@ function Listing(props) {
               )}
             </Box>
           </Grid>
-          <Grid item className={classes.item}>
+          <Grid item className={classes.item} xs>
             <CardContent className={classes.content}>
               <Box
                 display="flex"

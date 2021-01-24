@@ -47,10 +47,9 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "1em",
   },
   item: {
-    padding: "2em",
-    width: "50%",
     overflow: "scroll",
     height: "100%",
+    padding: "2em",
   },
 }));
 
@@ -211,7 +210,7 @@ function Home(props) {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item className={classes.item} onScroll={handleScroll}>
+      <Grid item className={classes.item} onScroll={handleScroll} xs>
         <Box className={classes.header}>
           {filterMode ? (
             <Typography variant="h3">Filter</Typography>
@@ -238,8 +237,7 @@ function Home(props) {
             justifyContent="space-between"
           >
             <Typography variant="h4" className={classes.subheader}>
-              {filteredListings.length} places found near University of
-              Pennsylvania
+              {filteredListings.length} places near University of Pennsylvania
             </Typography>
             {!filterMode && (
               <>
@@ -306,7 +304,7 @@ function Home(props) {
         )}
       </Grid>
 
-      <Grid item className={classes.item}>
+      <Grid item className={classes.item} xs>
         {filteredListings[detailed] && (
           <Detail
             id={detailed}

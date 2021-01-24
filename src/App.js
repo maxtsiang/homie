@@ -54,7 +54,6 @@ let theme = createMuiTheme({
     MuiButton: {
       root: {
         borderRadius: "1em",
-        padding: "0.75em",
       },
     },
   },

@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   },
   interestedButton: {
     width: "100%",
-    marginTop: "1em",
+    marginTop: "0.25em",
     background: "#ffcccc",
     "&:hover": {
       background: "#ff9eb5",
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
   },
   interestedButtonSelected: {
     width: "100%",
-    marginTop: "1em",
+    marginTop: "0.25em",
     background: "#ff9eb5",
     color: "white",
     "&:hover": {
@@ -45,8 +45,7 @@ const useStyles = makeStyles({
   },
   deleteButton: {
     width: "100%",
-
-    marginTop: "1em",
+    marginTop: "0.25em",
     background: "#FF6961",
     "&:hover": {
       background: "#FF1205",
