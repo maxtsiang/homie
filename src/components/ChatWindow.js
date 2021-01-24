@@ -141,7 +141,7 @@ const ChatWindow = (props) => {
       });
 
     return () => unsubscribe();
-  }, []);
+  }, [props.chat]);
 
   const classes = useStyles();
 

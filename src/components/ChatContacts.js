@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
-  List,
   ListItem,
   Box,
   ListItemText,
@@ -14,7 +13,7 @@ import {
 import firebase from "../firebase";
 import moment from "moment";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   sender: {
     display: "flex",
     alignItems: "center",
@@ -39,7 +38,7 @@ const ChatContacts = (props) => {
     const unsubscribe = firebase
       .firestore()
       .collection("chats")
-      .doc(props.selectedChat.id)
+      .doc(props.chat.id)
       .onSnapshot((snapshot) => {
         const chatDoc = snapshot.data();
         const last = chatDoc.recentMessage;
@@ -49,36 +48,35 @@ const ChatContacts = (props) => {
       });
 
     return () => unsubscribe();
-  }, [props.selectedChat]);
+  }, [props.chat]);
   return (
-    <List>
-      {props.chats.map((chat, index) => (
-        <ListItem
-          className={classes.listItem}
-          style={{
-            background: props.selected === index ? "lightgrey" : "none",
-          }}
-          onClick={props.setSelected(index)}
-        >
-          <Box className={classes.sender}>
-            <ListItemAvatar>
-              <Avatar alt={chat.otherUser.name} src={chat.otherUser.profile} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={chat.otherUser.name}
-              secondary={recentMessage ? recentMessage.content : null}
-            />
-          </Box>
-          <Box>
-            {recentMessage && (
-              <Typography variant="subtitle2">
-                {moment(recentMessage.createdAt).fromNow().toUpperCase()}
-              </Typography>
-            )}
-          </Box>
-        </ListItem>
-      ))}
-    </List>
+    <ListItem
+      className={classes.listItem}
+      style={{
+        background: props.selected ? "lightgrey" : "none",
+      }}
+      onClick={() => props.setSelected()}
+    >
+      <Box className={classes.sender}>
+        <ListItemAvatar>
+          <Avatar
+            alt={props.chat.otherUser.name}
+            src={props.chat.otherUser.profile}
+          />
+        </ListItemAvatar>
+        <ListItemText
+          primary={props.chat.otherUser.name}
+          secondary={recentMessage ? recentMessage.content : null}
+        />
+      </Box>
+      <Box>
+        {recentMessage && (
+          <Typography variant="subtitle2">
+            {moment(recentMessage.createdAt).fromNow().toUpperCase()}
+          </Typography>
+        )}
+      </Box>
+    </ListItem>
   );
 };
 

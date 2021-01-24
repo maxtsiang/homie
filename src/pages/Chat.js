@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, List } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 
 import ChatWindow from "../components/ChatWindow";
@@ -75,14 +75,23 @@ const Chat = () => {
       <Grid container className={classes.container}>
         <Grid item xs={3}>
           <Typography variant="h3">Chats</Typography>
-          {selectedChat && (
+          {/* {selectedChat && (
             <ChatContacts
               chats={chats}
               selected={selected}
               selectedChat={selectedChat}
               setSelected={setSelected}
             ></ChatContacts>
-          )}
+          )} */}
+          <List>
+            {chats.map((chat, index) => (
+              <ChatContacts
+                chat={chat}
+                selected={selected === index}
+                setSelected={() => setSelected(index)}
+              />
+            ))}
+          </List>
         </Grid>
         <Grid item xs={9}>
           {selectedChat && <ChatWindow chat={selectedChat}></ChatWindow>}
