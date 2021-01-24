@@ -43,41 +43,41 @@ const ChatContacts = (props) => {
       .onSnapshot((snapshot) => {
         const chatDoc = snapshot.data();
         const last = chatDoc.recentMessage;
-        setRecentMessage(last);
+        if (last) {
+          setRecentMessage(last);
+        }
       });
 
     return () => unsubscribe();
   }, [props.selectedChat]);
   return (
     <List>
-      {recentMessage &&
-        props.chats.map((chat, index) => (
-          <ListItem
-            className={classes.listItem}
-            style={{
-              background: props.selected === index ? "lightgrey" : "none",
-            }}
-            onClick={props.setSelected(index)}
-          >
-            <Box className={classes.sender}>
-              <ListItemAvatar>
-                <Avatar
-                  alt={chat.otherUser.name}
-                  src={chat.otherUser.profile}
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={chat.otherUser.name}
-                secondary={recentMessage.content}
-              />
-            </Box>
-            <Box>
+      {props.chats.map((chat, index) => (
+        <ListItem
+          className={classes.listItem}
+          style={{
+            background: props.selected === index ? "lightgrey" : "none",
+          }}
+          onClick={props.setSelected(index)}
+        >
+          <Box className={classes.sender}>
+            <ListItemAvatar>
+              <Avatar alt={chat.otherUser.name} src={chat.otherUser.profile} />
+            </ListItemAvatar>
+            <ListItemText
+              primary={chat.otherUser.name}
+              secondary={recentMessage ? recentMessage.content : null}
+            />
+          </Box>
+          <Box>
+            {recentMessage && (
               <Typography variant="subtitle2">
                 {moment(recentMessage.createdAt).fromNow().toUpperCase()}
               </Typography>
-            </Box>
-          </ListItem>
-        ))}
+            )}
+          </Box>
+        </ListItem>
+      ))}
     </List>
   );
 };

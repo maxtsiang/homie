@@ -8,6 +8,7 @@ import {
   makeStyles,
   Chip,
   Button,
+  CircularProgress,
 } from "@material-ui/core";
 import { useAuth } from "../contexts/AuthContext";
 import firebase from "../firebase";
@@ -35,6 +36,7 @@ function Profile(props) {
   const { currentUser } = useAuth();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
 
@@ -51,13 +53,17 @@ function Profile(props) {
   const isSelfProfile = currentUser.uid === props.user.id;
 
   function handleChat() {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     firebase
       .firestore()
       .collection("chats")
       .where("members", "array-contains", currentUser.uid)
       .get()
       .then((snapshot) => {
-        if (snapshot.exists) {
+        if (snapshot.docs.length === 0) {
           firebase
             .firestore()
             .collection("chats")
@@ -82,9 +88,13 @@ function Profile(props) {
                 .update({
                   chats: firebase.firestore.FieldValue.arrayUnion(docRef.id),
                 });
+              setLoading(false);
+              history.push("/chats");
             });
+        } else {
+          setLoading(false);
+          history.push("/chats");
         }
-        history.push("/chats");
       });
   }
 
@@ -140,14 +150,20 @@ function Profile(props) {
                 />
               ))}
             </Box>
-            <Button
-              color="primary"
-              variant="contained"
-              className={classes.button}
-              onClick={handleChat}
-            >
-              Chat
-            </Button>
+            {loading ? (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <CircularProgress size={30} />
+              </Box>
+            ) : (
+              <Button
+                color="primary"
+                variant="contained"
+                className={classes.button}
+                onClick={handleChat}
+              >
+                Chat
+              </Button>
+            )}
           </Box>
         </Popover>
       )}
