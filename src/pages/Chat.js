@@ -32,41 +32,42 @@ const Chat = () => {
       .get()
       .then((snapshot) => {
         const currentUserChats = snapshot.data().chats;
-
-        if (currentUserChats) {
-          currentUserChats.forEach((chatId) => {
-            firebase
-              .firestore()
-              .collection("chats")
-              .doc(chatId)
-              .get()
-              .then((snapshot) => {
-                const chatDoc = snapshot.data();
-                const chatMembers = chatDoc.members;
-                const otherUserId = chatMembers.find(
-                  (id) => id !== currentUser.uid
-                );
-                firebase
-                  .firestore()
-                  .collection("users")
-                  .doc(otherUserId)
-                  .get()
-                  .then((snapshot) => {
-                    const otherUserDoc = snapshot.data();
-                    const otherUser = {
-                      id: otherUserId,
-                      name: otherUserDoc.name,
-                      profile: otherUserDoc.profile,
-                    };
-                    const newChat = {
-                      id: chatId,
-                      otherUser,
-                    };
-                    setChats((prevChats) => [...prevChats, newChat]);
-                  });
-              });
+        firebase
+          .firestore()
+          .collection("chats")
+          .where(
+            firebase.firestore.FieldPath.documentId(),
+            "in",
+            currentUserChats
+          )
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+              const chatDoc = doc.data();
+              const chatMembers = chatDoc.members;
+              const otherUserId = Object.keys(chatMembers).find(
+                (id) => id !== currentUser.uid
+              );
+              firebase
+                .firestore()
+                .collection("users")
+                .doc(otherUserId)
+                .get()
+                .then((snapshot) => {
+                  const otherUserDoc = snapshot.data();
+                  const otherUser = {
+                    id: otherUserId,
+                    name: otherUserDoc.name,
+                    profile: otherUserDoc.profile,
+                  };
+                  const newChat = {
+                    id: doc.id,
+                    otherUser,
+                  };
+                  setChats((prevChats) => [...prevChats, newChat]);
+                });
+            });
           });
-        }
       });
   }, [currentUser.uid]);
 
@@ -75,14 +76,6 @@ const Chat = () => {
       <Grid container className={classes.container}>
         <Grid item xs={3}>
           <Typography variant="h3">Chats</Typography>
-          {/* {selectedChat && (
-            <ChatContacts
-              chats={chats}
-              selected={selected}
-              selectedChat={selectedChat}
-              setSelected={setSelected}
-            ></ChatContacts>
-          )} */}
           <List>
             {chats.map((chat, index) => (
               <ChatContacts

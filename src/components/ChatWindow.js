@@ -119,6 +119,7 @@ const ChatWindow = (props) => {
   }
 
   useEffect(() => {
+    setMessages([]);
     const unsubscribe = firebase
       .firestore()
       .collection("messages")

@@ -60,15 +60,19 @@ function Profile(props) {
     firebase
       .firestore()
       .collection("chats")
-      .where("members", "array-contains", currentUser.uid)
+      .where(`members.${currentUser.uid}`, "==", true)
+      .where(`members.${props.user.id}`, "==", true)
       .get()
       .then((snapshot) => {
         if (snapshot.docs.length === 0) {
+          let members = {};
+          members[`${props.user.id}`] = true;
+          members[`${currentUser.uid}`] = true;
           firebase
             .firestore()
             .collection("chats")
             .add({
-              members: [props.user.id, currentUser.uid],
+              members,
               creator: currentUser.uid,
               type: 1,
             })
