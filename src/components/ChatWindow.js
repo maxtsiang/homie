@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
+  Grid,
   Avatar,
   TextField,
   Button,
@@ -23,9 +24,8 @@ const useStyles = makeStyles({
   container: {
     border: "1px solid lightgrey",
     borderRadius: "0.7em",
-    height: "79vh",
-    width: "85%",
-    marginLeft: "1em",
+    height: "80vh",
+    width: "50vw",
     overflow: "scroll",
   },
   receivedtxtMsg: {
@@ -62,16 +62,10 @@ const useStyles = makeStyles({
     alignItems: "center",
   },
   msgBox: {
-    position: "fixed",
-    top: "auto",
-    right: "auto",
-    left: "auto",
-    bottom: "2em",
     display: "flex",
     alignItems: "center",
-    width: "60%",
+    width: "50vw",
     background: "white",
-    padding: "0.25em",
   },
   button: {
     margin: "1em",
@@ -148,6 +142,9 @@ const ChatWindow = (props) => {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
+    if (textContent === "") {
+      return;
+    }
     setTextContent("");
     const time = Number(moment().unix().valueOf() * 1000);
     firebase
@@ -226,34 +223,38 @@ const ChatWindow = (props) => {
   };
 
   return (
-    <Box className={classes.container} onScroll={handleScroll}>
-      <List>
-        {isEnd && (
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <Typography variant="subtitle2">End of messages</Typography>
-          </Box>
-        )}
-        {loading && (
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <CircularProgress size={30} />
-          </Box>
-        )}
+    <Grid container direction="column">
+      <Grid item xs={9}>
+        <Box className={classes.container} onScroll={handleScroll}>
+          <List>
+            {isEnd && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="subtitle2">End of messages</Typography>
+              </Box>
+            )}
+            {loading && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <CircularProgress size={30} />
+              </Box>
+            )}
 
-        {props.chat &&
-          messages.map((message, index) => {
-            return message.creator === currentUser.uid
-              ? sentMessage(message.content)
-              : receivedMessage(message.content, props.chat.otherUser);
-          })}
-        <div ref={messagesEnd} />
-      </List>
-      <Paper elevation={0}>
+            {props.chat &&
+              messages.map((message) => {
+                return message.creator === currentUser.uid
+                  ? sentMessage(message.content)
+                  : receivedMessage(message.content, props.chat.otherUser);
+              })}
+            <div ref={messagesEnd} />
+          </List>
+        </Box>
+      </Grid>
+      <Grid item xs={3}>
         <form className={classes.msgBox} onSubmit={handleSendMessage}>
           <TextField
             placeholder="Type your message..."
             value={textContent}
             onChange={handleChange}
-            fullWidth
+            style={{ width: "100%" }}
           />
 
           <Button
@@ -265,8 +266,8 @@ const ChatWindow = (props) => {
             Send
           </Button>
         </form>
-      </Paper>
-    </Box>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -13,6 +13,10 @@ const useStyles = makeStyles({
   container: {
     padding: "2em",
   },
+  contacts: {
+    height: "75vh",
+    overflow: "scroll",
+  },
 });
 
 const Chat = () => {
@@ -72,25 +76,23 @@ const Chat = () => {
   }, [currentUser.uid]);
 
   return (
-    <div>
-      <Grid container className={classes.container}>
-        <Grid item xs={3}>
-          <Typography variant="h3">Chats</Typography>
-          <List>
-            {chats.map((chat, index) => (
-              <ChatContacts
-                chat={chat}
-                selected={selected === index}
-                setSelected={() => setSelected(index)}
-              />
-            ))}
-          </List>
-        </Grid>
-        <Grid item xs={9}>
-          {selectedChat && <ChatWindow chat={selectedChat}></ChatWindow>}
-        </Grid>
+    <Grid container className={classes.container} spacing={2}>
+      <Grid item xs={3}>
+        <Typography variant="h3">Chats</Typography>
+        <List className={classes.contacts}>
+          {chats.map((chat, index) => (
+            <ChatContacts
+              chat={chat}
+              selected={selected === index}
+              setSelected={() => setSelected(index)}
+            />
+          ))}
+        </List>
       </Grid>
-    </div>
+      <Grid item xs={9}>
+        {selectedChat && <ChatWindow chat={selectedChat}></ChatWindow>}
+      </Grid>
+    </Grid>
   );
 };
 
