@@ -45,10 +45,6 @@ const useStyles = makeStyles({
     overflow: "visible",
   },
   button: {
-    width: "10%",
-    marginTop: "1em",
-    padding: "0.7em",
-    borderRadius: "1em",
     boxShadow: "none",
     alignSelf: "flex-end",
   },
@@ -225,13 +221,7 @@ function EditProfile(props) {
     setError("");
     setMessage("");
 
-    if (
-      !name ||
-      !pronouns ||
-      !major ||
-      !grad ||
-      (!currentUser.photoURL && !photo)
-    ) {
+    if (!name || !pronouns || !major || !grad) {
       setError("Please fill out everything (greek life optional) :)");
       return;
     }

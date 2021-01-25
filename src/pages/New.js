@@ -73,6 +73,7 @@ const useStyles = makeStyles({
     fontWeight: 400,
   },
   button: {
+    boxShadow: "none",
     alignSelf: "flex-end",
   },
   group: {

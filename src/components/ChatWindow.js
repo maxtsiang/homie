@@ -68,6 +68,7 @@ const useStyles = makeStyles({
     background: "white",
   },
   button: {
+    boxShadow: "none",
     margin: "1em",
   },
 });
