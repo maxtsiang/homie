@@ -182,7 +182,7 @@ const ChatWindow = (props) => {
   };
 
   const handleScroll = (e) => {
-    if (e.target.scrollTop === 0) {
+    if (e.target.scrollTop < 0) {
       if (!loading && !isEnd) {
         getMessages();
       }
