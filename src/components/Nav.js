@@ -22,6 +22,7 @@ const useStyles = makeStyles({
   navText: {
     color: "black",
     textDecoration: "none",
+    marginRight: "1em",
   },
   icon: {
     height: "1.3em",
@@ -76,6 +77,14 @@ function Nav() {
               to="/"
             >
               homie
+            </Typography>
+            <Typography
+              className={classes.navText}
+              component={RouterLink}
+              variant="subtitle1"
+              to="/feedback"
+            >
+              send feedback
             </Typography>
           </Grid>
           <Grid item>

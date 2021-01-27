@@ -1,11 +1,11 @@
 import Home from "./pages/Home";
 import New from "./pages/New";
 import Chat from "./pages/Chat";
-
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Forgot from "./pages/Forgot";
 import EditProfile from "./pages/EditProfile";
+import Feedback from "./pages/Feedback";
 
 import { BrowserRouter, Route } from "react-router-dom";
 import "fontsource-roboto";
@@ -54,6 +54,7 @@ let theme = createMuiTheme({
     MuiButton: {
       root: {
         borderRadius: "1em",
+        boxShadow: "none",
       },
     },
   },
@@ -78,6 +79,11 @@ function App() {
               exact
               path="/editprofile"
               component={() => <EditProfile />}
+            />
+            <PrivateRoute
+              exact
+              path="/feedback"
+              component={() => <Feedback />}
             />
             <Route exact path="/signup" component={() => <Signup />} />
             <Route exact path="/login" component={() => <Login />} />
