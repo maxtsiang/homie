@@ -145,14 +145,15 @@ function Profile(props) {
               <Typography variant="subtitle2">{props.user.pronouns}</Typography>
             </Box>
             <Box display="flex" flexWrap="wrap" className={classes.group}>
-              {props.user.habits.map((habit) => (
-                <Chip
-                  key={habit.id}
-                  label={habit.name}
-                  className={classes.habit}
-                  style={{ background: habit.color }}
-                />
-              ))}
+              {props.user.habits &&
+                props.user.habits.map((habit) => (
+                  <Chip
+                    key={habit.id}
+                    label={habit.name}
+                    className={classes.habit}
+                    style={{ background: habit.color }}
+                  />
+                ))}
             </Box>
             {loading ? (
               <Box display="flex" flexDirection="column" alignItems="center">

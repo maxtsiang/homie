@@ -59,7 +59,7 @@ function Interested(props) {
 
   const [selected, setSelected] = useState();
   const [interestedUsers, setInterestedUsers] = useState([]);
-  const interestedNumber = interestedUsers.length;
+  const [loading, setLoading] = useState(false);
 
   const { currentUser } = useAuth();
 
@@ -75,21 +75,23 @@ function Interested(props) {
 
   useEffect(() => {
     setInterestedUsers([]);
-    props.interested.forEach((id) => {
+    props.interested.slice(0, 3).forEach((id) => {
       firebase
         .firestore()
         .collection("users")
         .doc(id)
         .get()
         .then((snapshot) => {
+          const userDoc = snapshot.data();
           const user = {
             id: snapshot.id,
-            ...snapshot.data(),
+            name: userDoc.name,
+            profile: userDoc.profile,
           };
           setInterestedUsers((prevUsers) => [...prevUsers, user]);
         });
     });
-  }, [props.interested]);
+  }, []);
 
   useEffect(() => {
     interested_ref.get().then((snapshot) => {
@@ -99,27 +101,44 @@ function Interested(props) {
         setSelected(false);
       }
     });
-  }, [interested_ref]);
+  }, []);
 
-  function handleClickInterested() {
+  async function handleClickInterested() {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
     if (selected) {
-      interested_ref.delete();
+      setInterestedUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== currentUser.uid)
+      );
+      await interested_ref.delete();
 
-      listing_ref.update({
+      await listing_ref.update({
         interested: firebase.firestore.FieldValue.arrayRemove(currentUser.uid),
       });
-
+      setLoading(false);
       setSelected(false);
     } else {
-      interested_ref.set({
+      setInterestedUsers((prevUsers) => [
+        ...prevUsers,
+        {
+          id: currentUser.uid,
+          name: currentUser.displayName,
+          profile: currentUser.photoURL,
+        },
+      ]);
+
+      await interested_ref.set({
         creator: currentUser.uid,
         listing: props.listingid,
       });
 
-      listing_ref.update({
+      await listing_ref.update({
         interested: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
       });
-
+      setLoading(false);
       setSelected(true);
     }
   }
@@ -136,7 +155,7 @@ function Interested(props) {
 
   return (
     <Box>
-      {interestedNumber > 0 && (
+      {props.interested && interestedUsers.length > 0 && (
         <Box
           container
           display="flex"
@@ -164,10 +183,10 @@ function Interested(props) {
           <Box>
             <Typography variant="subtitle1" className={classes.interestedText}>
               {interestedUsers[0].name}{" "}
-              {interestedNumber > 1 ? (
+              {props.interested.length > 1 ? (
                 <>
-                  and {interestedNumber - 1} other
-                  {interestedNumber - 1 > 1 ? <>s</> : null}
+                  and {props.interested.length - 1} other
+                  {props.interested.length - 1 > 1 ? <>s</> : null}
                 </>
               ) : null}
             </Typography>

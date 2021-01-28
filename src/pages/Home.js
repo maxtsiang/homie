@@ -212,7 +212,7 @@ function Home(props) {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item className={classes.item} onScroll={handleScroll} xs>
+      <Grid item className={classes.item} onScroll={handleScroll} xs={6}>
         <Box className={classes.itemContainer}>
           <Box className={classes.header}>
             {filterMode ? (
@@ -305,7 +305,7 @@ function Home(props) {
         </Box>
       </Grid>
 
-      <Grid item className={classes.item} xs>
+      <Grid item className={classes.item} xs={6}>
         <Box className={classes.itemContainer}>
           {filteredListings[detailed] && (
             <Detail
