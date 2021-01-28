@@ -65,11 +65,11 @@ function Filter(props) {
   const [error, setError] = useState("");
 
   const handleSetMin = (e) => {
-    setMin(e.target.value);
+    setMin(parseInt(e.target.value));
   };
 
   const handleSetMax = (e) => {
-    setMax(e.target.value);
+    setMax(parseInt(e.target.value));
   };
 
   const handleSetFilters = (e) => {
@@ -135,6 +135,7 @@ function Filter(props) {
               label="Min"
               value={min}
               onChange={handleSetMin}
+              type="number"
             />
           </FormControl>
 
@@ -149,6 +150,7 @@ function Filter(props) {
               value={max}
               label="Max"
               onChange={handleSetMax}
+              type="number"
             />
           </FormControl>
         </Box>
@@ -183,7 +185,7 @@ function Filter(props) {
             InputAdornmentProps={{ position: "start" }}
             fullWidth
             value={end}
-            minDate={new Date()}
+            minDate={start ? start : new Date()}
             onChange={(date) => setEnd(date)}
             className={classes.input}
           />

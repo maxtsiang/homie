@@ -137,7 +137,7 @@ function New() {
 
   const handleSetPrice = (e) => {
     setError("");
-    setPrice(e.target.value);
+    setPrice(parseInt(e.target.value));
   };
 
   const handleCheck = (e) => {
@@ -216,6 +216,10 @@ function New() {
       setError("Please enter a valid price");
       setLoading(false);
       return;
+    } else if (price >= 10000) {
+      setError("Please enter a price below $10,000");
+      setLoading(false);
+      return;
     } else if (description.length === 0) {
       setError("Please enter a description");
       setLoading(false);
@@ -224,6 +228,10 @@ function New() {
       setError("Please add at least 3 photos");
       setLoading(false);
       return;
+    }
+
+    if (price % 1 != 0) {
+      setPrice(parseFloat(price).toFixed(0));
     }
 
     try {
@@ -324,6 +332,8 @@ function New() {
                   <InputAdornment position="start">$</InputAdornment>
                 }
                 onChange={handleSetPrice}
+                type="number"
+                value={price}
               />
             </FormControl>
           </Box>
@@ -354,7 +364,7 @@ function New() {
                 format="MM/DD/YYYY"
                 InputAdornmentProps={{ position: "start" }}
                 value={end}
-                minDate={new Date()}
+                minDate={start ? start : new Date()}
                 onChange={(date) => setEnd(date)}
                 className={classes.input}
                 fullWidth
