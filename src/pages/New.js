@@ -230,10 +230,6 @@ function New() {
       return;
     }
 
-    if (price % 1 != 0) {
-      setPrice(parseFloat(price).toFixed(0));
-    }
-
     try {
       let selectedAmenities = [];
       for (let amenity in amenities) {

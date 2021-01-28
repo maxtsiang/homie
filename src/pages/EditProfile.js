@@ -91,29 +91,49 @@ function EditProfile(props) {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  const [changed, setChanged] = useState(false);
+
   const history = useHistory();
 
   const handleSetName = (e) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setName(e.target.value);
   };
 
   const handleSetPronouns = (e) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setPronouns(e.target.value);
   };
 
   const handleSetGrad = (e) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setGrad(e.target.value);
   };
 
   const handleSetMajor = (e) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setMajor(e.target.value);
   };
 
   const handleSetGreek = (e) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setGreek(e.target.value);
   };
 
   const handleSelectHabit = (id) => {
+    if (!changed) {
+      setChanged(true);
+    }
     const newHabit = habits.find((habit) => {
       return habit.id === id;
     });
@@ -122,6 +142,9 @@ function EditProfile(props) {
   };
 
   const handleDeleteHabit = (id) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setMyHabits(myHabits.filter((habit) => habit.id !== id));
   };
 
@@ -161,6 +184,9 @@ function EditProfile(props) {
   }, []);
 
   const handleFileChange = (e) => {
+    if (!changed) {
+      setChanged(true);
+    }
     setError("");
     const fileList = Array.from(e.target.files);
     fileList.forEach((newPhoto) => {
@@ -224,6 +250,18 @@ function EditProfile(props) {
     if (!name || !pronouns || !major || !grad) {
       setError("Please fill out everything (greek life optional) :)");
       return;
+    } else if (name.length > 20) {
+      setError("Please enter a shorter name");
+      return;
+    } else if (major.length > 20) {
+      setError("Please enter a shorter major");
+      return;
+    } else if (pronouns.length > 20) {
+      setError("Please enter shorter pronouns");
+      return;
+    } else if (greek.length > 20) {
+      setError("Please enter a shorter greek");
+      return;
     }
 
     setLoading(true);
@@ -265,6 +303,7 @@ function EditProfile(props) {
               variant="contained"
               color="primary"
               onClick={handleSubmit}
+              disabled={!changed}
             >
               Done
             </Button>

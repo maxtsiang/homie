@@ -108,7 +108,7 @@ function Profile(props) {
         display="flex"
         alignItems="center"
         onClick={handleClick}
-        style={{ cursor: props.popover ? "pointer" : null }}
+        style={{ cursor: props.popover && !isSelfProfile ? "pointer" : null }}
       >
         <Box>
           <Avatar alt={props.user.name} src={props.user.profile} />
