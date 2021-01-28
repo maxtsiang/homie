@@ -181,7 +181,11 @@ function Interested(props) {
             </AvatarGroup>
           </Box>
           <Box>
-            <Typography variant="subtitle1" className={classes.interestedText}>
+            <Typography
+              variant="subtitle1"
+              className={classes.interestedText}
+              noWrap
+            >
               {interestedUsers[0].name}{" "}
               {props.interested.length > 1 ? (
                 <>

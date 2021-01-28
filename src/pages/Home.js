@@ -29,7 +29,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    height: "85vh",
+    height: "90vh",
   },
   overlay: {
     padding: "1em",
@@ -43,9 +43,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "1em",
   },
   item: {
-    height: "100%",
-  },
-  itemContainer: {
     padding: "2em",
     height: "100%",
     overflow: "scroll",
@@ -213,117 +210,113 @@ function Home(props) {
   return (
     <Grid container className={classes.container}>
       <Grid item className={classes.item} onScroll={handleScroll} xs={6}>
-        <Box className={classes.itemContainer}>
-          <Box className={classes.header}>
-            {filterMode ? (
-              <Typography variant="h3">Filter</Typography>
-            ) : (
-              <Box display="flex" alignItems="center">
-                <Typography variant="h3">Find a place</Typography>
-                <IconButton onClick={() => setFilterMode(true)}>
-                  <Badge
-                    badgeContent={Object.keys(filters).length}
-                    color="primary"
-                  >
-                    <TuneRoundedIcon />
-                  </Badge>
-                </IconButton>
-              </Box>
-            )}
-
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Typography variant="h4">
-                {filteredListings.length} found near Penn
-              </Typography>
-              {!filterMode && (
-                <>
-                  <Button onClick={handleOpenSortBy}>Sort By</Button>
-                  <Menu
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    {Object.keys(SORT_OPTIONS).map((key, index) => (
-                      <MenuItem
-                        key={index}
-                        selected={sortBy === key}
-                        onClick={() => handleSortBy(key)}
-                      >
-                        {SORT_OPTIONS[key].name}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </>
-              )}
-            </Box>
-          </Box>
-
+        <Box className={classes.header}>
           {filterMode ? (
-            <Filter
-              filters={filters}
-              addFilter={addFilter}
-              close={() => setFilterMode(false)}
-              clearFilters={clearFilters}
-            />
+            <Typography variant="h3">Filter</Typography>
           ) : (
-            <Box>
-              {filteredListings &&
-                filteredListings.map((listing, index) => {
-                  return (
-                    <Listing
-                      key={listing.id}
-                      index={index}
-                      id={listing.id}
-                      detailed={detailed}
-                      hovered={hovered}
-                      setHovered={setHovered}
-                      setDetailed={setDetailed}
-                      info={listing}
-                      edit={listing.creator === currentUser.uid}
-                      handleInterestedOverlay={handleToggleInterestedOverlay}
-                      setInterestedUsers={setInterestedUsers}
-                    />
-                  );
-                })}
-              {loading && (
-                <Box display="flex" flexDirection="column" alignItems="center">
-                  <CircularProgress size={30} />
-                </Box>
-              )}
-              {isEnd && (
-                <Box display="flex" flexDirection="column" alignItems="center">
-                  <Typography variant="subtitle2">No more listings</Typography>
-                </Box>
-              )}
+            <Box display="flex" alignItems="center">
+              <Typography variant="h3">Find a place</Typography>
+              <IconButton onClick={() => setFilterMode(true)}>
+                <Badge
+                  badgeContent={Object.keys(filters).length}
+                  color="primary"
+                >
+                  <TuneRoundedIcon />
+                </Badge>
+              </IconButton>
             </Box>
           )}
+
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h4">
+              {filteredListings.length} found near Penn
+            </Typography>
+            {!filterMode && (
+              <>
+                <Button onClick={handleOpenSortBy}>Sort By</Button>
+                <Menu
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  {Object.keys(SORT_OPTIONS).map((key, index) => (
+                    <MenuItem
+                      key={index}
+                      selected={sortBy === key}
+                      onClick={() => handleSortBy(key)}
+                    >
+                      {SORT_OPTIONS[key].name}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
+          </Box>
         </Box>
+
+        {filterMode ? (
+          <Filter
+            filters={filters}
+            addFilter={addFilter}
+            close={() => setFilterMode(false)}
+            clearFilters={clearFilters}
+          />
+        ) : (
+          <Box style={{ height: "70%" }}>
+            {filteredListings &&
+              filteredListings.map((listing, index) => {
+                return (
+                  <Listing
+                    key={listing.id}
+                    index={index}
+                    id={listing.id}
+                    detailed={detailed}
+                    hovered={hovered}
+                    setHovered={setHovered}
+                    setDetailed={setDetailed}
+                    info={listing}
+                    edit={listing.creator === currentUser.uid}
+                    handleInterestedOverlay={handleToggleInterestedOverlay}
+                    setInterestedUsers={setInterestedUsers}
+                  />
+                );
+              })}
+            {loading && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <CircularProgress size={30} />
+              </Box>
+            )}
+            {isEnd && (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="subtitle2">No more listings</Typography>
+              </Box>
+            )}
+          </Box>
+        )}
       </Grid>
 
       <Grid item className={classes.item} xs={6}>
-        <Box className={classes.itemContainer}>
-          {filteredListings[detailed] && (
-            <Detail
-              id={detailed}
-              close={() => setDetailed(-1)}
-              info={filteredListings[detailed]}
-            />
-          )}
-          <Map
-            hidden={detailed >= 0 && filteredListings.length > 0}
-            hovered={hovered}
-            listings={filteredListings}
-            setHovered={setHovered}
-            setDetailed={setDetailed}
-            height="100%"
-            width="100%"
+        {filteredListings[detailed] && (
+          <Detail
+            id={detailed}
+            close={() => setDetailed(-1)}
+            info={filteredListings[detailed]}
           />
-        </Box>
+        )}
+        <Map
+          hidden={detailed >= 0 && filteredListings.length > 0}
+          hovered={hovered}
+          listings={filteredListings}
+          setHovered={setHovered}
+          setDetailed={setDetailed}
+          height="100%"
+          width="100%"
+        />
       </Grid>
 
       <Backdrop className={classes.backdrop} open={openInterestedOverlay}>
