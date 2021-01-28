@@ -165,7 +165,7 @@ const ChatWindow = (props) => {
       .update({
         lastUpdated: time,
         recentMessage: {
-          content: textContent,
+          content: textContent.substring(0, 10),
           creator: currentUser.uid,
           createdAt: time,
         },

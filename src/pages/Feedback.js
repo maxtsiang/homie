@@ -31,7 +31,7 @@ const useStyles = makeStyles({
   },
 });
 
-function EditProfile(props) {
+function Feedback(props) {
   const classes = useStyles();
 
   const [error, setError] = useState("");
@@ -114,4 +114,4 @@ function EditProfile(props) {
   );
 }
 
-export default EditProfile;
+export default Feedback;

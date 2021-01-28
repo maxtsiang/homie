@@ -66,7 +66,13 @@ const ChatContacts = (props) => {
         </ListItemAvatar>
         <ListItemText
           primary={props.chat.otherUser.name}
-          secondary={recentMessage ? recentMessage.content : null}
+          secondary={
+            recentMessage
+              ? recentMessage.content.length >= 10
+                ? recentMessage.content + "..."
+                : recentMessage.content
+              : null
+          }
         />
       </Box>
       <Box>
