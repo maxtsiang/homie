@@ -1,33 +1,24 @@
-import { makeStyles } from "@material-ui/core";
-
-import RoomRoundedIcon from "@material-ui/icons/RoomRounded";
-
-const useStyles = makeStyles({
-  icon: {
-    height: "2em",
-    width: "2em",
-    transform: "translate(-50%, -100%)",
-
-    "&:hover": {
-      cursor: "pointer",
-    },
-  },
-});
+import { Button } from "@material-ui/core";
 
 function MapMarker(props) {
-  const classes = useStyles();
   return (
-    <div
+    <Button
+      color="primary"
+      variant="contained"
       onMouseEnter={() => props.setHovered && props.setHovered(props.id)}
       onMouseLeave={() => props.setHovered && props.setHovered(-1)}
       onClick={() => props.setDetailed && props.setDetailed(props.id)}
+      style={{
+        transform: "translate(-50%, -100%)",
+        padding: "0.2em",
+        background: props.hovered || props.$hovered ? "#779ecb" : null,
+        "&:hover": {
+          background: "#779ecb",
+        },
+      }}
     >
-      {props.$hover || props.hovered ? (
-        <RoomRoundedIcon color="primary" className={classes.icon} />
-      ) : (
-        <RoomRoundedIcon className={classes.icon} />
-      )}
-    </div>
+      ${props.price}
+    </Button>
   );
 }
 

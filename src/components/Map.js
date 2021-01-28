@@ -1,5 +1,3 @@
-import { Box } from "@material-ui/core";
-
 import GoogleMapReact from "google-map-react";
 import MapMarker from "../components/MapMarker";
 
@@ -24,7 +22,7 @@ function Map(props) {
         defaultCenter={pennLocation}
         center={props.center}
         defaultZoom={14}
-        hoverDistance={20}
+        hoverDistance={15}
         yesIWantToUseGoogleMapApiInternals
       >
         {props.listings &&
@@ -38,6 +36,7 @@ function Map(props) {
                 id={index}
                 lat={listing.location.latitude}
                 lng={listing.location.longitude}
+                price={listing.price}
               />
             );
           })}
