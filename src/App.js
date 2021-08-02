@@ -21,6 +21,8 @@ import {
 } from "@material-ui/core/styles";
 import { AuthProvider } from "./contexts/AuthContext";
 
+import "./App.css";
+
 let theme = createMuiTheme({
   palette: {
     primary: {

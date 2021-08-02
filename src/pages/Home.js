@@ -29,7 +29,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    height: "90vh",
+    height: "95vh",
   },
   overlay: {
     padding: "1em",
